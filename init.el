@@ -2,9 +2,12 @@
 ;; ~/.emacs.d/init.el
 ;; David Mann
 ;; new init file for latest emacs, latest org-mode
+;; 
+(require 'package)
+(package-initialize)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;;XS
+;;
 ;;
 ;; org mode
 (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
@@ -40,6 +43,8 @@
 ;; Show column number
 (column-number-mode t)
 ;;
+;; save desktop
+(desktop-save-mode 1)
 ;; Let's load a nice color-theme
-(load-theme 'tsdh-light t)
-;;
+;;(load-theme 'tsdh-light t)
+(load-theme 'light-blue t)

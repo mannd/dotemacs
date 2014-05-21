@@ -2,23 +2,17 @@
 ;; ~/.emacs.d/init.el
 ;; David Mann
 ;; new init file for latest emacs, latest org-mode
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;;XS
 ;;
-;;
-;; add package archives
-;; stick with gnu packages for now
-;; (add-to-list 'load-path "~/.emacs.d")
-;; (require 'use-package)
-;; (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
 ;; org mode
 (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
 (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp"))
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-
-;; (package-initialize t)
 (require 'org)
-;;
-;; Standard key bindings
+
+;; Standard org key bindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
@@ -49,4 +43,3 @@
 ;; Let's load a nice color-theme
 (load-theme 'tsdh-light t)
 ;;
-

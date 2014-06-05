@@ -20,6 +20,7 @@
 ;; don't need org package, we're using the git version
 ;;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;;
 ;;
 ;; org mode

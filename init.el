@@ -30,8 +30,10 @@
 (require 'org)
 ;;
 ;; my elisp files
-(load "~/elisp/extensions")
-
+;; (load "~/elisp/extensions")
+(add-to-list 'load-path "~/.emacs.d/elisp/")
+(load-library "extensions")
+;;
 ;; Standard org key bindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)

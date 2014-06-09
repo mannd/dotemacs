@@ -76,3 +76,12 @@
 (setq visible-bell t)
 ;; save history
 (savehist-mode t)
+;;
+;; provide shortcut register to this file
+(set-register ?e '(file . "~/.emacs.d/init.el"))
+;;
+;; set up path for eshell
+(setenv "PATH"
+	(concat
+	 "/usr/local/bin" ":"
+	 (getenv "PATH")))

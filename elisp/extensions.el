@@ -54,7 +54,5 @@
 
 (global-set-key (kbd "\M-!") 'line-to-top)
 
-;; my additions
-(global-set-key (kbd "\C-xr") 'find-file-read-only)
 
 

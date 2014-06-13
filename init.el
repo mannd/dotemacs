@@ -68,7 +68,7 @@
 ;; save desktop
 ;;(desktop-save-mode 1)
 ;; Let's load a nice color-theme
-;; we'll use a dark them to distinguish emacs-carbon from aquamacs
+;; we'll use a dark theme to distinguish emacs-carbon from aquamacs
 (if (not (is-aquamacs))
 	 (load-theme 'wombat t))
 ;;
@@ -85,3 +85,6 @@
 	(concat
 	 "/usr/local/bin" ":"
 	 (getenv "PATH")))
+(setenv "EDITOR" "emacsclient")
+;; set up emacs as server
+(server-start)

@@ -80,11 +80,14 @@
 ;; provide shortcut register to this file
 (set-register ?e '(file . "~/.emacs.d/init.el"))
 ;;
-;; set up path for eshell
+;; set up path for eshell and term
 (setenv "PATH"
 	(concat
 	 "/usr/local/bin" ":"
 	 (getenv "PATH")))
+;; set up term and eshell to use emacsclient as default EDITOR
 (setenv "EDITOR" "emacsclient")
+(setenv "ALTERNATIVE_EDITOR" "emacs")
+(setenv "VISUAL" "emacsclient")
 ;; set up emacs as server
 (server-start)

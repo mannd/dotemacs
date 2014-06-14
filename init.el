@@ -41,6 +41,8 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-agenda-include-diary t)
 ;;
+;; I like visual-line-mode as default for text, org
+(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 ;; no longer necessary to turn on font-lock, is default in emacs 24
 ;;(add-hook 'org-mode-hook 'turn-on-font-lock)
 (setq org-hide-leading-stars 'hidestars) ; just one star visible
@@ -79,6 +81,7 @@
 ;;
 ;; provide shortcut register to this file
 (set-register ?e '(file . "~/.emacs.d/init.el"))
+(set-register ?t '(file . "~/todo.org"))
 ;;
 ;; set up path for eshell and term
 (setenv "PATH"

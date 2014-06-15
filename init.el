@@ -8,29 +8,26 @@
 ;; had Aquamacs skip this, but it's better to keep it in init.el.
 ;; Note that Aquamacs customizations override init.el.
 ;; Thus some stuff is skipped here if using Aquamacs
-;;(if (not (boundp 'aquamacs-version))
-;;    (load "~/Library/Preferences/Aquamacs Emacs/Preferences.el"))
 (defun is-aquamacs ()
   "You are running Aquamacs."
   (interactive)
   (if (boundp 'aquamacs-version) t nil))
-
-(require 'package)
-(package-initialize)
-;; don't need org package, we're using the git version
-;;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;;
-;;
+(package-initialize nil)
 ;; org mode
+;; don't need org package, we're using the git version
 (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
 (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp"))
 (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
+(package-initialize t)
 (require 'org)
+;; potentially use org-babel for init file at some point
+(require 'ob-tangle)
+;; set up package sources
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;;
 ;; my elisp files
-;; (load "~/elisp/extensions")
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 (load-library "extensions")
 ;;
@@ -43,23 +40,19 @@
 ;;
 ;; I like visual-line-mode as default for text, org
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-;; no longer necessary to turn on font-lock, is default in emacs 24
-;;(add-hook 'org-mode-hook 'turn-on-font-lock)
 (setq org-hide-leading-stars 'hidestars) ; just one star visible
 ;;
 ;; For mobile org
-(setq org-directory "~")
-(setq org-mobile-inbox-for-pull "~/todo.org")
+(setq org-directory "~/org")
+(setq org-mobile-inbox-for-pull "~/org/todo.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 ;;
-;; Personalization
-(setq user-mail-address "mannd@epstudiossoftware.com")
+;; notes directory
+(setq org-default-notes-file (concat org-directory "/" "organizer.org")
 ;;
-;; Some necessities from old .emacs
-;; Lose menus, toolbars, scrollbars
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'menu-bar-mode) (menu-bar-mode t))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fbound 'tool-bar-mode) (tool-bar-mode -1)
+;; but we'll keep menu-bar-mode, since it's up there anyway
 ;; eliminate splash screen
 (setq inhibit-splash-screen t)
 ;; No backup files
@@ -72,7 +65,7 @@
 ;; Let's load a nice color-theme
 ;; we'll use a dark theme to distinguish emacs-carbon from aquamacs
 (if (not (is-aquamacs))
-	 (load-theme 'wombat t))
+	 (load-theme 'misterioso t))
 ;;
 ;; use visible-bell
 (setq visible-bell t)
@@ -81,7 +74,7 @@
 ;;
 ;; provide shortcut register to this file
 (set-register ?e '(file . "~/.emacs.d/init.el"))
-(set-register ?t '(file . "~/todo.org"))
+(set-register ?t '(file . "~/org/todo.org"))
 ;;
 ;; set up path for eshell and term
 (setenv "PATH"
@@ -94,3 +87,4 @@
 (setenv "VISUAL" "emacsclient")
 ;; set up emacs as server
 (server-start)
+;;

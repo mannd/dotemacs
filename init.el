@@ -48,10 +48,10 @@
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 ;;
 ;; notes directory
-(setq org-default-notes-file (concat org-directory "/" "organizer.org")
+(setq org-default-notes-file (concat org-directory "/" "organizer.org"))
 ;;
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fbound 'tool-bar-mode) (tool-bar-mode -1)
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;; but we'll keep menu-bar-mode, since it's up there anyway
 ;; eliminate splash screen
 (setq inhibit-splash-screen t)

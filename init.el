@@ -50,6 +50,7 @@
 (setq org-directory "~/org")
 (setq org-mobile-inbox-for-pull "~/org/todo.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+(setq org-mobile-files (list "~/org/todo.org"))
 ;;
 ;; notes directory
 (setq org-default-notes-file (concat org-directory "/" "organizer.org"))

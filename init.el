@@ -4,10 +4,14 @@
 ;; new init file for latest emacs, latest org-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; I used to keep this in the Aquamacs preference file and
-;; had Aquamacs skip this, but it's better to keep it in init.el.
-;; Note that Aquamacs customizations override init.el.
-;; Thus some stuff is skipped here if using Aquamacs
+;; Re: Aquamacs
+;; Aquamacs doesn't load ~/.emacs.d/init.el, just .emacs, which in
+;; my configuration is empty.  Thus in the Aquamacs Preferences.el
+;; file there are these lines:
+;;(add-to-list 'load-path "~/.emacs.d/")
+;;(load-library "init")
+;; Thus some stuff is skipped here if using Aquamacs,
+;; so we use this function to see which emacs we are using.
 (defun is-aquamacs ()
   "You are running Aquamacs."
   (interactive)
@@ -65,8 +69,12 @@
 ;; Let's load a nice color-theme
 ;; we'll use a dark theme to distinguish emacs-carbon from aquamacs
 (if (not (is-aquamacs))
-	 (load-theme 'misterioso t))
+	 (load-theme 'tsdh-light t))
 ;;
+;; prevent graphical dialogs which crash emacs in Mac OS, (but
+;; not with Aquamacs)
+(if (not (is-aquamacs))
+    (setq use-dialog-box nil))
 ;; use visible-bell
 (setq visible-bell t)
 ;; save history

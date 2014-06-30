@@ -68,10 +68,6 @@
 ;; save desktop
 ;;(desktop-save-mode 1)
 ;; Let's load a nice color-theme
-;; we'll use a dark theme to distinguish emacs-carbon from aquamacs
-(if (not (is-aquamacs))
-	 (load-theme 'tsdh-light t))
-;;
 ;; prevent graphical dialogs which crash emacs in Mac OS, (but
 ;; not with Aquamacs)
 (if (not (is-aquamacs))
@@ -97,3 +93,23 @@
 ;; set up emacs as server
 (server-start)
 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Xiki/ruby stuff
+;; set up xiki
+;;
+;; Use rvm to manage ruby versions
+(add-to-list 'load-path "~/.emacs.d/rvm/")
+(require 'rvm)
+(rvm-use-default)
+;;
+;; If you want to play with Xiki, uncomment below
+;; Also make sure you set rvm default to 1.9.3 first
+;;    rvm --default 1.9.3
+;; And start xiki first on command line
+;; Doesn't seem to work well with Aquamacs
+;; (add-to-list 'load-path "/Users/mannd/.rvm/gems/ruby-1.9.3-p547/gems/trogdoro-el4r-1.0.10/data/emacs/site-lisp/")
+;; (require 'el4r)
+;; (el4r-boot)
+;; (el4r-troubleshooting-keys)
+;; 
+;; a reasonable color theme
+(load-theme 'tsdh-light t)

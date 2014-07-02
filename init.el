@@ -55,6 +55,22 @@
 ;; notes directory
 (setq org-default-notes-file (concat org-directory "/" "organizer.org"))
 ;;
+;;
+;; experiment with more TODO states
+(setq org-todo-keywords
+      '((sequence
+	 "TODO(t)"
+	 "STARTED(s)"
+	 "WAITING(w@/!)"
+	 "POSTPONED(p)"
+	 "SOMEDAY(s@/!)"
+	 "|" "DONE(x!)" "CANCELLED(c@)")))
+;;
+;; log stuff into drawer
+(setq org-log-into-drawer "LOGBOOK")
+(setq org-clock-into-drawer 1)
+;;
+;; screen stuff
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;; but we'll keep menu-bar-mode, since it's up there anyway

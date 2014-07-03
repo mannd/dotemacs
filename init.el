@@ -48,9 +48,9 @@
 ;;
 ;; For mobile org
 (setq org-directory "~/org")
-(setq org-mobile-inbox-for-pull "~/org/todo.org")
+(setq org-mobile-inbox-for-pull "~/org/index.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-(setq org-mobile-files (list "~/org/todo.org"))
+(setq org-mobile-files (list "~/org/todo.org" "~/org/organizer.org"))
 ;;
 ;; notes directory
 (setq org-default-notes-file (concat org-directory "/" "organizer.org"))

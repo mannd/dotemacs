@@ -118,14 +118,8 @@
 (rvm-use-default)
 ;;
 ;; If you want to play with Xiki, uncomment below
-;; Also make sure you set rvm default to 1.9.3 first
-;;    rvm --default 1.9.3
-;; And start xiki first on command line
-;; Doesn't seem to work well with Aquamacs
-;; (add-to-list 'load-path "/Users/mannd/.rvm/gems/ruby-1.9.3-p547/gems/trogdoro-el4r-1.0.10/data/emacs/site-lisp/")
-;; (require 'el4r)
-;; (el4r-boot)
-;; (el4r-troubleshooting-keys)
+;; to to ~/.emacs.d/elisp/start-xiki.el
+;; and M-x eval-buffer
 ;; 
 ;; a reasonable color theme
 (load-theme 'tsdh-light t)

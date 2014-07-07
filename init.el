@@ -40,6 +40,15 @@
 ;; my elisp files from "Writing GNU Emacs Extensions" and others?
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 (load-library "extensions")
+;; attempting to get evernote-mode to work
+(setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
+(require 'evernote-mode)
+(setq evernote-username "manndmd@gmail.com")
+
+(setq exec-path (cons "/usr/local/bin" exec-path))
+(require 'w3m)
+(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
+
 ;;
 ;; Standard org key bindings
 (global-set-key "\C-cl" 'org-store-link)
@@ -56,72 +65,69 @@
 (setq org-hide-leading-stars 'hidestars) ; just one star visible
 ;;
 ;; agenda files
-(setq org-agenda-files '((concat org-directory "/inbox.org")
-			 (concat org-directory "/home.org")
-			 (concat org-directory "/epstudios.org")
-			 (concat org-directory "/family.org")))
+(setq org-agenda-files '("~/org/inbox.org"
+			 "~/org/home.org"
+			 "~/org/epstudios.org"
+			 "~/org/family.org"))
 ;;
 ;; For mobile org
-(setq org-mobile-inbox-for-pull (concat org-directory "/index.org"))
+(setq org-mobile-inbox-for-pull "~/org/index.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-(setq org-mobile-files (list (concat org-directory "/inbox.org") 
-			     (concat org-directory "/home.org") 
-			     (concat org-directory "/epstudios.org")
-			     (concat org-directory "/family.org")))
+(setq org-mobile-files org-agenda-files)
 ;;
 ;; refile targets
 (setq org-refile-targets
       '((nil :maxlevel . 4)
 	(org-agenda-files :maxlevel . 4)
-	((concat org-directory "/org.org") :maxlevel . 4)))
+	("~/org/org.org" :maxlevel . 4)))
 ;;
 ;; default tasks/notes/inbox file
-(setq org-default-notes-file (concat org-directory "/inbox.org"))
+(setq org-default-notes-file "~/org/inbox.org")
 ;;
 ;; Capture templates
 (setq org-capture-templates 
-      '(("t" "todo" entry (file+headline (concat org-directory "/inbox.org") "Tasks") 
+      '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks") 
 	 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-	("n" "note" entry (file+headline (concat org-directory "/inbox.org") "Notes") 
+	("n" "note" entry (file+headline "~/org/inbox.org" "Notes") 
 	 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)))
-;;
+ ;;
 ;; experiment with more TODO states
-(setq org-todo-keywords
-      '((sequence
-	 "TODO(t)"
-	 "STARTED(s)"
-	 "WAITING(w@/!)"
-	 "POSTPONED(p)"
-	 "SOMEDAY(s@/!)"
-	 "|" "DONE(x!)" "CANCELLED(c@)")))
-;;
-;; log stuff into drawer
-(setq org-log-into-drawer "LOGBOOK")
-(setq org-clock-into-drawer 1)
-;;
-;; screen stuff
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-;; but we'll keep menu-bar-mode, since it's up there anyway
-;; eliminate splash screen
-(setq inhibit-splash-screen t)
-;; No backup files
-(setq make-backup-files nil)
-;; Show column number
-(column-number-mode t)
-;;
-;; prevent graphical dialogs which crash emacs in Mac OS, (but
-;; not with Aquamacs)
-(if (not (is-aquamacs))
-    (setq use-dialog-box nil))
-;; use visible-bell
-(setq visible-bell t)
-;; save history
-(savehist-mode t)
-;;
-;; provide shortcut registers to files
-(set-register ?e '(file . "~/.emacs.d/init.el")) ; e stands for .emacs
-(set-register ?i '(file . (concat org-directory "/inbox.org")))
+ (setq org-todo-keywords
+       '((sequence
+	  "TODO(t)"
+	  "STARTED(s)"
+	  "WAITING(w@/!)"
+	  "POSTPONED(p)"
+	  "SOMEDAY(s@/!)"
+	  "|" "DONE(x!)" "CANCELLED(c@)")))
+ ;;
+ ;; log stuff into drawer
+ (setq org-log-into-drawer "LOGBOOK")
+ (setq org-clock-into-drawer 1)
+ ;;
+ ;; screen stuff
+ (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+ (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+ ;; but we'll keep menu-bar-mode, since it's up there anyway
+ ;; eliminate splash screen
+ (setq inhibit-splash-screen t)
+ ;; No backup files
+ (setq make-backup-files nil)
+ ;; Show column number
+ (column-number-mode t)
+ ;;
+ ;; prevent graphical dialogs which crash emacs in Mac OS, (but
+ ;; not with Aquamacs)
+ (if (not (is-aquamacs))
+     (setq use-dialog-box nil))
+ ;; use visible-bell
+ (setq visible-bell t)
+ ;; save history
+ (savehist-mode t)
+ ;;
+ ;; provide shortcut registers to files
+ (set-register ?e '(file . "~/.emacs.d/init.el")) ; e stands for .emacs
+(set-register ?i '(file . "~/org/inbox.org"))
 ;;
 ;; set up path for eshell and term
 (setenv "PATH"
@@ -155,3 +161,15 @@
 	     (setq erc-autojoin-channels-alist '(("freenode.net"
 						  "#org-mode"
 						  "#emacs"))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evernote-developer-token "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

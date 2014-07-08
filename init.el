@@ -44,12 +44,19 @@
 (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
 (require 'evernote-mode)
 (setq evernote-username "manndmd@gmail.com")
-
 (setq exec-path (cons "/usr/local/bin" exec-path))
 (require 'w3m)
-(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
-
+(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "
+UTF8"))
+(global-set-key "\C-cec" 'evernote-create-note)
+(global-set-key "\C-ceo" 'evernote-open-note)
+(global-set-key "\C-ces" 'evernote-search-notes)
+(global-set-key "\C-ceS" 'evernote-do-saved-search)
+(global-set-key "\C-cew" 'evernote-write-note)
+(global-set-key "\C-cep" 'evernote-post-region)
+(global-set-key "\C-ceb" 'evernote-browser)
 ;;
+(require 'org-evernote)
 ;; Standard org key bindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)

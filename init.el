@@ -1,14 +1,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; ~/.emacs.d/init.el
 ;; This is the Emacs init file after declaring .emacs bandkruptcy
 ;; David Mann
 ;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; Re: Aquamacs
 ;; Aquamacs doesn't load ~/.emacs.d/init.el, just .emacs, which in
 ;; my configuration is empty.  Thus in the Aquamacs Preferences.el
 ;; file there are these lines:
-;; (add-to-list 'load-path "~/.emacs.d/")
-;; (load-library "init")
+;;    (add-to-list 'load-path "~/.emacs.d/")
+;;    (load-library "init")
 ;; Thus some stuff is skipped here if using Aquamacs,
 ;; so we use this function to see which emacs we are using.
 (defun is-aquamacs ()
@@ -18,18 +21,16 @@
 ;;
 ;; set up org mode
 ;; don't need org package, we're using the git version
-;;
 (defvar my-git-directory "~/git")
-;;
 (package-initialize nil)
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/lisp")))
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/contrib/lisp")))
-;; I use org-mode for txt files too
-(add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 (package-initialize t)
 (require 'org)
 ;; potentially use org-babel for init file at some point
 (require 'ob-tangle)
+;; I use org-mode for txt files too
+(add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 ;;
 ;; set up package sources
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -40,14 +41,13 @@
 ;; my elisp files from "Writing GNU Emacs Extensions" and others?
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 (load-library "extensions")
-;; attempting to get evernote-mode to work
+;; evernote-mode - note requires ruby 1.9.3
 (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
 (require 'evernote-mode)
 (setq evernote-username "manndmd@gmail.com")
 (setq exec-path (cons "/usr/local/bin" exec-path))
 (require 'w3m)
-(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "
-UTF8"))
+(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
 (global-set-key "\C-cec" 'evernote-create-note)
 (global-set-key "\C-ceo" 'evernote-open-note)
 (global-set-key "\C-ces" 'evernote-search-notes)
@@ -55,20 +55,22 @@ UTF8"))
 (global-set-key "\C-cew" 'evernote-write-note)
 (global-set-key "\C-cep" 'evernote-post-region)
 (global-set-key "\C-ceb" 'evernote-browser)
-;;
+;; org-evernote can dump evernote notes into org format
 (require 'org-evernote)
+;;
+;; org-mode setup
 ;; Standard org key bindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-agenda-include-diary t)
-;; ~/org is a symlink to "~/Dropbox/org"
+;; ~/org is a symlink to "~/Dropbox/org" for easy sharing
 (setq org-directory "~/org")
 ;;
 ;; I like visual-line-mode as default for text, org
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-;; tweak the stars
+;; tweak the org stars
 (setq org-hide-leading-stars 'hidestars) ; just one star visible
 ;;
 ;; agenda files
@@ -97,7 +99,7 @@ UTF8"))
 	 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
 	("n" "note" entry (file+headline "~/org/inbox.org" "Notes") 
 	 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)))
- ;;
+;;
 ;; experiment with more TODO states
  (setq org-todo-keywords
        '((sequence
@@ -168,6 +170,7 @@ UTF8"))
 	     (setq erc-autojoin-channels-alist '(("freenode.net"
 						  "#org-mode"
 						  "#emacs"))))
+;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

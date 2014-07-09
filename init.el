@@ -77,7 +77,8 @@
 (setq org-agenda-files '("~/org/inbox.org"
 			 "~/org/home.org"
 			 "~/org/epstudios.org"
-			 "~/org/family.org"))
+			 "~/org/family.org"
+			 "~/org/org.org"))
 ;;
 ;; For mobile org
 (setq org-mobile-inbox-for-pull "~/org/index.org")
@@ -87,8 +88,7 @@
 ;; refile targets
 (setq org-refile-targets
       '((nil :maxlevel . 4)
-	(org-agenda-files :maxlevel . 4)
-	("~/org/org.org" :maxlevel . 4)))
+	(org-agenda-files :maxlevel . 4)))
 ;;
 ;; default tasks/notes/inbox file
 (setq org-default-notes-file "~/org/inbox.org")
@@ -101,41 +101,40 @@
 	 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)))
 ;;
 ;; experiment with more TODO states
- (setq org-todo-keywords
-       '((sequence
-	  "TODO(t)"
-	  "STARTED(s)"
-	  "WAITING(w@/!)"
-	  "POSTPONED(p)"
-	  "SOMEDAY(s@/!)"
-	  "|" "DONE(x!)" "CANCELLED(c@)")))
- ;;
- ;; log stuff into drawer
- (setq org-log-into-drawer "LOGBOOK")
- (setq org-clock-into-drawer 1)
- ;;
- ;; screen stuff
- (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
- (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
- ;; but we'll keep menu-bar-mode, since it's up there anyway
- ;; eliminate splash screen
- (setq inhibit-splash-screen t)
- ;; No backup files
- (setq make-backup-files nil)
- ;; Show column number
- (column-number-mode t)
- ;;
- ;; prevent graphical dialogs which crash emacs in Mac OS, (but
- ;; not with Aquamacs)
- (if (not (is-aquamacs))
-     (setq use-dialog-box nil))
- ;; use visible-bell
- (setq visible-bell t)
- ;; save history
- (savehist-mode t)
- ;;
- ;; provide shortcut registers to files
- (set-register ?e '(file . "~/.emacs.d/init.el")) ; e stands for .emacs
+(setq org-todo-keywords
+     (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+;;
+;; log stuff into drawer
+(setq org-log-done (quote time))
+(setq org-log-into-drawer "LOGBOOK")
+(setq org-clock-into-drawer 1)
+;;
+;; avoid blank lines in org files
+(setq org-cycle-separator-lines 0)
+;;
+;; screen stuff
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;; but we'll keep menu-bar-mode, since it's up there anyway
+;; eliminate splash screen
+(setq inhibit-splash-screen t)
+;; No backup files
+(setq make-backup-files nil)
+;; Show column number
+(column-number-mode t)
+;;
+;; prevent graphical dialogs which crash emacs in Mac OS, (but
+;; not with Aquamacs)
+(if (not (is-aquamacs))
+    (setq use-dialog-box nil))
+;; use visible-bell
+(setq visible-bell t)
+;; save history
+(savehist-mode t)
+;;
+;; provide shortcut registers to files
+(set-register ?e '(file . "~/.emacs.d/init.el")) ; e stands for .emacs
 (set-register ?i '(file . "~/org/inbox.org"))
 ;;
 ;; set up path for eshell and term

@@ -70,8 +70,12 @@
 ;;
 ;; I like visual-line-mode as default for text, org
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
-;; tweak the org stars
+;; we hide stars by default even in buffers where we turn off
+;; org-indent-mode.
 (setq org-hide-leading-stars 'hidestars) ; just one star visible
+;; org-indent-mode will be default, turn it off per file as needed
+;; with #_STARTUP: noindent
+(setq org-startup-indented t)
 ;;
 ;; agenda files
 (setq org-agenda-files '("~/org/inbox.org"
@@ -93,6 +97,8 @@
 ;; default tasks/notes/inbox file
 (setq org-default-notes-file "~/org/inbox.org")
 ;;
+;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
+(setq org-stuck-projects '("+LEVEL=2/-DONE" ("NEXT") nil ""))
 ;; Capture templates
 (setq org-capture-templates 
       '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks") 
@@ -104,6 +110,15 @@
 (setq org-todo-keywords
      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
 	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+;; we'll try making the colors prettier too
+(setq org-todo-keyword-faces
+      (quote (("NEXT" :foreground "blue" :weight bold)
+	      ("DONE" :foreground "forest green" :weight bold)
+	      ("WAITING" :foreground "orange" :weight bold)
+	      ("HOLD" :foreground "magenta" :weight bold)
+	      ("CANCELLED" :foreground "forest green" :weight bold)
+	      ("SOMEDAY" :foreground "yellow" :weight bold))))
+
 ;;
 ;; log stuff into drawer
 (setq org-log-done (quote time))
@@ -142,6 +157,12 @@
 	(concat
 	 "/usr/local/bin" ":"
 	 (getenv "PATH")))
+;; need this so that emacs finds latex programs
+(setenv "PATH"
+	(concat
+	 "/usr/texbin" ":"
+	 (getenv "PATH")))
+;;
 ;; set up term and eshell to use emacsclient as default EDITOR
 (setenv "EDITOR" "emacsclient")
 (setenv "ALTERNATIVE_EDITOR" "emacs")
@@ -169,6 +190,7 @@
 	     (setq erc-autojoin-channels-alist '(("freenode.net"
 						  "#org-mode"
 						  "#emacs"))))
+;;
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -182,3 +204,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+

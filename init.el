@@ -79,6 +79,7 @@
 ;;
 ;; agenda files
 (setq org-agenda-files '("~/org/inbox.org"
+			 "~/org/personal.org"
 			 "~/org/home.org"
 			 "~/org/epstudios.org"
 			 "~/org/family.org"
@@ -91,8 +92,7 @@
 ;;
 ;; refile targets
 (setq org-refile-targets
-      '((nil :maxlevel . 4)
-	(org-agenda-files :maxlevel . 4)))
+      '((org-agenda-files :maxlevel . 2)))
 ;;
 ;; default tasks/notes/inbox file
 (setq org-default-notes-file "~/org/inbox.org")

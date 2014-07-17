@@ -117,7 +117,7 @@
 	      ("WAITING" :foreground "orange" :weight bold)
 	      ("HOLD" :foreground "magenta" :weight bold)
 	      ("CANCELLED" :foreground "forest green" :weight bold)
-	      ("SOMEDAY" :foreground "yellow" :weight bold))))
+	      ("SOMEDAY" :foreground "cyan" :weight bold))))
 
 ;;
 ;; log stuff into drawer

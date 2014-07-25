@@ -25,6 +25,8 @@
 (package-initialize nil)
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/lisp")))
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/contrib/lisp")))
+;; use latest org-mode documentation
+(add-to-list 'Info-default-directory-list (expand-file-name (concat my-git-directory "/org-mode/doc")))
 (package-initialize t)
 (require 'org)
 ;; potentially use org-babel for init file at some point

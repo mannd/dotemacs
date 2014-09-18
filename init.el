@@ -170,7 +170,7 @@
 (setenv "ALTERNATIVE_EDITOR" "emacs")
 (setenv "VISUAL" "emacsclient")
 ;; set up emacs as server
-(server-start)
+;; (server-start)
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Xiki/ruby stuff
 ;; set up xiki
@@ -207,3 +207,4 @@
  ;; If there is more than one, they won't work right.
  )
 
+(put 'narrow-to-region 'disabled nil)

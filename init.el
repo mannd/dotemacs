@@ -130,6 +130,8 @@
 ;; avoid blank lines in org files
 (setq org-cycle-separator-lines 0)
 ;;
+;; supress footer in org html export files
+(setq org-html-postamble nil)
 ;; screen stuff
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))

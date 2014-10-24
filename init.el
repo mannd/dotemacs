@@ -167,10 +167,14 @@
 	 "/usr/texbin" ":"
 	 (getenv "PATH")))
 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; NOTE for some reason emacsclient not working well, so stuck
+;; with VI for quick shell edits for now.
+;;
 ;; set up term and eshell to use emacsclient as default EDITOR
-(setenv "EDITOR" "emacsclient")
-(setenv "ALTERNATIVE_EDITOR" "emacs")
-(setenv "VISUAL" "emacsclient")
+;; (setenv "EDITOR" "emacsclient")
+;; (setenv "ALTERNATIVE_EDITOR" "emacs")
+;; (setenv "VISUAL" "emacsclient")
 ;; set up emacs as server
 ;; (server-start)
 ;;
@@ -202,13 +206,21 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . grm-mode))
+;;
+;; multiple cursors (package installed)
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-C") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evernote-developer-token "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b"))
+; custom-set-variables was added by Custom.
+; If you edit it by hand, you could mess it up, so be careful.
+; Your init file should contain only one such instance.
+; If there is more than one, they won't work right.
+'(evernote-developer-token "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -213,7 +213,9 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
+;;
+;; ispell
+(setq ispell-program-name "/usr/local/bin/ispell")
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
 ; custom-set-variables was added by Custom.

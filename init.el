@@ -35,7 +35,7 @@
 (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 ;;
 ;; set up package sources
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;; use-package must be loaded by package system
 (require 'use-package)
@@ -110,7 +110,7 @@
 ;;
 ;; experiment with more TODO states
 (setq org-todo-keywords
-     (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+     (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
 	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 ;; we'll try making the colors prettier too
 (setq org-todo-keyword-faces
@@ -178,6 +178,9 @@
 ;; set up emacs as server
 ;; (server-start)
 ;;
+;; assuming emacs NOT run from command line
+(setenv "EDITOR" "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
+(server-start)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Xiki/ruby stuff
 ;; set up xiki
 ;;
@@ -218,11 +221,15 @@
 (setq ispell-program-name "/usr/local/bin/ispell")
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
-; custom-set-variables was added by Custom.
-; If you edit it by hand, you could mess it up, so be careful.
-; Your init file should contain only one such instance.
-; If there is more than one, they won't work right.
-'(evernote-developer-token "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b"))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evernote-developer-token
+   "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b")
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

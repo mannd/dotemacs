@@ -168,18 +168,9 @@
 	 (getenv "PATH")))
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; NOTE for some reason emacsclient not working well, so stuck
-;; with VI for quick shell edits for now.
-;;
-;; set up term and eshell to use emacsclient as default EDITOR
-;; (setenv "EDITOR" "emacsclient")
-;; (setenv "ALTERNATIVE_EDITOR" "emacs")
-;; (setenv "VISUAL" "emacsclient")
-;; set up emacs as server
-;; (server-start)
-;;
-;; assuming emacs NOT run from command line
+;; problem with emacsclient was invoking wrong emacsclient (/usr/bin/emacsclient)
 (setenv "EDITOR" "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
+;; set up emacs as server
 (server-start)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Xiki/ruby stuff
 ;; set up xiki
@@ -217,6 +208,11 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 ;;
+;; adjust text size
+;; (bind-key "C-+" 'text-scale-increase)	
+;; (bind-key "C--" 'text-scale-decrease)
+(org-babel-load-file "~/.emacs.d/dem.org")
+
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,0 +1,8 @@
+#+BEGIN_SRC emacs-lisp
+
+
+(bind-key "C-+" 'text-scale-increase)	
+(bind-key "C--" 'text-scale-decrease)
+ 
+
+#+END_SRC

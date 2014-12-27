@@ -15,7 +15,7 @@
 ;; Thus some stuff is skipped here if using Aquamacs,
 ;; so we use this function to see which emacs we are using.
 (defun is-aquamacs ()
-  "You are running Aquamacs."
+  "t if you are running Aquamacs."
   (interactive)
   (if (boundp 'aquamacs-version) t nil))
 ;;
@@ -121,6 +121,8 @@
 	      ("CANCELLED" :foreground "forest green" :weight bold)
 	      ("SOMEDAY" :foreground "cyan" :weight bold))))
 
+;; activate org mode speed commands
+(setq org-use-speed-commands t)
 ;;
 ;; log stuff into drawer
 (setq org-log-done (quote time))
@@ -156,7 +158,7 @@
 (set-register ?e '(file . "~/.emacs.d/init.el")) ; e stands for .emacs
 (set-register ?i '(file . "~/org/inbox.org"))
 ;;
-;; set up path for eshell and term
+;; set up path for eshell
 (setenv "PATH"
 	(concat
 	 "/usr/local/bin" ":"
@@ -165,6 +167,11 @@
 (setenv "PATH"
 	(concat
 	 "/usr/texbin" ":"
+	 (getenv "PATH")))
+;; use git in /usr/local/git/bin for eshell
+(setenv "PATH"
+	(concat
+	 "/usr/local/git/bin" ":"
 	 (getenv "PATH")))
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

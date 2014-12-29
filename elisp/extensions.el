@@ -54,5 +54,3 @@
 
 (global-set-key (kbd "\M-!") 'line-to-top)
 
-
-

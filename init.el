@@ -22,12 +22,16 @@
 ;; set up org mode
 ;; don't need org package, we're using the git version
 (defvar my-git-directory "~/git")
+;; use latest org-mode documentation
+;; seems like this needs to come early, or is overriden by Info-directory-list
+(add-to-list 'Info-default-directory-list (expand-file-name (concat my-git-directory "/org-mode/doc")))
+
 (package-initialize nil)
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/lisp")))
-(add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/contrib/lisp")))
-;; use latest org-mode documentation
-(add-to-list 'Info-default-directory-list (expand-file-name (concat my-git-directory "/org-mode/doc")))
+(add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/contrib/lisp")) t)
 (package-initialize t)
+;; prevent loading packages twice
+(setq package-enable-at-startup nil)
 (require 'org)
 ;; potentially use org-babel for init file at some point
 (require 'ob-tangle)
@@ -215,9 +219,7 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 ;;
-;; adjust text size
-;; (bind-key "C-+" 'text-scale-increase)	
-;; (bind-key "C--" 'text-scale-decrease)
+;; experimentally put some code in an org-babel file
 (org-babel-load-file "~/.emacs.d/dem.org")
 
 ;; ispell

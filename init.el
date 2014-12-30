@@ -165,6 +165,10 @@
 ;; set up path for eshell
 (setenv "PATH"
 	(concat
+	 "/Users/mannd/bin" ":"
+	 (getenv "PATH")))
+(setenv "PATH"
+	(concat
 	 "/usr/local/bin" ":"
 	 (getenv "PATH")))
 ;; need this so that emacs finds latex programs

@@ -25,7 +25,7 @@
 ;; use latest org-mode documentation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
 (add-to-list 'Info-default-directory-list (expand-file-name (concat my-git-directory "/org-mode/doc")))
-
+;;
 (package-initialize nil)
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/lisp")))
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/contrib/lisp")) t)
@@ -221,7 +221,8 @@
 ;;
 ;; experimentally put some code in an org-babel file
 (org-babel-load-file "~/.emacs.d/dem.org")
-
+;; Magit
+(global-set-key (kbd "M-m") 'magit-status)
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

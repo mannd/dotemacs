@@ -12,8 +12,9 @@
 ;; file there are these lines:
 ;;    (add-to-list 'load-path "~/.emacs.d/")
 ;;    (load-library "init")
-;; Thus some stuff is skipped here if using Aquamacs,
-;; so we use this function to see which emacs we are using.
+;;
+;; There is some stuff that is broken in non-Aquamacs, and right now
+;; I am avoiding Aquamacs, so need to test for Aquamacs.
 (defun is-aquamacs ()
   "t if you are running Aquamacs."
   (interactive)
@@ -30,8 +31,9 @@
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/lisp")))
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/contrib/lisp")) t)
 (package-initialize t)
-;; prevent loading packages twice
+;; prevent loading packages twice after init.el is done
 (setq package-enable-at-startup nil)
+;;
 (require 'org)
 ;; potentially use org-babel for init file at some point
 (require 'ob-tangle)

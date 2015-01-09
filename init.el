@@ -25,11 +25,17 @@
 (defvar my-git-directory "~/git")
 ;; use latest org-mode documentation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
-(add-to-list 'Info-default-directory-list (expand-file-name (concat my-git-directory "/org-mode/doc")))
+(add-to-list 'Info-default-directory-list
+	     (expand-file-name
+	      (concat my-git-directory "/org-mode/doc")))
 ;;
 (package-initialize nil)
-(add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/lisp")))
-(add-to-list 'load-path (expand-file-name (concat my-git-directory "/org-mode/contrib/lisp")) t)
+(add-to-list 'load-path
+	     (expand-file-name
+	      (concat my-git-directory "/org-mode/lisp")))
+(add-to-list 'load-path
+	     (expand-file-name
+	      (concat my-git-directory "/org-mode/contrib/lisp")) t)
 (package-initialize t)
 ;; prevent loading packages twice after init.el is done
 (setq package-enable-at-startup nil)
@@ -49,6 +55,8 @@
 ;; my elisp files from "Writing GNU Emacs Extensions" and others?
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 (load-library "extensions")
+;; the modifystamp and writestamp stuff in Chapt 4 of above
+(require 'timestamp)
 ;; evernote-mode - note requires ruby 1.9.3
 (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
 (require 'evernote-mode)

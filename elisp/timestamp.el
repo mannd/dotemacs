@@ -72,10 +72,10 @@
 (defun maybe-update-modifystamps ()
   "Call 'update-modifystamps' if the buffer has been modified."
   (if last-change-time
-      (update-modifystamps)))
+      (update-modifystamps last-change-time)))
 
 
-(defun update-modifystamps ()
+(defun update-modifystamps (time)
   "Find modifystamps and replace them with the current time."
   (save-excursion
     (save-restriction
@@ -89,23 +89,22 @@
 			"$")))
 	(while (re-search-forward regexp nil t)
 	  (replace-match (format-time-string modifystamp-format
-					     last-change-time)
+					     time)
 			 t t nil 1))))))
   (setq last-change-time nil)
   nil)
 
+(make-variable-buffer-local 'last-change-time)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; hooks removed per text
-;; (setq before-save-hook 'update-writestamps)
-;; ;(add-hook 'before-save-hook 'update-writestamps)
-;; ;(remove-hook 'before-save-hook 'update-writestamps)
-;; (make-variable-buffer-local 'last-change-time)
 
-;; (make-local-variable 'first-change-hook)
+;; (add-hook 'before-save-hook 'update-writestamps)
+
+
+
 ;; (add-hook 'before-save-hook 'maybe-update-modifystamps)
-;; ;(add-hook 'first-change-hook 'update-modifystamps nil t)
-;; ;(remove-hook 'first-change-hook 'update-modifystamps)
-;; ;(remove-hook 'before-save-hook 'maybe-update-modifystamps)  
+
 
 ;; (make-local-variable 'after-change-functions)
 
@@ -113,7 +112,14 @@
 ;; (add-hook 'after-change-functions 'remember-change-time nil t)
 
 
-;; ;; (add-hook 'before-save-hook
-;; ;; 	  '(lambda ()
-;; ;; 	     (if last-change-time
-;; ;; 		 (update-modifystamps last-change-time))))
+;; (add-hook 'before-save-hook
+;;  	  '(lambda ()
+;;  	     (if last-change-time
+;; 		   (update-modifystamps last-change-time))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; only for first versin of modifystamps -- don't use
+;; (make-local-variable 'first-change-hook)
+;; (add-hook 'first-change-hook 'update-modifystamps nil t)
+
+(provide 'timestamp)

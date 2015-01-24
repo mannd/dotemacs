@@ -62,6 +62,8 @@
 (require 'evernote-mode)
 (setq evernote-username "manndmd@gmail.com")
 (setq exec-path (cons "/usr/local/bin" exec-path))
+;; for lein
+(setq exec-path (cons "/Users/mannd/bin" exec-path))
 (require 'w3m)
 (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
 (global-set-key "\C-cec" 'evernote-create-note)
@@ -196,7 +198,9 @@
 ;; problem with emacsclient was invoking wrong emacsclient (/usr/bin/emacsclient)
 (setenv "EDITOR" "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
 ;; set up emacs as server
-(server-start)
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Xiki/ruby stuff
 ;; set up xiki
 ;;
@@ -258,3 +262,27 @@
  )
 
 (put 'narrow-to-region 'disabled nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Clojure stuff taken from https://github.com/flyingmachine/emacs-for-clojure/blob/master/init.el
+
+(defvar clojure-packages
+  '(paredit
+    clojure-mode
+    clojure-mode-extra-font-locking
+    cider
+    ido-ubiquitous
+    smex
+    rainbow-delimiters
+    tagedit
+    ))					;magit already loaded
+
+;; don't seem to need this
+;; (if (eq system-type 'darwin)
+;;     (add-to-list 'clojure-packages 'exec-path-from-shell))
+
+(dolist (p clojure-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
+

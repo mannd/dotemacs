@@ -196,7 +196,10 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; problem with emacsclient was invoking wrong emacsclient (/usr/bin/emacsclient)
-(setenv "EDITOR" "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
+;; make sure the emacslient appropriate to the Emacs I am using is used
+(setenv "EDITOR" (expand-file-name "bin/emacsclient" invocation-directory))
+
+;; "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
 ;; set up emacs as server
 (require 'server)
 (unless (server-running-p)
@@ -228,7 +231,7 @@
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("README\\.md\\'" . grm-mode))
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 ;;
 ;; multiple cursors (package installed)
 (require 'multiple-cursors)

@@ -156,6 +156,8 @@
 ;; but we'll keep menu-bar-mode, since it's up there anyway
 ;; eliminate splash screen
 (setq inhibit-splash-screen t)
+;; inhibit scratch message
+(setq initial-scratch-message "")
 ;; No backup files
 (setq make-backup-files nil)
 ;; Show column number
@@ -246,6 +248,9 @@
 (global-set-key (kbd "M-m") 'magit-status)
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
+;; gnus
+(require 'nnir)
+
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

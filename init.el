@@ -41,6 +41,7 @@
 (setq package-enable-at-startup nil)
 ;;
 (require 'org)
+(require 'org-checklist)
 ;; potentially use org-babel for init file at some point
 (require 'ob-tangle)
 ;; I use org-mode for txt files too
@@ -160,6 +161,8 @@
 (setq initial-scratch-message "")
 ;; No backup files
 (setq make-backup-files nil)
+;; auto-revert-mode reloads buffer if file changes on disk
+(global-auto-revert-mode t)
 ;; Show column number
 (column-number-mode t)
 ;;
@@ -292,5 +295,9 @@
 (dolist (p clojure-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+;;;;;;;;;;
+;; ido for org-mode
+(setq org-completion-use-ido t)
 
 

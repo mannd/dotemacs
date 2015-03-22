@@ -29,6 +29,8 @@
 	     (expand-file-name
 	      (concat my-git-directory "/org-mode/doc")))
 ;;
+;; add bbdb-info file
+(add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-3.1.2/doc")
 (package-initialize nil)
 (add-to-list 'load-path
 	     (expand-file-name
@@ -300,4 +302,36 @@
 ;; ido for org-mode
 (setq org-completion-use-ido t)
 
+;; longitude latitude for sunset/sunrise
+(setq calendar-latitude 48.9)
+(setq calendar-longitude 2.5)
+(setq calendar-location-name "Paris, FR")
+
+
+;; BBDB
+;;(add-to-list 'load-path "~/.emacs.d/elisp/bbdb-2.35/lisp")
+;;
+;; BBDB v3
+(require 'bbdb-loaddefs "~/.emacs.d/elisp/bbdb-3.1.2/lisp/bbdb-loaddefs.el")
+(require 'bbdb)
+(setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
+(bbdb-initialize 'gnus 'message)
+(bbdb-mua-auto-update-init 'gnus 'message)
+(setq bbdb-pop-up-window-size 5)
+(setq bbdb-mua-update-interactive-p '(query . create))
+(setq bbdb-message-all-addresses t)
+(add-hook
+ 'gnus-summary-mode-hook
+ (lambda ()
+   (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
+   ))
+;; (setq bbdb-north-american-phone-numbers-p nil)
+;; (setq bbdb-complete-name-full-completion t)
+;; (setq bbdb-completion-type 'primary-or-name)
+;; (setq bbdb-complete-name-allow-cycling t)
+;; (setq
+;;  bbdb-offer-save 1
+;;  bbdb-use-popup t
+;;  bbdb-electric-p t
+;;  bbdb-popup-target-lines 1)
 

@@ -317,7 +317,7 @@
 (setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
 (bbdb-initialize 'gnus 'message)
 (bbdb-mua-auto-update-init 'gnus 'message)
-(setq bbdb-pop-up-window-size 5)
+(setq bbdb-mua-pop-up-window-size 0.2)
 (setq bbdb-mua-update-interactive-p '(query . create))
 (setq bbdb-message-all-addresses t)
 (add-hook

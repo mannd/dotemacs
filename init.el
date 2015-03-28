@@ -262,6 +262,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(canlock-password "f2adf01a9191e9787b0182f97eae18d118ae43d9")
  '(evernote-developer-token
    "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b")
  '(org-modules
@@ -317,7 +318,7 @@
 (setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
 (bbdb-initialize 'gnus 'message)
 (bbdb-mua-auto-update-init 'gnus 'message)
-(setq bbdb-mua-pop-up-window-size 0.2)
+(setq bbdb-mua-pop-up-window-size 0.1)
 (setq bbdb-mua-update-interactive-p '(query . create))
 (setq bbdb-message-all-addresses t)
 (add-hook

@@ -336,3 +336,13 @@
 ;;  bbdb-electric-p t
 ;;  bbdb-popup-target-lines 1)
 
+;; objective-c editing
+;; (add-to-list 'magic-mode-alist
+;; 	     `(,(lambda ()
+;; 		  (and (string= (file-name-extension buffer-file-name) "h")
+;; 		       (re-search-forward "@\\<interface\\>"
+;; 					  magic-mode-regexp-match-limit t)))
+;; 	       . objc-mode))
+;; magit-git-flow
+(require 'magit-gitflow)
+(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)

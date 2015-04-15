@@ -51,7 +51,7 @@
 ;;
 ;; set up package sources
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;; use-package must be loaded by package system
 (require 'use-package)
 ;;
@@ -346,3 +346,5 @@
 ;; magit-git-flow
 (require 'magit-gitflow)
 (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
+;; magit docs
+(setq magit-last-seen-setup-instructions "1.4.0")

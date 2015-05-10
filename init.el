@@ -302,6 +302,9 @@
 ;;;;;;;;;;
 ;; ido for org-mode
 (setq org-completion-use-ido t)
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 
 ;; longitude latitude for sunset/sunrise
 (setq calendar-latitude 48.9)
@@ -348,3 +351,10 @@
 (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
 ;; magit docs
 (setq magit-last-seen-setup-instructions "1.4.0")
+;;
+;; ledger
+;;
+(autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
+(add-to-list 'load-path
+	     (expand-file-name "~/lisp"))
+(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))

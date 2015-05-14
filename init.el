@@ -238,6 +238,7 @@
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+;; FIXME gfm-mode won't load until we are actuall in markdown-mode
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 ;;
 ;; multiple cursors (package installed)
@@ -358,3 +359,6 @@
 (add-to-list 'load-path
 	     (expand-file-name "~/lisp"))
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+;;
+;; use 'a' to open in current buffer, not create new buffer in dired
+(put 'dired-find-alternate-file 'disabled nil)

@@ -39,8 +39,7 @@
 (global-set-key (kbd "\C-q") 'scroll-n-lines-behind)
 (global-set-key (kbd "\C-z") 'scroll-n-lines-ahead)
 
-(global-set-key (kbd "\C-x\C-q") 'quoted-insert)
-
+(global-set-key (kbd "\C-x q") 'quoted-insert)
 ;; (defun point-to-top ()
 ;;   "Put point on top line of window."
 ;;   (interactive)

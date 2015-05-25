@@ -268,7 +268,10 @@
    "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b")
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))))
+    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
+ '(package-selected-packages
+   (quote
+    (writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors magit ido-ubiquitous helm geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking cider bbdb-vcard bbdb-csv-import))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -302,10 +305,14 @@
 
 ;;;;;;;;;;
 ;; ido for org-mode
-(setq org-completion-use-ido t)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+;; (setq org-completion-use-ido t)
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-everywhere t)
+;; (ido-mode 1)				
+
+;; trying helm 
+(require 'helm-config)
+(helm-mode 1)
 
 ;; longitude latitude for sunset/sunrise
 (setq calendar-latitude 48.9)
@@ -362,3 +369,41 @@
 ;;
 ;; use 'a' to open in current buffer, not create new buffer in dired
 (put 'dired-find-alternate-file 'disabled nil)
+;; try less jumpy trackpad scrolling
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control))))
+;;
+;; Proper title capitalization function
+;; Modified from http://karl-voit.at/2015/05/25/elisp-title-capitalization/
+(defun my-title-capitalization (beg end)
+  "Proper English title capitalization of a marked region"
+  ;; - before: the presentation of this heading of my own from my keyboard and yet
+  ;; - after:  The Presentation of This Heading of My Own from My Keyboard and Yet
+  ;; - before: a a a a a a a a
+  ;; - after:  A a a a a a a A
+  (interactive "r")
+  (save-excursion
+    (let (
+	  (do-not-capitalize '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
+			       "from" "in" "into" "it" "next" "nor" "of" "off"
+			       "on" "onto" "or" "over" "past" "so" "the" "till"
+			       "to" "up" "yet" ))
+	  )
+      ;; go to begin of first word:
+      (goto-char beg)
+      (forward-word)
+      (backward-word)
+      ;; capitalize first word in any case:
+      (capitalize-word 1)
+      (forward-word)
+      (while (< (point) end)
+	(backward-word)
+	;; capitalize each word in between except it is list member:
+	(if (member (thing-at-point 'word t) do-not-capitalize)
+	    (forward-word)
+	  (capitalize-word 1) )
+	(forward-word) )
+      ;; capitalize last word in any case:
+      (backward-word)
+      (capitalize-word 1)
+      )
+    ))

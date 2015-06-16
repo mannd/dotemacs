@@ -228,9 +228,11 @@
 ;; IRC
 (use-package erc
 	     :config
-	     (setq erc-autojoin-channels-alist '(("freenode.net"
+	     (setq erc-autojoin-channels-alist '((".*\\.freenode.net"
 						  "#org-mode"
-						  "#emacs"))))
+						  "#emacs"
+						  "#android"
+						  "#android-dev"))))
 ;;
 ;;
 (add-to-list 'load-path (expand-file-name (concat my-git-directory "/markdown-mode")))
@@ -407,3 +409,6 @@
       (capitalize-word 1)
       )
     ))
+;;
+;; twittering-mode
+(require 'twittering-mode)

@@ -46,6 +46,10 @@
 (require 'org-checklist)
 ;; potentially use org-babel for init file at some point
 (require 'ob-tangle)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (C . t)))
 ;; I use org-mode for txt files too
 (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 ;;
@@ -273,7 +277,8 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors magit ido-ubiquitous helm geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking cider bbdb-vcard bbdb-csv-import))))
+    (js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors magit ido-ubiquitous helm geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking cider bbdb-vcard bbdb-csv-import)))
+ '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -375,40 +380,10 @@
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control))))
 ;;
 ;; Proper title capitalization function
-;; Modified from http://karl-voit.at/2015/05/25/elisp-title-capitalization/
-(defun my-title-capitalization (beg end)
-  "Proper English title capitalization of a marked region"
-  ;; - before: the presentation of this heading of my own from my keyboard and yet
-  ;; - after:  The Presentation of This Heading of My Own from My Keyboard and Yet
-  ;; - before: a a a a a a a a
-  ;; - after:  A a a a a a a A
-  (interactive "r")
-  (save-excursion
-    (let (
-	  (do-not-capitalize '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
-			       "from" "in" "into" "it" "next" "nor" "of" "off"
-			       "on" "onto" "or" "over" "past" "so" "the" "till"
-			       "to" "up" "yet" ))
-	  )
-      ;; go to begin of first word:
-      (goto-char beg)
-      (forward-word)
-      (backward-word)
-      ;; capitalize first word in any case:
-      (capitalize-word 1)
-      (forward-word)
-      (while (< (point) end)
-	(backward-word)
-	;; capitalize each word in between except it is list member:
-	(if (member (thing-at-point 'word t) do-not-capitalize)
-	    (forward-word)
-	  (capitalize-word 1) )
-	(forward-word) )
-      ;; capitalize last word in any case:
-      (backward-word)
-      (capitalize-word 1)
-      )
-    ))
+;;
+;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
+(load-library "title-capitalization")
 ;;
 ;; twittering-mode
 (require 'twittering-mode)
+(setq twittering-use-master-password t)

@@ -37,7 +37,7 @@
 	      (concat my-git-directory "/org-mode/lisp")))
 (add-to-list 'load-path
 	     (expand-file-name
-	      (concat my-git-directory "/org-mode/contrib/lisp")) t)
+	      (concat my-git-directory "/org-mode/contrib/lisp")))
 (package-initialize t)
 ;; prevent loading packages twice after init.el is done
 (setq package-enable-at-startup nil)
@@ -49,7 +49,9 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
-   (C . t)))
+   (C . t)
+   (js . t)
+   (java . t)))
 ;; I use org-mode for txt files too
 (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 ;;
@@ -159,6 +161,9 @@
 ;;
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
+;;
+;; just-one-space makes deletion better
+(setq just-one-space t)
 ;; screen stuff
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -179,7 +184,10 @@
 (if (not (is-aquamacs))
     (setq use-dialog-box nil))
 ;; use visible-bell
-(setq visible-bell t)
+;; work around for garbage text with visible with OS X El Capitan
+;;(setq visible-bell t)
+(setq visible-bell nil)
+(setq ring-bell-function 'ignore)
 ;; save history
 (savehist-mode t)
 ;;
@@ -259,6 +267,12 @@
 ;; experimentally put some code in an org-babel file
 (org-babel-load-file "~/.emacs.d/dem.org")
 ;; Magit
+(add-to-list 'load-path "~/git/magit/lisp")
+(require 'magit)
+(with-eval-after-load 'info
+  (info-initialize)
+  (add-to-list 'Info-directory-list
+	       "~/git/magit/Documentation/"))
 (global-set-key (kbd "M-m") 'magit-status)
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
@@ -279,7 +293,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors magit ido-ubiquitous helm geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking cider bbdb-vcard bbdb-csv-import)))
+    (js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -297,8 +311,6 @@
   '(paredit
     clojure-mode
     clojure-mode-extra-font-locking
-    cider
-    ido-ubiquitous
     smex
     rainbow-delimiters
     tagedit
@@ -319,7 +331,9 @@
 ;; (setq ido-everywhere t)
 ;; (ido-mode 1)				
 
-;; trying helm 
+;; trying helm
+(add-to-list 'load-path "~/git/emacs-async")
+(add-to-list 'load-path "~/git/helm")
 (require 'helm-config)
 (helm-mode 1)
 
@@ -366,8 +380,6 @@
 ;; magit-git-flow
 (require 'magit-gitflow)
 (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
-;; magit docs
-(setq magit-last-seen-setup-instructions "1.4.0")
 ;;
 ;; ledger
 ;;
@@ -389,3 +401,6 @@
 ;; twittering-mode
 (require 'twittering-mode)
 (setq twittering-use-master-password t)
+;; abbrev mode
+(setq-default abbrev-mode t)
+(setq save-abbrevs t)

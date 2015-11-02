@@ -16,3 +16,8 @@ ido.last
 rvm/
 evernote-mode-master/
 SessionDesktop.el
+
+.DS_Store
+.mc-lists.el
+elisp/
+viper

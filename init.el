@@ -237,8 +237,9 @@
 ;; to ~/.emacs.d/elisp/start-xiki.el
 ;; and M-x eval-buffer
 ;; 
-;; a reasonable color theme
+;; pick a theme
 (load-theme 'tsdh-light t)
+''(load-theme 'leuven t)
 ;; IRC
 (use-package erc
 	     :config
@@ -277,7 +278,16 @@
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
 ;; gnus
+(setq gnus-init-file "~/.emacs.d/gnus")
 (require 'nnir)
+;; quit gnus automatically on exit emacs
+(defadvice save-buffers-kill-emacs (before rgb/gnus-exit)
+(gnus-group-exit))
+
+(add-hook 'gnus-started-hook
+(lambda () (ad-activate 'save-buffers-kill-emacs)))
+(add-hook 'gnus-after-exiting-gnus-hook
+(lambda () (ad-deactivate 'save-buffers-kill-emacs)))
 
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
@@ -405,3 +415,4 @@
 ;; abbrev mode
 (setq-default abbrev-mode t)
 (setq save-abbrevs t)
+(put 'upcase-region 'disabled nil)

@@ -21,3 +21,4 @@ SessionDesktop.el
 .mc-lists.el
 elisp/
 viper
+network-security.data

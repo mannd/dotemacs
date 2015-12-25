@@ -6,45 +6,34 @@
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Re: Aquamacs
-;; Aquamacs doesn't load ~/.emacs.d/init.el, just .emacs, which in
-;; my configuration is empty.  Thus in the Aquamacs Preferences.el
-;; file there are these lines:
-;;    (add-to-list 'load-path "~/.emacs.d/")
-;;    (load-library "init")
 ;;
-;; There is some stuff that is broken in non-Aquamacs, and right now
-;; I am avoiding Aquamacs, so need to test for Aquamacs.
-(defun is-aquamacs ()
-  "t if you are running Aquamacs."
-  (interactive)
-  (if (boundp 'aquamacs-version) t nil))
-;;
-;; set up org mode
-;; don't need org package, we're using the git version
-(defvar my-git-directory "~/git")
-;; use latest org-mode documentation
+;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
+;; for org-mode
 (add-to-list 'Info-default-directory-list
 	     (expand-file-name
-	      (concat my-git-directory "/org-mode/doc")))
+	      "~/git/org-mode/doc"))
 ;;
 ;; add bbdb-info file
 (add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-3.1.2/doc")
+;;
+;; override build-in org
+;;
 (package-initialize nil)
 (add-to-list 'load-path
 	     (expand-file-name
-	      (concat my-git-directory "/org-mode/lisp")))
+	      "~/git/org-mode/lisp"))
 (add-to-list 'load-path
 	     (expand-file-name
-	      (concat my-git-directory "/org-mode/contrib/lisp")))
+	      "~/git/org-mode/contrib/lisp"))
 (package-initialize t)
 ;; prevent loading packages twice after init.el is done
 (setq package-enable-at-startup nil)
 ;;
+;; set up org-mode
+;;
 (require 'org)
 (require 'org-checklist)
-;; potentially use org-babel for init file at some point
 (require 'ob-tangle)
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -52,17 +41,17 @@
    (C . t)
    (js . t)
    (java . t)))
-;; I use org-mode for txt files too
+;; file types for org-mode
 (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 ;;
 ;; set up package sources
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;; use-package must be loaded by package system
+;; 
 (require 'use-package)
 ;;
-;; my elisp files from "Writing GNU Emacs Extensions" and others?
 (add-to-list 'load-path "~/.emacs.d/elisp/")
+;; my elisp files from "Writing GNU Emacs Extensions" and others?
 (load-library "extensions")
 ;; the modifystamp and writestamp stuff in Chapt 4 of above
 (require 'timestamp)
@@ -179,12 +168,8 @@
 ;; Show column number
 (column-number-mode t)
 ;;
-;; prevent graphical dialogs which crash emacs in Mac OS, (but
-;; not with Aquamacs)
-(if (not (is-aquamacs))
-    (setq use-dialog-box nil))
-;; use visible-bell
 ;; work around for garbage text with visible with OS X El Capitan
+;; ... and all the bell stuff is annoying anyway
 ;;(setq visible-bell t)
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
@@ -250,7 +235,7 @@
 						  "#android-dev"))))
 ;;
 ;;
-(add-to-list 'load-path (expand-file-name (concat my-git-directory "/markdown-mode")))
+(add-to-list 'load-path (expand-file-name "~/git/markdown-mode"))
 (autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
@@ -404,7 +389,6 @@
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control))))
 ;;
 ;; Proper title capitalization function
-;;
 ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
 (load-library "title-capitalization")
 ;;

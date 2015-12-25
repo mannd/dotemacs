@@ -16,7 +16,9 @@
 	       (nnimap-stream ssl)
 	       (nnir-search-engine imap)))
 (add-to-list 'gnus-secondary-select-methods
-	       '(nntp "news.gmane.org"))
+	     '(nntp "news.gmane.org"))
+
+(setq gnus-agent nil)
 
 
 (setq message-send-mail-function 'smtpmail-send-it
@@ -30,3 +32,5 @@
 
 (setq bbdb-send-mail-style 'gnus)
 
+(setq gnus-move-split-methods
+      '((".*" "[Gmail]/All Mail")))

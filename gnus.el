@@ -8,6 +8,8 @@
 	       (nnimap-address "imap.gmail.com")
 	       (nnimap-server-port 993)
 	       (nnimap-stream ssl)
+	       (nnmail-expiry-target "[Gmail]/Trash")
+	       (nnmail-expiry-wait 2)
 	       (nnir-search-engine imap)))
 (add-to-list 'gnus-secondary-select-methods
        '(nnimap "epstudios"
@@ -17,9 +19,6 @@
 	       (nnir-search-engine imap)))
 (add-to-list 'gnus-secondary-select-methods
 	     '(nntp "news.gmane.org"))
-
-(setq gnus-agent nil)
-
 
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))

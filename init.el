@@ -103,6 +103,9 @@
 			 "~/org/family.org"
 			 "~/org/org.org"))
 ;;
+;; change default iCalendar target (org.ics conflicts with org.org file)
+(setq org-icalendar-combined-agenda-file "~/org/org-calendar.ics")
+(setq org-icalendar-include-todo t)
 ;; For mobile org
 (setq org-mobile-inbox-for-pull "~/org/index.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
@@ -177,8 +180,9 @@
 (savehist-mode t)
 ;;
 ;; provide shortcut registers to files
-(set-register ?e '(file . "~/.emacs.d/init.el")) ; e stands for .emacs
+(set-register ?e '(file . "~/.emacs.d/init.el"))
 (set-register ?i '(file . "~/org/inbox.org"))
+(set-register ?g '(file . "~/.emacs.d/gnus.el"))
 ;;
 ;; set up path for eshell
 (setenv "PATH"

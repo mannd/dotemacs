@@ -404,3 +404,7 @@
 (setq-default abbrev-mode t)
 (setq save-abbrevs t)
 (put 'upcase-region 'disabled nil)
+;;
+;; put time and day in mode-line (good for full screen Emacs)
+(setq display-time-day-and-date t)
+(display-time-mode t)

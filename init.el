@@ -227,8 +227,9 @@
 ;; and M-x eval-buffer
 ;; 
 ;; pick a theme
-(load-theme 'tsdh-light t)
-''(load-theme 'leuven t)
+(load-theme 'wombat t)
+;;(load-theme 'tsdh-light t)
+;;(load-theme 'leuven t)
 ;; IRC
 (use-package erc
 	     :config
@@ -263,7 +264,7 @@
   (info-initialize)
   (add-to-list 'Info-directory-list
 	       "~/git/magit/Documentation/"))
-(global-set-key (kbd "M-m") 'magit-status)
+(global-set-key (kbd "C-x g") 'magit-status)
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
 ;; gnus
@@ -292,7 +293,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (cider js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (olivetti fountain-mode cider js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -408,3 +409,5 @@
 ;; put time and day in mode-line (good for full screen Emacs)
 (setq display-time-day-and-date t)
 (display-time-mode t)
+;; for Fountain Mode
+

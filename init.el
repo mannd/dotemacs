@@ -172,10 +172,14 @@
 (column-number-mode t)
 ;;
 ;; work around for garbage text with visible with OS X El Capitan
-;; ... and all the bell stuff is annoying anyway
-;;(setq visible-bell t)
-(setq visible-bell nil)
-(setq ring-bell-function 'ignore)
+;; HOWEVER< no longer needed, as fixed with an explanation point
+;; in a yellow triangle now
+;; (setq visible-bell nil)
+;; (setq ring-bell-function 'ignore)
+;;
+;; Go ahead and ring the silent bell!
+(setq visible-bell t)
+(setq ring-bell-function t)
 ;; save history
 (savehist-mode t)
 ;;
@@ -241,12 +245,11 @@
 ;;
 ;;
 (add-to-list 'load-path (expand-file-name "~/git/markdown-mode"))
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 (autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-;; FIXME gfm-mode won't load until we are actuall in markdown-mode
-(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 ;;
 ;; multiple cursors (package installed)
 (require 'multiple-cursors)
@@ -338,9 +341,14 @@
 (helm-mode 1)
 
 ;; longitude latitude for sunset/sunrise
-(setq calendar-latitude 48.9)
-(setq calendar-longitude 2.5)
-(setq calendar-location-name "Paris, FR")
+;; Paris, FR
+;; (setq calendar-latitude 48.9)
+;; (setq calendar-longitude 2.5)
+;; (setq calendar-location-name "Paris, FR")
+;; Parker, CO
+(setq calendar-latitude 39.4868360)
+(setq calendar-longitude -104.7450340)
+(setq calendar-location-name "Parker, CO")
 
 
 ;; BBDB
@@ -387,6 +395,7 @@
 (add-to-list 'load-path
 	     (expand-file-name "~/lisp"))
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+(add-to-list 'auto-mode-alist '("\\.dat$" . ledger-mode))
 ;;
 ;; use 'a' to open in current buffer, not create new buffer in dired
 (put 'dired-find-alternate-file 'disabled nil)

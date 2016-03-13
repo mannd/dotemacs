@@ -60,6 +60,7 @@
 (require 'evernote-mode)
 (setq evernote-username "manndmd@gmail.com")
 (setq exec-path (cons "/usr/local/bin" exec-path))
+(setq exec-path (cons "/usr/local/opt/coreutils/libexec/gnubin" exec-path))
 ;; for lein
 (setq exec-path (cons "/Users/mannd/bin" exec-path))
 (require 'w3m)
@@ -207,6 +208,11 @@
 	(concat
 	 "/usr/local/git/bin" ":"
 	 (getenv "PATH")))
+(setenv "PATH"
+	(concat
+	 "/usr/local/opt/coreutils/libexec/gnubin" ":"
+	 (getenv "PATH")))
+
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; problem with emacsclient was invoking wrong emacsclient (/usr/bin/emacsclient)
@@ -296,7 +302,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (olivetti fountain-mode cider js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (dracula-theme olivetti fountain-mode cider js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

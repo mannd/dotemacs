@@ -340,21 +340,26 @@
 ;; (setq ido-everywhere t)
 ;; (ido-mode 1)				
 
-;; trying helm
+;; helm
 (add-to-list 'load-path "~/git/emacs-async")
 (add-to-list 'load-path "~/git/helm")
 (require 'helm-config)
 (helm-mode 1)
+;; recent helm commits eliminates using helm for M-x and C-x C-f
+;; so fix this
+;;(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
 
 ;; longitude latitude for sunset/sunrise
 ;; Paris, FR
-;; (setq calendar-latitude 48.9)
-;; (setq calendar-longitude 2.5)
-;; (setq calendar-location-name "Paris, FR")
+(setq calendar-latitude 48.9)
+(setq calendar-longitude 2.5)
+(setq calendar-location-name "Paris, FR")
 ;; Parker, CO
-(setq calendar-latitude 39.4868360)
-(setq calendar-longitude -104.7450340)
-(setq calendar-location-name "Parker, CO")
+;; (setq calendar-latitude 39.4868360)
+;; (setq calendar-longitude -104.7450340)
+;; (setq calendar-location-name "Parker, CO")
 
 
 ;; BBDB

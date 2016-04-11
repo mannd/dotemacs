@@ -237,8 +237,8 @@
 ;; and M-x eval-buffer
 ;; 
 ;; pick a theme
-(load-theme 'wombat t)
-;;(load-theme 'tsdh-light t)
+;;(load-theme 'wombat t)
+(load-theme 'tsdh-light t)
 ;;(load-theme 'leuven t)
 ;; IRC
 (use-package erc
@@ -302,7 +302,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (dracula-theme olivetti fountain-mode cider js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (htmlize dracula-theme olivetti fountain-mode cider js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -430,4 +430,9 @@
 (setq display-time-day-and-date t)
 (display-time-mode t)
 ;; for Fountain Mode
-
+;;
+;; for mac printing
+(add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
+(when (require 'mac-print-mode nil t)
+  (mac-print-mode 1)
+  (global-set-key (kbd "M-p") 'mac-print-buffer))

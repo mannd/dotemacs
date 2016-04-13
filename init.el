@@ -47,8 +47,16 @@
 ;; set up package sources
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;; 
-(require 'use-package)
+;;
+;; use-package setup
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 ;;
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 ;; my elisp files from "Writing GNU Emacs Extensions" and others?
@@ -325,20 +333,9 @@
     tagedit
     ))					;magit already loaded
 
-;; don't seem to need this
-;; (if (eq system-type 'darwin)
-;;     (add-to-list 'clojure-packages 'exec-path-from-shell))
-
 (dolist (p clojure-packages)
   (when (not (package-installed-p p))
     (package-install p)))
-
-;;;;;;;;;;
-;; ido for org-mode
-;; (setq org-completion-use-ido t)
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-everywhere t)
-;; (ido-mode 1)				
 
 ;; helm
 (add-to-list 'load-path "~/git/emacs-async")
@@ -361,7 +358,6 @@
 ;; (setq calendar-longitude -104.7450340)
 ;; (setq calendar-location-name "Parker, CO")
 
-
 ;; BBDB
 ;;(add-to-list 'load-path "~/.emacs.d/elisp/bbdb-2.35/lisp")
 ;;
@@ -379,23 +375,6 @@
  (lambda ()
    (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
    ))
-;; (setq bbdb-north-american-phone-numbers-p nil)
-;; (setq bbdb-complete-name-full-completion t)
-;; (setq bbdb-completion-type 'primary-or-name)
-;; (setq bbdb-complete-name-allow-cycling t)
-;; (setq
-;;  bbdb-offer-save 1
-;;  bbdb-use-popup t
-;;  bbdb-electric-p t
-;;  bbdb-popup-target-lines 1)
-
-;; objective-c editing
-;; (add-to-list 'magic-mode-alist
-;; 	     `(,(lambda ()
-;; 		  (and (string= (file-name-extension buffer-file-name) "h")
-;; 		       (re-search-forward "@\\<interface\\>"
-;; 					  magic-mode-regexp-match-limit t)))
-;; 	       . objc-mode))
 ;; magit-git-flow
 (require 'magit-gitflow)
 (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)

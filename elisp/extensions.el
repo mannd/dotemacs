@@ -134,3 +134,4 @@
 ;;   (set-window-start nil unscroll-window-start))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Chapter 4 moved to timestamp.el
+(provide 'extensions)

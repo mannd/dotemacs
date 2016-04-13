@@ -6,6 +6,8 @@
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
+(unless noninteractive
+  (message "Loading %s..." load-file-name))
 ;;
 ;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
@@ -49,18 +51,16 @@
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;;
 ;; use-package setup
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
 ;;
 (add-to-list 'load-path "~/.emacs.d/elisp/")
+
 ;; my elisp files from "Writing GNU Emacs Extensions" and others?
-(load-library "extensions")
+(use-package extensions)
+
 ;; the modifystamp and writestamp stuff in Chapt 4 of above
 (require 'timestamp)
 ;; evernote-mode - note requires ruby 1.9.3
@@ -71,9 +71,9 @@
 (setq exec-path (cons "/usr/local/opt/coreutils/libexec/gnubin" exec-path))
 ;; for lein
 (setq exec-path (cons "/Users/mannd/bin" exec-path))
-(require 'w3m)
+;;(require 'w3m)
 (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
-(global-set-key "\C-cec" 'evernote-create-note)
+(global-set-key "\C-cec" #'evernote-create-note)
 (global-set-key "\C-ceo" 'evernote-open-note)
 (global-set-key "\C-ces" 'evernote-search-notes)
 (global-set-key "\C-ceS" 'evernote-do-saved-search)
@@ -296,6 +296,12 @@
 (add-hook 'gnus-after-exiting-gnus-hook
 (lambda () (ad-deactivate 'save-buffers-kill-emacs)))
 
+;; use-package testing
+(use-package olivetti :ensure t :defer t)
+(use-package htmlize :ensure t :defer t)
+(use-package cider :ensure t :defer t)
+(use-package w3m :ensure t :defer t)
+
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -310,7 +316,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (htmlize dracula-theme olivetti fountain-mode cider js3-mode js2-mode writeroom-mode w3m use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -376,16 +382,13 @@
    (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
    ))
 ;; magit-git-flow
-(require 'magit-gitflow)
-(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
-;;
+(use-package magit-gitflow
+  :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+
 ;; ledger
-;;
-(autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
-(add-to-list 'load-path
-	     (expand-file-name "~/lisp"))
-(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
-(add-to-list 'auto-mode-alist '("\\.dat$" . ledger-mode))
+(use-package ledger-mode
+  :load-path "~/lisp"
+  :mode ("\\.ledger$" "\\.dat$"))
 ;;
 ;; use 'a' to open in current buffer, not create new buffer in dired
 (put 'dired-find-alternate-file 'disabled nil)

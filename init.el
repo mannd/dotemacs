@@ -5,35 +5,24 @@
 ;; David Mann
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 (unless noninteractive
   (message "Loading %s..." load-file-name))
-;;
+
 ;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
-;; for org-mode
-(add-to-list 'Info-default-directory-list
-	     (expand-file-name
-	      "~/git/org-mode/doc"))
-;;
-;; add bbdb-info file
+(add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
 (add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-3.1.2/doc")
-;;
+
 ;; override build-in org
-;;
 (package-initialize nil)
-(add-to-list 'load-path
-	     (expand-file-name
-	      "~/git/org-mode/lisp"))
-(add-to-list 'load-path
-	     (expand-file-name
-	      "~/git/org-mode/contrib/lisp"))
+(add-to-list 'load-path "~/git/org-mode/lisp")
+(add-to-list 'load-path "~/git/org-mode/contrib/lisp")
 (package-initialize t)
+
 ;; prevent loading packages twice after init.el is done
 (setq package-enable-at-startup nil)
-;;
+
 ;; set up org-mode
-;;
 (require 'org)
 (require 'org-checklist)
 (require 'ob-tangle)
@@ -45,33 +34,34 @@
    (java . t)))
 ;; file types for org-mode
 (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
-;;
+
 ;; set up package sources
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;;
+
 ;; use-package setup
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
-;;
+
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 
 ;; my elisp files from "Writing GNU Emacs Extensions" and others?
 (use-package extensions)
 
 ;; the modifystamp and writestamp stuff in Chapt 4 of above
-(require 'timestamp)
+(use-package timestamp)
+
+;; for lein
+(setq exec-path (cons "/Users/mannd/bin" exec-path))
+
 ;; evernote-mode - note requires ruby 1.9.3
 (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
 (require 'evernote-mode)
 (setq evernote-username "manndmd@gmail.com")
 (setq exec-path (cons "/usr/local/bin" exec-path))
 (setq exec-path (cons "/usr/local/opt/coreutils/libexec/gnubin" exec-path))
-;; for lein
-(setq exec-path (cons "/Users/mannd/bin" exec-path))
-;;(require 'w3m)
+
 (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
 (global-set-key "\C-cec" #'evernote-create-note)
 (global-set-key "\C-ceo" 'evernote-open-note)
@@ -82,28 +72,22 @@
 (global-set-key "\C-ceb" 'evernote-browser)
 ;; org-evernote can dump evernote notes into org format
 (require 'org-evernote)
-;;
+
 ;; org-mode setup
 ;; Standard org key bindings
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
-;; get to org-agenda faster with function key f12
-(global-set-key (kbd "<f12>") 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-agenda-include-diary t)
 ;; ~/org is a symlink to "~/Dropbox/org" for easy sharing
 (setq org-directory "~/org")
-;;
 ;; I like visual-line-mode as default for text, org
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 ;; we hide stars by default even in buffers where we turn off
-;; org-indent-mode.
 (setq org-hide-leading-stars 'hidestars) ; just one star visible
-;; org-indent-mode will be default, turn it off per file as needed
-;; with #_STARTUP: noindent
 (setq org-startup-indented t)
-;;
+
 ;; agenda files
 (setq org-agenda-files '("~/org/inbox.org"
 			 "~/org/personal.org"
@@ -111,22 +95,23 @@
 			 "~/org/epstudios.org"
 			 "~/org/family.org"
 			 "~/org/org.org"))
-;;
+
 ;; change default iCalendar target (org.ics conflicts with org.org file)
 (setq org-icalendar-combined-agenda-file "~/org/org-calendar.ics")
 (setq org-icalendar-include-todo t)
+
 ;; For mobile org
 (setq org-mobile-inbox-for-pull "~/org/index.org")
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 (setq org-mobile-files org-agenda-files)
-;;
+
 ;; refile targets
 (setq org-refile-targets
       '((org-agenda-files :maxlevel . 2)))
-;;
+
 ;; default tasks/notes/inbox file
 (setq org-default-notes-file "~/org/inbox.org")
-;;
+
 ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
 (setq org-stuck-projects '("+LEVEL=2/-DONE" ("NEXT") nil ""))
 ;; Capture templates
@@ -135,11 +120,12 @@
 	 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
 	("n" "note" entry (file+headline "~/org/inbox.org" "Notes") 
 	 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)))
-;;
+
 ;; experiment with more TODO states
 (setq org-todo-keywords
      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
 	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+
 ;; we'll try making the colors prettier too
 (setq org-todo-keyword-faces
       (quote (("NEXT" :foreground "blue" :weight bold)
@@ -151,20 +137,21 @@
 
 ;; activate org mode speed commands
 (setq org-use-speed-commands t)
-;;
+
 ;; log stuff into drawer
 (setq org-log-done (quote time))
 (setq org-log-into-drawer "LOGBOOK")
 (setq org-clock-into-drawer 1)
-;;
+
 ;; avoid blank lines in org files
 (setq org-cycle-separator-lines 0)
-;;
+
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
-;;
+
 ;; just-one-space makes deletion better
 (setq just-one-space t)
+
 ;; screen stuff
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -179,24 +166,19 @@
 (global-auto-revert-mode t)
 ;; Show column number
 (column-number-mode t)
-;;
-;; work around for garbage text with visible with OS X El Capitan
-;; HOWEVER< no longer needed, as fixed with an explanation point
-;; in a yellow triangle now
-;; (setq visible-bell nil)
-;; (setq ring-bell-function 'ignore)
-;;
+
 ;; Go ahead and ring the silent bell!
 (setq visible-bell t)
 (setq ring-bell-function t)
+
 ;; save history
 (savehist-mode t)
-;;
+
 ;; provide shortcut registers to files
 (set-register ?e '(file . "~/.emacs.d/init.el"))
 (set-register ?i '(file . "~/org/inbox.org"))
 (set-register ?g '(file . "~/.emacs.d/gnus.el"))
-;;
+
 ;; set up path for eshell
 (setenv "PATH"
 	(concat
@@ -232,9 +214,8 @@
 (require 'server)
 (unless (server-running-p)
   (server-start))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Xiki/ruby stuff
+
 ;; set up xiki
-;;
 ;; Use rvm to manage ruby versions
 (add-to-list 'load-path "~/.emacs.d/rvm/")
 (require 'rvm)
@@ -243,11 +224,12 @@
 ;; If you want to play with Xiki, go
 ;; to ~/.emacs.d/elisp/start-xiki.el
 ;; and M-x eval-buffer
-;; 
+
 ;; pick a theme
-;;(load-theme 'wombat t)
 (load-theme 'tsdh-light t)
+;;(load-theme 'wombat t)
 ;;(load-theme 'leuven t)
+
 ;; IRC
 (use-package erc
 	     :config
@@ -256,8 +238,8 @@
 						  "#emacs"
 						  "#android"
 						  "#android-dev"))))
-;;
-;;
+
+
 (add-to-list 'load-path (expand-file-name "~/git/markdown-mode"))
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 (autoload 'markdown-mode "markdown-mode"
@@ -274,6 +256,7 @@
 ;;
 ;; experimentally put some code in an org-babel file
 (org-babel-load-file "~/.emacs.d/dem.org")
+
 ;; Magit
 (add-to-list 'load-path "~/git/magit/lisp")
 (require 'magit)
@@ -282,15 +265,16 @@
   (add-to-list 'Info-directory-list
 	       "~/git/magit/Documentation/"))
 (global-set-key (kbd "C-x g") 'magit-status)
+
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
+
 ;; gnus
 (setq gnus-init-file "~/.emacs.d/gnus")
 (require 'nnir)
 ;; quit gnus automatically on exit emacs
 (defadvice save-buffers-kill-emacs (before rgb/gnus-exit)
 (gnus-group-exit))
-
 (add-hook 'gnus-started-hook
 (lambda () (ad-activate 'save-buffers-kill-emacs)))
 (add-hook 'gnus-after-exiting-gnus-hook
@@ -337,7 +321,7 @@
     smex
     rainbow-delimiters
     tagedit
-    ))					;magit already loaded
+    ))					
 
 (dolist (p clojure-packages)
   (when (not (package-installed-p p))
@@ -356,17 +340,14 @@
 
 ;; longitude latitude for sunset/sunrise
 ;; Paris, FR
-(setq calendar-latitude 48.9)
-(setq calendar-longitude 2.5)
-(setq calendar-location-name "Paris, FR")
+;; (setq calendar-latitude 48.9)
+;; (setq calendar-longitude 2.5)
+;; (setq calendar-location-name "Paris, FR")
 ;; Parker, CO
-;; (setq calendar-latitude 39.4868360)
-;; (setq calendar-longitude -104.7450340)
-;; (setq calendar-location-name "Parker, CO")
+(setq calendar-latitude 39.4868360)
+(setq calendar-longitude -104.7450340)
+(setq calendar-location-name "Parker, CO")
 
-;; BBDB
-;;(add-to-list 'load-path "~/.emacs.d/elisp/bbdb-2.35/lisp")
-;;
 ;; BBDB v3
 (require 'bbdb-loaddefs "~/.emacs.d/elisp/bbdb-3.1.2/lisp/bbdb-loaddefs.el")
 (require 'bbdb)
@@ -381,6 +362,7 @@
  (lambda ()
    (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
    ))
+
 ;; magit-git-flow
 (use-package magit-gitflow
   :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
@@ -389,30 +371,31 @@
 (use-package ledger-mode
   :load-path "~/lisp"
   :mode ("\\.ledger$" "\\.dat$"))
-;;
+
 ;; use 'a' to open in current buffer, not create new buffer in dired
 (put 'dired-find-alternate-file 'disabled nil)
+
 ;; try less jumpy trackpad scrolling
 (setq mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control))))
-;;
+
 ;; Proper title capitalization function
 ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
 (load-library "title-capitalization")
-;;
+
 ;; twittering-mode
-(add-to-list 'load-path "~/git/twittering-mode")
-(require 'twittering-mode)
-(setq twittering-use-master-password t)
+(use-package twittering-mode
+  :config (setq twittering-use-master-password t)
+  :load-path "~/git/twittering-mode/")
+
 ;; abbrev mode
 (setq-default abbrev-mode t)
 (setq save-abbrevs t)
 (put 'upcase-region 'disabled nil)
-;;
+
 ;; put time and day in mode-line (good for full screen Emacs)
 (setq display-time-day-and-date t)
 (display-time-mode t)
-;; for Fountain Mode
-;;
+
 ;; for mac printing
 (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
 (when (require 'mac-print-mode nil t)

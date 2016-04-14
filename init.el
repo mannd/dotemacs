@@ -130,10 +130,7 @@
 (setq org-html-postamble nil)
 
 ;; for lein
-(use-package lein
-  :disabled t
-  :config
-  (setq exec-path (cons "/Users/mannd/bin" exec-path)))
+(setq exec-path (cons "/Users/mannd/bin" exec-path))
 
 ;; evernote-mode - note requires ruby 1.9.3
 (use-package evernote-mode
@@ -219,6 +216,7 @@
 ;; set up xiki
 ;; Use rvm to manage ruby versions
 (use-package rvm
+  :disabled t
   :load-path "~/.emacs.d/rvm/"
   :config 
   (rvm-use-default))

@@ -5,6 +5,8 @@
 ;; David Mann
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defconst emacs-start-time (current-time))
+
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
@@ -17,10 +19,20 @@
 (package-initialize nil)
 (add-to-list 'load-path "~/git/org-mode/lisp")
 (add-to-list 'load-path "~/git/org-mode/contrib/lisp")
+(add-to-list 'load-path "~/.emacs.d/elisp/")
 (package-initialize t)
 
 ;; prevent loading packages twice after init.el is done
 (setq package-enable-at-startup nil)
+
+;; set up package sources
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+
+;; use-package setup
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
 ;; set up org-mode
 (require 'org)
@@ -35,43 +47,11 @@
 ;; file types for org-mode
 (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 
-;; set up package sources
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
-;; use-package setup
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)
-(require 'bind-key)
-
-(add-to-list 'load-path "~/.emacs.d/elisp/")
-
-;; my elisp files from "Writing GNU Emacs Extensions" and others?
+;; my elisp files from "Writing GNU Emacs Extensions"
 (use-package extensions)
-
-;; the modifystamp and writestamp stuff in Chapt 4 of above
 (use-package timestamp)
-
-;; for lein
-(setq exec-path (cons "/Users/mannd/bin" exec-path))
-
-;; evernote-mode - note requires ruby 1.9.3
-(setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
-(require 'evernote-mode)
-(setq evernote-username "manndmd@gmail.com")
-(setq exec-path (cons "/usr/local/bin" exec-path))
-(setq exec-path (cons "/usr/local/opt/coreutils/libexec/gnubin" exec-path))
-
-(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
-(global-set-key "\C-cec" #'evernote-create-note)
-(global-set-key "\C-ceo" 'evernote-open-note)
-(global-set-key "\C-ces" 'evernote-search-notes)
-(global-set-key "\C-ceS" 'evernote-do-saved-search)
-(global-set-key "\C-cew" 'evernote-write-note)
-(global-set-key "\C-cep" 'evernote-post-region)
-(global-set-key "\C-ceb" 'evernote-browser)
-;; org-evernote can dump evernote notes into org format
-(require 'org-evernote)
+;; experimentally put some code in an org-babel file
+(org-babel-load-file "~/.emacs.d/dem.org")
 
 ;; org-mode setup
 ;; Standard org key bindings
@@ -149,10 +129,34 @@
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
 
-;; just-one-space makes deletion better
-(setq just-one-space t)
+;; for lein
+(use-package lein
+  :disabled t
+  :config
+  (setq exec-path (cons "/Users/mannd/bin" exec-path)))
+
+;; evernote-mode - note requires ruby 1.9.3
+(use-package evernote-mode
+  :disabled t
+  :config
+  (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
+  (setq evernote-username "manndmd@gmail.com")
+  (setq exec-path (cons "/usr/local/bin" exec-path))
+  (setq exec-path (cons "/usr/local/opt/coreutils/libexec/gnubin" exec-path))
+  (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
+  (global-set-key "\C-cec" #'evernote-create-note)
+  (global-set-key "\C-ceo" 'evernote-open-note)
+  (global-set-key "\C-ces" 'evernote-search-notes)
+  (global-set-key "\C-ceS" 'evernote-do-saved-search)
+  (global-set-key "\C-cew" 'evernote-write-note)
+  (global-set-key "\C-cep" 'evernote-post-region)
+  (global-set-key "\C-ceb" 'evernote-browser)
+  (use-package org-evernote))
+
 
 ;; screen stuff
+;; just-one-space makes deletion better
+(setq just-one-space t)
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;; but we'll keep menu-bar-mode, since it's up there anyway
@@ -166,11 +170,9 @@
 (global-auto-revert-mode t)
 ;; Show column number
 (column-number-mode t)
-
 ;; Go ahead and ring the silent bell!
 (setq visible-bell t)
 (setq ring-bell-function t)
-
 ;; save history
 (savehist-mode t)
 
@@ -203,13 +205,12 @@
 	 "/usr/local/opt/coreutils/libexec/gnubin" ":"
 	 (getenv "PATH")))
 
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; problem with emacsclient was invoking wrong emacsclient (/usr/bin/emacsclient)
+;; problem with emacsclient was invoking wrong emacsclient
+;; (/usr/bin/emacsclient)
 ;; make sure the emacslient appropriate to the Emacs I am using is used
 (setenv "EDITOR" (expand-file-name "bin/emacsclient" invocation-directory))
-
 ;; "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
+
 ;; set up emacs as server
 (require 'server)
 (unless (server-running-p)
@@ -217,10 +218,10 @@
 
 ;; set up xiki
 ;; Use rvm to manage ruby versions
-(add-to-list 'load-path "~/.emacs.d/rvm/")
-(require 'rvm)
-(rvm-use-default)
-;;
+(use-package rvm
+  :load-path "~/.emacs.d/rvm/"
+  :config 
+  (rvm-use-default))
 ;; If you want to play with Xiki, go
 ;; to ~/.emacs.d/elisp/start-xiki.el
 ;; and M-x eval-buffer
@@ -239,32 +240,32 @@
 						  "#android"
 						  "#android-dev"))))
 
+(use-package markdown-mode
+  :load-path "~/git/markdown-mode"
+  :mode
+  ("\\.md\\'" . markdown-mode)
+  ("\\.markdown\\'" . markdown-mode)
+  ("README\\.md\\'" . gfm-mode))
 
-(add-to-list 'load-path (expand-file-name "~/git/markdown-mode"))
-(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
-(autoload 'markdown-mode "markdown-mode"
-  "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-;;
 ;; multiple cursors (package installed)
-(require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-C") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-;;
-;; experimentally put some code in an org-babel file
-(org-babel-load-file "~/.emacs.d/dem.org")
+(use-package multiple-cursors
+  :init
+  (global-set-key (kbd "C-S-c C-S-C") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
 ;; Magit
-(add-to-list 'load-path "~/git/magit/lisp")
-(require 'magit)
-(with-eval-after-load 'info
-  (info-initialize)
+(use-package magit
+  :load-path "~/git/magit/lisp"
+  :init
+  (use-package magit-gitflow
+    :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+  (global-set-key (kbd "C-x g") 'magit-status)  
+  :config 
   (add-to-list 'Info-directory-list
 	       "~/git/magit/Documentation/"))
-(global-set-key (kbd "C-x g") 'magit-status)
+
 
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")
@@ -300,7 +301,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -328,13 +329,14 @@
     (package-install p)))
 
 ;; helm
-(add-to-list 'load-path "~/git/emacs-async")
-(add-to-list 'load-path "~/git/helm")
-(require 'helm-config)
-(helm-mode 1)
-;; recent helm commits eliminates using helm for M-x and C-x C-f
-;; so fix this
-;;(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+;;(add-to-list 'load-path "~/git/emacs-async")
+(use-package helm-config
+  :demand t
+  :load-path "~/git/helm"
+  :config
+  (use-package helm-mode
+    :init
+    (helm-mode 1)))
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 
@@ -363,10 +365,6 @@
    (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
    ))
 
-;; magit-git-flow
-(use-package magit-gitflow
-  :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
-
 ;; ledger
 (use-package ledger-mode
   :load-path "~/lisp"
@@ -380,7 +378,7 @@
 
 ;; Proper title capitalization function
 ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
-(load-library "title-capitalization")
+(use-package title-capitalization)
 
 ;; twittering-mode
 (use-package twittering-mode
@@ -401,3 +399,17 @@
 (when (require 'mac-print-mode nil t)
   (mac-print-mode 1)
   (global-set-key (kbd "M-p") 'mac-print-buffer))
+
+;; timing
+(when window-system
+  (let ((elapsed (float-time (time-subtract (current-time)
+                                            emacs-start-time))))
+    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
+
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed (float-time (time-subtract (current-time)
+                                                         emacs-start-time))))
+                 (message "Loading %s...done (%.3fs) [after-init]"
+                          ,load-file-name elapsed)))
+            t))

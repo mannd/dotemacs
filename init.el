@@ -129,9 +129,6 @@
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
 
-;; for lein
-(setq exec-path (cons "/Users/mannd/bin" exec-path))
-
 ;; evernote-mode - note requires ruby 1.9.3
 (use-package evernote-mode
   :disabled t
@@ -178,6 +175,7 @@
 (set-register ?i '(file . "~/org/inbox.org"))
 (set-register ?g '(file . "~/.emacs.d/gnus.el"))
 
+;; note on Windows path delimiter is ";"
 ;; set up path for eshell
 (setenv "PATH"
 	(concat
@@ -201,6 +199,12 @@
 	(concat
 	 "/usr/local/opt/coreutils/libexec/gnubin" ":"
 	 (getenv "PATH")))
+
+(setq exec-path (split-string (getenv "PATH") ":"))
+;; for lein
+(setq exec-path (cons "/Users/mannd/bin" exec-path))
+
+
 
 ;; problem with emacsclient was invoking wrong emacsclient
 ;; (/usr/bin/emacsclient)
@@ -299,7 +303,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

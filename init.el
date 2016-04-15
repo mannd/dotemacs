@@ -176,10 +176,13 @@
 (set-register ?g '(file . "~/.emacs.d/gnus.el"))
 
 ;; note on Windows path delimiter is ";"
+(if (eq system-type "windows-nt")
+    (setq DELIM ";")
+  (setq DELIM ":"))
 ;; set up path for eshell
 (setenv "PATH"
 	(concat
-	 "/Users/mannd/bin" ":"
+	 "/Users/mannd/bin" DELIM
 	 (getenv "PATH")))
 (setenv "PATH"
 	(concat
@@ -203,8 +206,6 @@
 (setq exec-path (split-string (getenv "PATH") ":"))
 ;; for lein
 (setq exec-path (cons "/Users/mannd/bin" exec-path))
-
-
 
 ;; problem with emacsclient was invoking wrong emacsclient
 ;; (/usr/bin/emacsclient)
@@ -277,11 +278,11 @@
 (require 'nnir)
 ;; quit gnus automatically on exit emacs
 (defadvice save-buffers-kill-emacs (before rgb/gnus-exit)
-(gnus-group-exit))
+  (gnus-group-exit))
 (add-hook 'gnus-started-hook
-(lambda () (ad-activate 'save-buffers-kill-emacs)))
+	  (lambda () (ad-activate 'save-buffers-kill-emacs)))
 (add-hook 'gnus-after-exiting-gnus-hook
-(lambda () (ad-deactivate 'save-buffers-kill-emacs)))
+	  (lambda () (ad-deactivate 'save-buffers-kill-emacs)))
 
 ;; use-package testing
 (use-package olivetti :ensure t :defer t)
@@ -338,9 +339,10 @@
   :config
   (use-package helm-mode
     :init
-    (helm-mode 1)))
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
+    (helm-mode 1))
+  :init
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "M-x") 'helm-M-x))
 
 ;; longitude latitude for sunset/sunrise
 ;; Paris, FR

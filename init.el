@@ -355,19 +355,22 @@
 (setq calendar-location-name "Parker, CO")
 
 ;; BBDB v3
-(require 'bbdb-loaddefs "~/.emacs.d/elisp/bbdb-3.1.2/lisp/bbdb-loaddefs.el")
-(require 'bbdb)
-(setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
-(bbdb-initialize 'gnus 'message)
-(bbdb-mua-auto-update-init 'gnus 'message)
-(setq bbdb-mua-pop-up-window-size 0.1)
-(setq bbdb-mua-update-interactive-p '(query . create))
-(setq bbdb-message-all-addresses t)
-(add-hook
+(use-package bbdb-loaddefs
+  :load-path "~/.emacs.d/elisp/bbdb-3.1.2/lisp/"
+  :init
+  (use-package bbdb)
+  (add-hook
  'gnus-summary-mode-hook
  (lambda ()
    (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
    ))
+  :config
+  (setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
+  (bbdb-initialize 'gnus 'message)
+  (bbdb-mua-auto-update-init 'gnus 'message)
+  (setq bbdb-mua-pop-up-window-size 0.1)
+  (setq bbdb-mua-update-interactive-p '(query . create))
+  (setq bbdb-message-all-addresses t))
 
 ;; ledger
 (use-package ledger-mode

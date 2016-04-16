@@ -259,12 +259,12 @@
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
+
 ;; Magit
 (use-package magit
 ;  :disabled t
   :load-path "~/git/magit/lisp"
   :init
-  (setenv "GIT_ASKPASS" "/usr/lib/git-core/git-gui--askpass")
   (use-package magit-gitflow
 ;    :disabled t
     :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))

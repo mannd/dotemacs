@@ -20,6 +20,5 @@ games/
 url/
 .DS_Store
 .mc-lists.el
-elisp/
 viper
 network-security.data

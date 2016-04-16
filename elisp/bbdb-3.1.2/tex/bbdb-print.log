@@ -1,0 +1,26 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdftex 2014.5.25)  22 MAR 2015 12:17
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**bbdb-print.tex
+(./bbdb-print.tex)
+*
+(Please type a command or say `\end')
+*\help
+! Undefined control sequence.
+<*> \help
+         
+? ?
+Type <return> to proceed, S to scroll future error messages,
+R to run without stopping, Q to run quietly,
+I to insert something, 
+1 or ... or 9 to ignore the next 1 to 9 tokens of input,
+H for help, X to quit.
+? R
+OK, entering \nonstopmode...
+! Emergency stop.
+<*> \help
+         
+*** (job aborted, no legal \end found)
+
+!  ==> Fatal error occurred, no output PDF file produced!

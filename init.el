@@ -13,7 +13,8 @@
 ;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
 (add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
-(add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-3.1.2/doc")
+;; bbdb v3 info is blank, and for some reason below doesn't work
+;;(add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-2.35/texinfo")
 
 ;; override build-in org
 (package-initialize nil)
@@ -129,9 +130,6 @@
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
 
-;; for lein
-(setq exec-path (cons "/Users/mannd/bin" exec-path))
-
 ;; evernote-mode - note requires ruby 1.9.3
 (use-package evernote-mode
   :disabled t
@@ -178,10 +176,14 @@
 (set-register ?i '(file . "~/org/inbox.org"))
 (set-register ?g '(file . "~/.emacs.d/gnus.el"))
 
+;; note on Windows path delimiter is ";"
+(if (eq system-type "windows-nt")
+    (setq DELIM ";")
+  (setq DELIM ":"))
 ;; set up path for eshell
 (setenv "PATH"
 	(concat
-	 "/Users/mannd/bin" ":"
+	 "/Users/mannd/bin" DELIM
 	 (getenv "PATH")))
 (setenv "PATH"
 	(concat
@@ -201,6 +203,10 @@
 	(concat
 	 "/usr/local/opt/coreutils/libexec/gnubin" ":"
 	 (getenv "PATH")))
+
+(setq exec-path (split-string (getenv "PATH") ":"))
+;; for lein
+(setq exec-path (cons "/Users/mannd/bin" exec-path))
 
 ;; problem with emacsclient was invoking wrong emacsclient
 ;; (/usr/bin/emacsclient)
@@ -276,11 +282,11 @@
 (require 'nnir)
 ;; quit gnus automatically on exit emacs
 (defadvice save-buffers-kill-emacs (before rgb/gnus-exit)
-(gnus-group-exit))
+  (gnus-group-exit))
 (add-hook 'gnus-started-hook
-(lambda () (ad-activate 'save-buffers-kill-emacs)))
+	  (lambda () (ad-activate 'save-buffers-kill-emacs)))
 (add-hook 'gnus-after-exiting-gnus-hook
-(lambda () (ad-deactivate 'save-buffers-kill-emacs)))
+	  (lambda () (ad-deactivate 'save-buffers-kill-emacs)))
 
 ;; use-package testing
 (use-package olivetti :ensure t :defer t)
@@ -302,7 +308,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser exec-path-from-shell debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -337,9 +343,10 @@
   :config
   (use-package helm-mode
     :init
-    (helm-mode 1)))
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
+    (helm-mode 1))
+  :init
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "M-x") 'helm-M-x))
 
 ;; longitude latitude for sunset/sunrise
 ;; Paris, FR
@@ -352,19 +359,22 @@
 (setq calendar-location-name "Parker, CO")
 
 ;; BBDB v3
-(require 'bbdb-loaddefs "~/.emacs.d/elisp/bbdb-3.1.2/lisp/bbdb-loaddefs.el")
-(require 'bbdb)
-(setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
-(bbdb-initialize 'gnus 'message)
-(bbdb-mua-auto-update-init 'gnus 'message)
-(setq bbdb-mua-pop-up-window-size 0.1)
-(setq bbdb-mua-update-interactive-p '(query . create))
-(setq bbdb-message-all-addresses t)
-(add-hook
+(use-package bbdb-loaddefs
+  :load-path "~/.emacs.d/elisp/bbdb-3.1.2/lisp/"
+  :init
+  (use-package bbdb)
+  (add-hook
  'gnus-summary-mode-hook
  (lambda ()
    (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
    ))
+  :config
+  (setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
+  (bbdb-initialize 'gnus 'message)
+  (bbdb-mua-auto-update-init 'gnus 'message)
+  (setq bbdb-mua-pop-up-window-size 0.1)
+  (setq bbdb-mua-update-interactive-p '(query . create))
+  (setq bbdb-message-all-addresses t))
 
 ;; ledger
 (use-package ledger-mode

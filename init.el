@@ -176,9 +176,9 @@
 (set-register ?i '(file . "~/org/inbox.org"))
 (set-register ?g '(file . "~/.emacs.d/gnus.el"))
 
-;; note on Windows path delimiter is ";"
+;; note on Windows path delimiter is ";", but not with MSYS
 (if (eq system-type "windows-nt")
-    (setq DELIM ";")
+    (setq DELIM ":")
   (setq DELIM ":"))
 ;; set up path for eshel
 (setenv "PATH"
@@ -204,7 +204,7 @@
 	 "/usr/local/opt/coreutils/libexec/gnubin" ":"
 	 (getenv "PATH")))
 
-(setq exec-path (split-string (getenv "PATH") ":"))
+;;(setq exec-path (split-string (getenv "PATH") ":"))
 ;; for lein
 (setq exec-path (cons "/Users/mannd/bin" exec-path))
 
@@ -261,11 +261,11 @@
 
 ;; Magit
 (use-package magit
-  :disabled nil
+;  :disabled t
   :load-path "~/git/magit/lisp"
   :init
   (use-package magit-gitflow
-    :disabled t
+;    :disabled t
     :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
   (use-package with-editor
     :load-path "~/git/with-editor")

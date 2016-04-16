@@ -180,7 +180,7 @@
 (if (eq system-type "windows-nt")
     (setq DELIM ";")
   (setq DELIM ":"))
-;; set up path for eshell
+;; set up path for eshel
 (setenv "PATH"
 	(concat
 	 "/Users/mannd/bin" DELIM
@@ -261,6 +261,7 @@
 
 ;; Magit
 (use-package magit
+  :disabled nil
   :load-path "~/git/magit/lisp"
   :init
   (use-package magit-gitflow
@@ -269,9 +270,11 @@
   (use-package with-editor
     :load-path "~/git/with-editor")
   (global-set-key (kbd "C-x g") 'magit-status)  
-  :config 
-  (add-to-list 'Info-directory-list
-	       "~/git/magit/Documentation/"))
+  :config
+  (with-eval-after-load 'info
+    (info-initialize)
+    (add-to-list 'Info-directory-list
+	       "~/git/magit/Documentation/")))
 
 
 ;; ispell
@@ -393,6 +396,7 @@
 
 ;; twittering-mode
 (use-package twittering-mode
+  :disabled t
   :config (setq twittering-use-master-password t)
   :load-path "~/git/twittering-mode/")
 

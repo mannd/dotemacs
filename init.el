@@ -13,7 +13,8 @@
 ;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
 (add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
-(add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-3.1.2/doc")
+;; bbdb v3 info is blank, and for some reason below doesn't work
+;;(add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-2.35/texinfo")
 
 ;; override build-in org
 (package-initialize nil)

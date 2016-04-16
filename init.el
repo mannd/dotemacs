@@ -258,7 +258,10 @@
   :load-path "~/git/magit/lisp"
   :init
   (use-package magit-gitflow
+    :disabled t
     :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+  (use-package with-editor
+    :load-path "~/git/with-editor")
   (global-set-key (kbd "C-x g") 'magit-status)  
   :config 
   (add-to-list 'Info-directory-list

@@ -205,6 +205,7 @@
 	 (getenv "PATH")))
 
 ;;(setq exec-path (split-string (getenv "PATH") ":"))
+(setq exec-path (cons "/usr/local/bin" exec-path))
 ;; for lein
 (setq exec-path (cons "/Users/mannd/bin" exec-path))
 
@@ -397,7 +398,7 @@
 
 ;; twittering-mode
 (use-package twittering-mode
-  :disabled t
+;  :disabled t
   :config (setq twittering-use-master-password t)
   :load-path "~/git/twittering-mode/")
 

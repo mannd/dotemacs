@@ -2,7 +2,7 @@
 ;;
 ;; ~/.emacs.d/init.el
 ;; This is the Emacs init file after declaring .emacs bandkruptcy
-;; David Mann
+;; David Mann ,
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defconst emacs-start-time (current-time))

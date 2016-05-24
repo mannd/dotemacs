@@ -433,4 +433,6 @@
 (progn
   (info-initialize)
   (add-to-list 'Info-additional-directory-list "~/git/org-mode/doc")
-  (add-to-list 'Info-additional-directory-list "C:/Users/mannd/bin/emacs-24.5-bin-i686-mingw32/share/info")))
+  (add-to-list 'Info-additional-directory-list "C:/Users/mannd/bin/emacs-24.5-bin-i686-mingw32/share/info")
+  (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-12"))
+  (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))

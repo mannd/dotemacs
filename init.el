@@ -313,7 +313,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -430,3 +430,42 @@
                  (message "Loading %s...done (%.3fs) [after-init]"
                           ,load-file-name elapsed)))
             t))
+
+;; required for below
+(use-package frame-cmds
+  :ensure t)
+;; weather from wttr.in
+(use-package wttrin
+  :ensure t
+  :commands (wttrin)
+  :init
+  (setq wttrin-default-cities '("Parker")))
+;; from Pragmatic Emacs -- to widen frame
+;; from http://pragmaticemacs.com/emacs/weather-in-emacs/
+;;advise wttrin to save frame arrangement
+;;requires frame-cmds package
+(defun bjm/wttrin-save-frame ()
+  "Save frame and window configuration and then expand frame for wttrin."
+  ;;save window arrangement to a register
+  (window-configuration-to-register :pre-wttrin)
+  (delete-other-windows)
+  ;;save frame setup and resize
+  (save-frame-config)
+  (set-frame-width (selected-frame) 130)
+  (set-frame-height (selected-frame) 48)
+  )
+(advice-add 'wttrin :before #'bjm/wttrin-save-frame)
+
+(defun bjm/wttrin-restore-frame ()
+  "Restore frame and window configuration saved prior to launching wttrin."
+  (interactive)
+  (jump-to-frame-config-register)
+  (jump-to-register :pre-wttrin)
+  )
+(advice-add 'wttrin-exit :after #'bjm/wttrin-restore-frame)
+
+;; Zen-burn
+(use-package zenburn-theme
+  :ensure t
+  :config
+  (load-theme 'zenburn t))

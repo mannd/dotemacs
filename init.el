@@ -13,8 +13,6 @@
 ;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
 (add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
-;; bbdb v3 info is blank, and for some reason below doesn't work
-;;(add-to-list 'Info-default-directory-list "~/.emacs.d/elisp/bbdb-2.35/texinfo")
 
 ;; override build-in org
 (package-initialize nil)
@@ -271,12 +269,12 @@
     :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
   (use-package with-editor
     :load-path "~/git/with-editor")
-  (global-set-key (kbd "C-x g") 'magit-status)  
+  (global-set-key (kbd "C-x g") 'magit-status)
   :config
   (with-eval-after-load 'info
     (info-initialize)
-    (add-to-list 'Info-directory-list
-	       "~/git/magit/Documentation/")))
+    (add-to-list 'Info-additional-directory-list
+  	       "~/git/magit/Documentation/")))
 
 
 ;; ispell
@@ -469,3 +467,12 @@
   :ensure t
   :config
   (load-theme 'zenburn t))
+
+(if (eq system-type 'windows-nt)
+(progn
+  (info-initialize)
+  (add-to-list 'Info-additional-directory-list "~/git/org-mode/doc")
+  (add-to-list 'Info-additional-directory-list "C:/Users/mannd/bin/emacs-24.5-bin-i686-mingw32/share/info")
+  (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-12"))
+  (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))
+

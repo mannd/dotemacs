@@ -508,3 +508,11 @@
   (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-12"))
   (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))
 
+;; Hydra
+(use-package hydra
+  :load-path "~/git/hydra")
+
+(defhydra hyrdra-zoom (global-map "<f2>")
+  "zoom"
+  ("g" text-scale-increase "in")
+  ("l" text-scale-decrease "out"))

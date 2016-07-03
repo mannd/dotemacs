@@ -230,7 +230,7 @@
 ;; and M-x eval-buffer
 
 ;; pick a theme
-(load-theme 'tsdh-light t)
+;;(load-theme 'tsdh-light t)
 ;;(load-theme 'wombat t)
 ;;(load-theme 'leuven t)
 
@@ -516,3 +516,6 @@
   "zoom"
   ("g" text-scale-increase "in")
   ("l" text-scale-decrease "out"))
+
+;; Common Lisp
+(setq inferior-lisp-program "clisp")

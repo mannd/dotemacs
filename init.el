@@ -2,7 +2,7 @@
 ;;
 ;; ~/.emacs.d/init.el
 ;; This is the Emacs init file after declaring .emacs bandkruptcy
-;; David Mann ,
+;; David Mann
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defconst emacs-start-time (current-time))
@@ -128,14 +128,14 @@
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
 
-;; evernote-mode - note requires ruby 1.9.3
+;; evernote-mode - note requires ruby 1.9.3 (or later??)
+;; disabled
 (use-package evernote-mode
   :disabled t
   :config
   (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
   (setq evernote-username "manndmd@gmail.com")
   (setq exec-path (cons "/usr/local/bin" exec-path))
-  (setq exec-path (cons "/usr/local/opt/coreutils/libexec/gnubin" exec-path))
   (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
   (global-set-key "\C-cec" #'evernote-create-note)
   (global-set-key "\C-ceo" 'evernote-open-note)
@@ -174,39 +174,6 @@
 (set-register ?i '(file . "~/org/inbox.org"))
 (set-register ?g '(file . "~/.emacs.d/gnus.el"))
 
-;; note on Windows path delimiter is ";", but not with MSYS
-(if (eq system-type "windows-nt")
-    (setq DELIM ":")
-  (setq DELIM ":"))
-;; set up path for eshel
-(setenv "PATH"
-	(concat
-	 "/Users/mannd/bin" DELIM
-	 (getenv "PATH")))
-(setenv "PATH"
-	(concat
-	 "/usr/local/bin" ":"
-	 (getenv "PATH")))
-;; need this so that emacs finds latex programs
-(setenv "PATH"
-	(concat
-	 "/usr/texbin" ":"
-	 (getenv "PATH")))
-;; use git in /usr/local/git/bin for eshell
-(setenv "PATH"
-	(concat
-	 "/usr/local/git/bin" ":"
-	 (getenv "PATH")))
-(setenv "PATH"
-	(concat
-	 "/usr/local/opt/coreutils/libexec/gnubin" ":"
-	 (getenv "PATH")))
-
-;;(setq exec-path (split-string (getenv "PATH") ":"))
-(setq exec-path (cons "/usr/local/bin" exec-path))
-;; for lein
-(setq exec-path (cons "/Users/mannd/bin" exec-path))
-
 ;; problem with emacsclient was invoking wrong emacsclient
 ;; (/usr/bin/emacsclient)
 ;; make sure the emacslient appropriate to the Emacs I am using is used
@@ -243,6 +210,7 @@
 						  "#android"
 						  "#android-dev"))))
 
+;; markdown-mode
 (use-package markdown-mode
   :load-path "~/git/markdown-mode"
   :mode
@@ -257,7 +225,6 @@
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
-
 
 ;; Magit
 (use-package magit
@@ -291,12 +258,14 @@
 (add-hook 'gnus-after-exiting-gnus-hook
 	  (lambda () (ad-deactivate 'save-buffers-kill-emacs)))
 
-;; use-package testing
+;; some use-package stuff
 (use-package olivetti :ensure t :defer t)
 (use-package htmlize :ensure t :defer t)
 (use-package cider :ensure t :defer t)
 (use-package w3m :ensure t :defer t)
 
+;; UGH -- need to change custom file and use-package all
+;; this stuff!
 ;; stuff below added by Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -320,7 +289,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
@@ -354,6 +323,8 @@
 (put 'narrow-to-region 'disabled nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 ;; Clojure stuff taken from https://github.com/flyingmachine/emacs-for-clojure/blob/master/init.el
 
 (defvar clojure-packages
@@ -446,23 +417,10 @@
   (mac-print-mode 1)
   (global-set-key (kbd "M-p") 'mac-print-buffer))
 
-;; timing
-(when window-system
-  (let ((elapsed (float-time (time-subtract (current-time)
-                                            emacs-start-time))))
-    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
-
-  (add-hook 'after-init-hook
-            `(lambda ()
-               (let ((elapsed (float-time (time-subtract (current-time)
-                                                         emacs-start-time))))
-                 (message "Loading %s...done (%.3fs) [after-init]"
-                          ,load-file-name elapsed)))
-            t))
-
 ;; required for below
 (use-package frame-cmds
   :ensure t)
+
 ;; weather from wttr.in
 (use-package wttrin
   :ensure t
@@ -519,3 +477,43 @@
 
 ;; Common Lisp
 (setq inferior-lisp-program "clisp")
+
+;; xcode-mode -- doesn't work with Xcode 8 yet
+;; (use-package xcode-mode
+;;     :load-path "~/git/xcode-mode"
+;;    :ensure t)
+
+;; new and improved way to make PATH and exec-path match bash config
+;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
+;; it looks like it would prefer using .profile, so below I
+;; disable the error message that occurs.
+(use-package exec-path-from-shell
+  :ensure t
+  :init
+  (setq exec-path-from-shell-check-startup-files nil)
+  :config
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
+
+
+;; this package needed to make rvm work in Emacs
+(use-package rvm
+  :ensure t
+  :config
+  (rvm-use-default))
+
+;; timing
+;; THIS NEEDS TO BE LAST IN init.el
+(when window-system
+  (let ((elapsed (float-time (time-subtract (current-time)
+                                            emacs-start-time))))
+    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
+
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed (float-time (time-subtract (current-time)
+                                                         emacs-start-time))))
+                 (message "Loading %s...done (%.3fs) [after-init]"
+                          ,load-file-name elapsed)))
+            t))
+

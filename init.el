@@ -226,7 +226,6 @@
 
 ;; Magit
 (use-package magit
-;  :disabled t
   :load-path "~/git/magit/lisp"
   :init
   (use-package magit-gitflow

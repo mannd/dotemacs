@@ -1,5 +1,3 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 ;; ~/.emacs.d/init.el
 ;; This is the Emacs init file after declaring .emacs bandkruptcy
 ;; David Mann
@@ -94,10 +92,10 @@
 ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
 (setq org-stuck-projects '("+LEVEL=2/-DONE" ("NEXT") nil ""))
 ;; Capture templates
-(setq org-capture-templates 
-      '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks") 
+(setq org-capture-templates
+      '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
 	 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-	("n" "note" entry (file+headline "~/org/inbox.org" "Notes") 
+	("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
 	 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)))
 
 ;; experiment with more TODO states
@@ -190,7 +188,7 @@
 (use-package rvm
   :disabled t
   :load-path "~/.emacs.d/rvm/"
-  :config 
+  :config
   (rvm-use-default))
 ;; If you want to play with Xiki, go
 ;; to ~/.emacs.d/elisp/start-xiki.el
@@ -289,7 +287,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(send-mail-function (quote mailclient-send-it))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
@@ -334,8 +332,7 @@
     smex
     rainbow-delimiters
     tagedit
-    ))					
-
+    ))
 (dolist (p clojure-packages)
   (when (not (package-installed-p p))
     (package-install p)))
@@ -502,6 +499,41 @@
   :config
   (rvm-use-default))
 
+;; compile buffer scrolls
+(setq compilation-scroll-output t)
+
+;; yasnippet
+(use-package yasnippet
+  :load-path "~/git/yasnippet"
+  :config
+  (yas-global-mode 1))
+
+;; company-sourcekit for Swift programming
+(use-package company-sourcekit
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-sourcekit))
+
+;; xcode documentation -- Doesn't work
+;; (use-package xcode-document-viewer
+;;   :load-path "~/git/emacs-xcode-document-viewer"
+;;   :init
+;;   (use-package anything
+;;     :ensure t)
+;;   :config
+;;   (setq xcdoc:document-path "/Applications/Xcode.app/Contents/Developer/Documentation/DocSets/com.apple.adc.documentation.docset")
+;;   (setq xcdoc:open-w3m-other-buffer t))
+
+;; flycheck
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode)
+  :config
+  (add-to-list 'flycheck-checkers 'swift)
+  (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; timing
 ;; THIS NEEDS TO BE LAST IN init.el
 (when window-system
@@ -516,4 +548,6 @@
                  (message "Loading %s...done (%.3fs) [after-init]"
                           ,load-file-name elapsed)))
             t))
+
+;;; init ends here
 

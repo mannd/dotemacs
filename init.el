@@ -14,8 +14,8 @@
 
 ;; override build-in org
 (package-initialize nil)
-(add-to-list 'load-path "~/git/org-mode/lisp")
-(add-to-list 'load-path "~/git/org-mode/contrib/lisp")
+(add-to-list 'load-path "~/git/org-mode/lisp/")
+(add-to-list 'load-path "~/git/org-mode/contrib/lisp/")
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 (package-initialize t)
 
@@ -524,13 +524,15 @@
 ;;   (setq xcdoc:open-w3m-other-buffer t))
 
 ;; flycheck
+;; note that flycheck C-c ! conflicts with org-mode
 (use-package flycheck
   :ensure t
   :init
   (global-flycheck-mode)
   :config
   (add-to-list 'flycheck-checkers 'swift)
-  (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"))
+  (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
+  (define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; timing

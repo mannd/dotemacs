@@ -534,6 +534,11 @@
   (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
   (define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
 
+;; fix for yas-snippet breaking term-mode TABS
+;; see https://github.com/joaotavora/yasnippet/issues/289
+(add-hook 'term-mode-hook (lambda()
+			    (yas-minor-mode -1)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; timing
 ;; THIS NEEDS TO BE LAST IN init.el

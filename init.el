@@ -274,7 +274,7 @@
  '(canlock-password "f2adf01a9191e9787b0182f97eae18d118ae43d9")
  '(custom-safe-themes
    (quote
-    ("40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" default)))
+    ("427fed191e7a766152e59ef0e2904283f436dbbe259b9ccc04989f3acde50a55" "cc210a8d0cc72968e7c8516c9c7bd5043cc47199755abc5c23cb295a6e715d35" "40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" default)))
  '(evernote-developer-token
    "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b")
  '(fci-rule-color "#383838")
@@ -286,7 +286,8 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(send-mail-function (quote mailclient-send-it))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
@@ -538,6 +539,25 @@
 ;; see https://github.com/joaotavora/yasnippet/issues/289
 (add-hook 'term-mode-hook (lambda()
 			    (yas-minor-mode -1)))
+
+;; swift-mode to use company-mode by default
+(add-hook 'swift-mode-hook (lambda()
+			     (company-mode t)))
+
+;; flycheck-swift
+;; (use-package flycheck-swift
+;;   :load-path "~/git/flycheck-swift"
+;;   :config
+;;   (eval-after-load 'flycheck '(flycheck-swift-setup)))
+
+;; projectile
+(use-package projectile
+  :ensure t)
+
+(use-package helm-projectile
+  :ensure t
+  :config
+  (helm-projectile-on))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; timing

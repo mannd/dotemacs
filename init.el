@@ -23,7 +23,7 @@
 (setq package-enable-at-startup nil)
 
 ;; set up package sources
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;; use-package setup
 (eval-when-compile
@@ -558,6 +558,10 @@
   :ensure t
   :config
   (helm-projectile-on))
+
+;; send deleted files to trash
+(setq delete-by-moving-to-trash t)
+(setq trash-directory "~/.Trash")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; timing

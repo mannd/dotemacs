@@ -19,6 +19,8 @@
 	       (nnir-search-engine imap)))
 (add-to-list 'gnus-secondary-select-methods
 	     '(nntp "news.gmane.org"))
+(add-to-list 'gnus-secondary-select-methods
+	     '(nntp "news.gwene.org"))
 
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
@@ -33,3 +35,5 @@
 
 (setq gnus-move-split-methods
       '((".*" "[Gmail]/All Mail")))
+
+(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)

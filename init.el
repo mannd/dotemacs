@@ -35,6 +35,7 @@
 (require 'org)
 (require 'org-checklist)
 (require 'ob-tangle)
+(require 'org-drill)
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
@@ -198,6 +199,7 @@
 ;;(load-theme 'tsdh-light t)
 ;;(load-theme 'wombat t)
 ;;(load-theme 'leuven t)
+(load-theme 'dracula t)
 
 ;; IRC
 (use-package erc
@@ -226,6 +228,7 @@
 
 ;; Magit
 (use-package magit
+;  :disabled t
   :load-path "~/git/magit/lisp"
   :init
   (use-package magit-gitflow
@@ -274,10 +277,11 @@
  '(canlock-password "f2adf01a9191e9787b0182f97eae18d118ae43d9")
  '(custom-safe-themes
    (quote
-    ("427fed191e7a766152e59ef0e2904283f436dbbe259b9ccc04989f3acde50a55" "cc210a8d0cc72968e7c8516c9c7bd5043cc47199755abc5c23cb295a6e715d35" "40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" default)))
+    ("0e219d63550634bc5b0c214aced55eb9528640377daf486e13fb18a32bf39856" "427fed191e7a766152e59ef0e2904283f436dbbe259b9ccc04989f3acde50a55" "cc210a8d0cc72968e7c8516c9c7bd5043cc47199755abc5c23cb295a6e715d35" "40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" default)))
  '(evernote-developer-token
    "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b")
  '(fci-rule-color "#383838")
+ '(line-number-mode nil)
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
@@ -286,7 +290,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (dash with-editor litable graphviz-dot-mode helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(send-mail-function (quote mailclient-send-it))
  '(vc-annotate-background "#2B2B2B")
@@ -450,10 +454,10 @@
 
 ;; Zen-burn
 (use-package zenburn-theme
-;  :disabled t
+  :disabled nil
   :ensure t
   :config
-  (load-theme 'zenburn t))
+  (load-theme 'zenburn t t))		;not enabled
 
 (if (eq system-type 'windows-nt)
 (progn
@@ -552,7 +556,9 @@
 
 ;; projectile
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :config
+  (projectile-global-mode))
 
 (use-package helm-projectile
   :ensure t
@@ -562,6 +568,10 @@
 ;; send deleted files to trash
 (setq delete-by-moving-to-trash t)
 (setq trash-directory "~/.Trash")
+
+;; graphviz dot mode
+(use-package graphviz-dot-mode
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; timing

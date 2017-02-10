@@ -2,25 +2,33 @@
 ;; This is the Emacs init file after declaring .emacs bandkruptcy
 ;; David Mann
 ;; 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Code:
+
 (defconst emacs-start-time (current-time))
 
 (unless noninteractive
   (message "Loading %s..." load-file-name))
+
+;; below suppresses flycheck errors
+(setq-default flycheck-emacs-lisp-load-path 'inherit)
+;;(setq-default flycheck-emacs-lisp-initialize-packages t)
 
 ;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
 (add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
 
 ;; override build-in org
-(package-initialize nil)
-(add-to-list 'load-path "~/git/org-mode/lisp/")
-(add-to-list 'load-path "~/git/org-mode/contrib/lisp/")
+(package-initialize)
+(add-to-list 'load-path "~/git/org-mode/lisp")
+(add-to-list 'load-path  "~/git/org-mode/contrib/lisp")
 (add-to-list 'load-path "~/.emacs.d/elisp/")
-(package-initialize t)
+;(package-initialize t)
 
 ;; prevent loading packages twice after init.el is done
 (setq package-enable-at-startup nil)
+
+(setq user-full-name "David Mann, MD"
+      user-mail-address "manndmd@gmail.com")
 
 ;; set up package sources
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -36,6 +44,7 @@
 (require 'org-checklist)
 (require 'ob-tangle)
 (require 'org-drill)
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
@@ -102,7 +111,7 @@
 ;; experiment with more TODO states
 (setq org-todo-keywords
      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+	(seflycheck-emacs-lisp-initialize-packagesquence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
 ;; we'll try making the colors prettier too
 (setq org-todo-keyword-faces

@@ -252,6 +252,12 @@
     (add-to-list 'Info-additional-directory-list
   	       "~/git/magit/Documentation/")))
 
+;; Magithub
+(use-package magithub
+;  :disabled t
+  :load-path "~/git/magithub"
+  :after magit
+  :config (magithub-feature-autoinject t))
 
 ;; ispell
 (setq ispell-program-name "/usr/local/bin/ispell")

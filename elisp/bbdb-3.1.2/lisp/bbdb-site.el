@@ -24,7 +24,7 @@
 (if (< emacs-major-version 23)
   (error "BBDB %s requires GNU Emacs 23 or later" bbdb-version))
 
-(defconst bbdb-version-date "2015-02-28 20:09:09 -0600"
+(defconst bbdb-version-date "2017-02-11 20:13:43 -0700"
   "Version date of BBDB.")
 
 (defcustom bbdb-print-tex-path '("/usr/local/share/bbdb")

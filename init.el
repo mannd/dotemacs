@@ -17,7 +17,7 @@
 ;; seems like this needs to come early, or is overriden by Info-directory-list
 (add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
 
-;; override build-in org
+;; override built-in org
 (package-initialize)
 (add-to-list 'load-path "~/git/org-mode/lisp")
 (add-to-list 'load-path  "~/git/org-mode/contrib/lisp")
@@ -104,9 +104,9 @@
 ;; Capture templates
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
-	 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+	 "* TODO %?\n%U\n%a\n")
 	("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
-	 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)))
+	 "* %? :NOTE:\n%U\n%a\n")))
 
 ;; experiment with more TODO states
 (setq org-todo-keywords
@@ -208,7 +208,8 @@
 ;;(load-theme 'tsdh-light t)
 ;;(load-theme 'wombat t)
 ;;(load-theme 'leuven t)
-(load-theme 'dracula t)
+;;(load-theme 'dracula t)
+(load-theme 'light-blue t)
 
 ;; IRC
 (use-package erc
@@ -273,6 +274,16 @@
 (add-hook 'gnus-after-exiting-gnus-hook
 	  (lambda () (ad-deactivate 'save-buffers-kill-emacs)))
 
+;; change gnus gmail links to All Mail links when tasks
+;; must use org-capture for this to work
+(defun dem/replace()
+  (interactive)
+  (goto-char 1)
+  (setq-local search-invisible t)
+  (replace-string "gnus:INBOX" "gnus:%5BGmail%5D/All%20Mail"))
+
+(add-hook 'org-capture-prepare-finalize-hook 'dem/replace)
+
 ;; some use-package stuff
 (use-package olivetti :ensure t :defer t)
 (use-package htmlize :ensure t :defer t)
@@ -305,7 +316,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (dash with-editor litable graphviz-dot-mode helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser debbugs color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
+    (with-editor litable graphviz-dot-mode helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser color-theme clojure-mode-extra-font-locking bbdb-vcard bbdb-csv-import)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(send-mail-function (quote mailclient-send-it))
  '(vc-annotate-background "#2B2B2B")
@@ -491,6 +502,9 @@
   ("g" text-scale-increase "in")
   ("l" text-scale-decrease "out"))
 
+;; iBuffer is better
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
 ;; Common Lisp
 (setq inferior-lisp-program "clisp")
 
@@ -584,9 +598,21 @@
 (setq delete-by-moving-to-trash t)
 (setq trash-directory "~/.Trash")
 
+;; try improving scrolling with trackpad
+(setq mouse-wheel-progressive-speed nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control) . nil)))
+
 ;; graphviz dot mode
 (use-package graphviz-dot-mode
   :ensure t)
+
+;; figure out if .h files are C or Objective C
+;; (add-to-list 'magic-mode-alist
+;; 	     `(,(lambda ()
+;; 		  (and (string= (file-name-extension buffer-file-name) "h")
+;; 		       (re-search-forward "@\\<interface\\>" 
+;; 					  magic-mode-regexp-match-limit t)))
+;; 	       . objc-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; timing

@@ -960,8 +960,8 @@ Do not call this in your init file.  Use `bbdb-initialize'.
 
 ;;;***
 
-;;;### (autoloads nil nil ("bbdb-pkg.el" "bbdb-site.el") (21774 35594
-;;;;;;  746257 0))
+;;;### (autoloads nil nil ("bbdb-pkg.el" "bbdb-site.el") (22712 31951
+;;;;;;  782924 0))
 
 ;;;***
 

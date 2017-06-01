@@ -101,7 +101,8 @@
 (setq org-default-notes-file "~/org/inbox.org")
 
 ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
-(setq org-stuck-projects '("+LEVEL=2/-DONE" ("NEXT") nil ""))
+(setq org-stuck-projects '("+project/-DONE" ("NEXT") nil ""))
+(setq org-tags-exclude-from-inheritance '("project"))
 ;; Capture templates
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")

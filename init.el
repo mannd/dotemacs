@@ -101,7 +101,7 @@
 (setq org-default-notes-file "~/org/inbox.org")
 
 ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
-(setq org-stuck-projects '("+project/-DONE" ("NEXT") nil ""))
+(setq org-stuck-projects '("+project/-DONE-CANCELLED" ("NEXT") nil ""))
 (setq org-tags-exclude-from-inheritance '("project"))
 ;; Capture templates
 (setq org-capture-templates
@@ -338,6 +338,13 @@
 (setq calendar-latitude 39.4868360)
 (setq calendar-longitude -104.7450340)
 (setq calendar-location-name "Parker, CO")
+
+;; try calfw calendar
+(use-package calfw
+  :load-path "~/git/emacs-calfw"
+  :init
+  (use-package calfw-org))
+
 
 ;; BBDB v3
 (use-package bbdb-loaddefs

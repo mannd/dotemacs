@@ -36,8 +36,8 @@
   (interactive)
   (scroll-behind (prefix-numeric-value n)))
 
-(global-set-key (kbd "\M-p") 'scroll-n-lines-behind)
-(global-set-key (kbd "\M-n") 'scroll-n-lines-ahead)
+(global-set-key (kbd "M-p") 'scroll-n-lines-behind)
+(global-set-key (kbd "M-n") 'scroll-n-lines-ahead)
 
 ;; (global-set-key (kbd "\C-x q") 'quoted-insert)
 ;; (defun point-to-top ()

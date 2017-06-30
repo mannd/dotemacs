@@ -398,8 +398,8 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
 (when (require 'mac-print-mode nil t)
   (mac-print-mode 1)
-  (global-set-key (kbd "M-p") 'mac-print-buffer))
-
+  ;; (global-set-key (kbd "M-p") 'mac-print-buffer))
+)
 ;; required for below
 (use-package frame-cmds
   :ensure t)

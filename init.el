@@ -560,10 +560,16 @@
 
 ;; auctex
 (use-package tex-mode
-  :ensure auctex)
+  :ensure t)
+
+
 
 ;; graphviz dot mode
 (use-package graphviz-dot-mode
+  :ensure t)
+
+;; play with evil mode
+(use-package evil
   :ensure t)
 
 ;; figure out if .h files are C or Objective C

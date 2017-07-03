@@ -400,7 +400,7 @@
   (mac-print-mode 1)
   ;; (global-set-key (kbd "M-p") 'mac-print-buffer))
 )
-;; required for below
+;; REQUIRED for below
 (use-package frame-cmds
   :ensure t)
 
@@ -570,7 +570,15 @@
 
 ;; play with evil mode
 (use-package evil
-  :ensure t)
+  :ensure t
+  :config
+  ;; Make movement keys work like they should
+  (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+  (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+  (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+  ;; Make horizontal movement cross lines                                    
+  (setq-default evil-cross-lines t))
 
 ;; figure out if .h files are C or Objective C
 ;; (add-to-list 'magic-mode-alist

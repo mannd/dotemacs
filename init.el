@@ -156,7 +156,6 @@
   (global-set-key "\C-ceb" 'evernote-browser)
   (use-package org-evernote))
 
-
 ;; screen stuff
 ;; just-one-space makes deletion better
 (setq just-one-space t)
@@ -241,7 +240,7 @@
 
 ;; Magit
 (use-package magit
-;  :disabled t
+;  :disabed t
   :load-path "~/git/magit/lisp"
   :init
   (use-package magit-gitflow
@@ -344,7 +343,6 @@
   :load-path "~/git/emacs-calfw"
   :init
   (use-package calfw-org))
-
 
 ;; BBDB v3
 (use-package bbdb-loaddefs
@@ -562,17 +560,17 @@
 (use-package tex-mode
   :ensure t)
 
-
-
 ;; graphviz dot mode
+;; seems broken in emacs 26 master branch for now
 (use-package graphviz-dot-mode
+  :disabled t
   :ensure t)
 
 ;; play with evil mode
 (use-package evil
   :ensure t
   :config
-  ;; Make movement keys work like they should
+  ;; Make movement keys work respect visual lines 
   (evil-mode 1)
   (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)

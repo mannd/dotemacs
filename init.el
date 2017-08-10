@@ -569,6 +569,10 @@
 ;; play with evil mode
 (use-package evil
   :ensure t
+  :init
+  ;; c-u in evil-mode works like in vim (page up)
+  ;; must be set before package is loaded
+  (setq evil-want-C-u-scroll t)
   :config
   ;; Make movement keys work respect visual lines 
   (evil-mode 1)

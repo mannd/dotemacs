@@ -108,7 +108,13 @@
       '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
 	 "* TODO %?\n%U\n%a\n")
 	("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
-	 "* %? :NOTE:\n%U\n%a\n")))
+	 "* %? :NOTE:\n%U\n%a\n")
+	("j" "journal entry"
+	 entry (file+datetree "~/org/journal.org" "Journal")
+	 "**** %U %^{Title}\n%?")
+	("g" "German vocabulary"
+	 entry (file+headline "~/org/german.org" "German") 
+	 "* <[%^{German word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** German\n %^{Detailed German word|%\\1}\n** English\n %^{English translation}" )))
 
 ;; experiment with more TODO states
 (setq org-todo-keywords
@@ -225,11 +231,13 @@
 ;; markdown-mode
 (use-package markdown-mode
   :load-path "~/git/markdown-mode"
-  :mode
+  :mode (("README\\.md\\'" . gfm-mode)
+  ("README\\.markdown\\'" . gfm-mode)
   ("\\.md\\'" . markdown-mode)
-  ("\\.markdown\\'" . markdown-mode)
-  ("README\\.md\\'" . gfm-mode))
+  ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "pandoc"))
 
+  
 ;; multiple cursors (package installed)
 (use-package multiple-cursors
   :init
@@ -580,6 +588,7 @@
   (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
   (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
   (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+  (setq evil-search-module 'evil-search)
   ;; Make horizontal movement cross lines                                    
   (setq-default evil-cross-lines t))
 

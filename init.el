@@ -268,7 +268,7 @@
 
 ;; Magithub
 (use-package magithub
-;  :disabled t
+  :disabled t
   :load-path "~/git/magithub"
   :after magit
   :config (magithub-feature-autoinject t))
@@ -354,9 +354,7 @@
   :demand t
   :config
   ;; darksky.net api key
-  (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba")
-  (add-to-list 'evil-emacs-state-modes 'forecast-mode)
-  )
+  (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba"))
 
 ;; try calfw calendar
 (use-package calfw
@@ -438,12 +436,13 @@
 
 ;; Hydra
 (use-package hydra
+  :disabled t
   :load-path "~/git/hydra")
 
-(defhydra hyrdra-zoom (global-map "<f2>")
-  "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
+;; (defhydra hyrdra-zoom (global-map "<f2>")
+;;   "zoom"
+;;   ("g" text-scale-increase "in")
+;;   ("l" text-scale-decrease "out"))
 
 ;; iBuffer is better
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -570,11 +569,12 @@
   (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
   (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
   (setq evil-search-module 'evil-search)
-  ;; Make horizontal movement cross lines
   (setq-default evil-cross-lines t)
   ;; git commit buffers start in insert mode
   (evil-set-initial-state 'git-commit-mode 'insert)
   (evil-set-initial-state 'dired-mode 'emacs))
+  (add-to-list 'evil-emacs-state-modes 'forecast-mode)
+  (setq-default evil-cross-lines t))
 
 ;; figure out if .h files are C or Objective C
 ;; (add-to-list 'magic-mode-alist

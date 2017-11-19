@@ -257,7 +257,7 @@
 
 ;; Magithub
 (use-package magithub
-;  :disabled t
+  :disabled t
   :load-path "~/git/magithub"
   :after magit
   :config (magithub-feature-autoinject t))
@@ -449,12 +449,13 @@
 
 ;; Hydra
 (use-package hydra
+  :disabled t
   :load-path "~/git/hydra")
 
-(defhydra hyrdra-zoom (global-map "<f2>")
-  "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
+;; (defhydra hyrdra-zoom (global-map "<f2>")
+;;   "zoom"
+;;   ("g" text-scale-increase "in")
+;;   ("l" text-scale-decrease "out"))
 
 ;; iBuffer is better
 (global-set-key (kbd "C-x C-b") 'ibuffer)

@@ -354,9 +354,7 @@
   :demand t
   :config
   ;; darksky.net api key
-  (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba")
-  (add-to-list 'evil-emacs-state-modes 'forecast-mode)
-  )
+  (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba"))
 
 ;; try calfw calendar
 (use-package calfw
@@ -572,6 +570,7 @@
   (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
   (setq evil-search-module 'evil-search)
   ;; Make horizontal movement cross lines
+  (add-to-list 'evil-emacs-state-modes 'forecast-mode)
   (setq-default evil-cross-lines t))
 
 ;; figure out if .h files are C or Objective C

@@ -122,7 +122,7 @@
 ;; experiment with more TODO states
 (setq org-todo-keywords
      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	(seflycheck-emacs-lisp-initialize-packagesquence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
 ;; we'll try making the colors prettier too
 (setq org-todo-keyword-faces
@@ -571,7 +571,10 @@
   (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
   (setq evil-search-module 'evil-search)
   ;; Make horizontal movement cross lines
-  (setq-default evil-cross-lines t))
+  (setq-default evil-cross-lines t)
+  ;; git commit buffers start in insert mode
+  (evil-set-initial-state 'git-commit-mode 'insert)
+  (evil-set-initial-state 'dired-mode 'emacs))
 
 ;; figure out if .h files are C or Objective C
 ;; (add-to-list 'magic-mode-alist

@@ -572,7 +572,7 @@
   (setq-default evil-cross-lines t)
   ;; git commit buffers start in insert mode
   (evil-set-initial-state 'git-commit-mode 'insert)
-  (evil-set-initial-state 'dired-mode 'emacs))
+  (evil-set-initial-state 'dired-mode 'emacs)
   (add-to-list 'evil-emacs-state-modes 'forecast-mode)
   (setq-default evil-cross-lines t))
 

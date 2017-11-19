@@ -108,7 +108,16 @@
       '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
 	 "* TODO %?\n%U\n%a\n")
 	("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
-	 "* %? :NOTE:\n%U\n%a\n")))
+	 "* %? :NOTE:\n%U\n%a\n")
+	("j" "journal entry"
+	 entry (file+datetree "~/Documents/journal.org")
+	 "**** %U %^{Title}\n%?")
+	("g" "German vocabulary"
+	 entry (file+headline "~/org/german.org" "German")
+	 "* <[%^{German word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** German\n %^{Detailed German word|%\\1}\n** English\n %^{English translation}")
+	("f" "French vocabulary"
+	 entry (file+headline "~/org/french.org" "French")
+	 "* <[%^{French word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** French\n %^{Detailed French word|%\\1}\n** English\n %^{English translation}")))
 
 ;; experiment with more TODO states
 (setq org-todo-keywords
@@ -225,11 +234,13 @@
 ;; markdown-mode
 (use-package markdown-mode
   :load-path "~/git/markdown-mode"
-  :mode
+  :mode (("README\\.md\\'" . gfm-mode)
+  ("README\\.markdown\\'" . gfm-mode)
   ("\\.md\\'" . markdown-mode)
-  ("\\.markdown\\'" . markdown-mode)
-  ("README\\.md\\'" . gfm-mode))
+  ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "pandoc"))
 
+  
 ;; multiple cursors (package installed)
 (use-package multiple-cursors
   :init
@@ -338,6 +349,15 @@
 (setq calendar-longitude -104.7450340)
 (setq calendar-location-name "Parker, CO")
 
+;; for forecast-mode, darksky.net api key
+(use-package forecast
+  :demand t
+  :config
+  ;; darksky.net api key
+  (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba")
+  (add-to-list 'evil-emacs-state-modes 'forecast-mode)
+  )
+
 ;; try calfw calendar
 (use-package calfw
   :load-path "~/git/emacs-calfw"
@@ -377,6 +397,9 @@
 ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
 (use-package title-capitalization)
 
+;; C-sharp mode
+(use-package csharp-mode)
+
 ;; twittering-mode
 (use-package twittering-mode
 ;  :disabled t
@@ -398,40 +421,6 @@
   (mac-print-mode 1)
   ;; (global-set-key (kbd "M-p") 'mac-print-buffer))
 )
-;; REQUIRED for below
-(use-package frame-cmds
-  :ensure t)
-
-;; weather from wttr.in
-(use-package wttrin
-  :ensure t
-  :commands (wttrin)
-  :init
-  (setq wttrin-default-cities '("Parker")))
-;; from Pragmatic Emacs -- to widen frame
-;; from http://pragmaticemacs.com/emacs/weather-in-emacs/
-;;advise wttrin to save frame arrangement
-;;requires frame-cmds package
-(defun bjm/wttrin-save-frame ()
-  "Save frame and window configuration and then expand frame for wttrin."
-  ;;save window arrangement to a register
-  (window-configuration-to-register :pre-wttrin)
-  (delete-other-windows)
-  ;;save frame setup and resize
-  (save-frame-config)
-  (set-frame-width (selected-frame) 130)
-  (set-frame-height (selected-frame) 48)
-  )
-(advice-add 'wttrin :before #'bjm/wttrin-save-frame)
-
-(defun bjm/wttrin-restore-frame ()
-  "Restore frame and window configuration saved prior to launching wttrin."
-  (interactive)
-  (jump-to-frame-config-register)
-  (jump-to-register :pre-wttrin)
-  )
-(advice-add 'wttrin-exit :after #'bjm/wttrin-restore-frame)
-
 ;; Zen-burn
 (use-package zenburn-theme
   :disabled nil
@@ -542,7 +531,7 @@
 (use-package projectile
   :ensure t
   :config
-  (projectile-global-mode))
+  (projectile-mode))
 
 (use-package helm-projectile
   :ensure t
@@ -575,13 +564,14 @@
   ;; must be set before package is loaded
   (setq evil-want-C-u-scroll t)
   :config
-  ;; Make movement keys work respect visual lines 
+  ;; Make movement keys work respect visual lines
   (evil-mode 1)
   (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
   (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
   (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-  ;; Make horizontal movement cross lines                                    
+  (setq evil-search-module 'evil-search)
+  ;; Make horizontal movement cross lines
   (setq-default evil-cross-lines t))
 
 ;; figure out if .h files are C or Objective C
@@ -609,4 +599,3 @@
             t))
 
 ;;; init ends here
-

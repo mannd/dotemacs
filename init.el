@@ -110,7 +110,7 @@
 	("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
 	 "* %? :NOTE:\n%U\n%a\n")
 	("j" "journal entry"
-	 entry (file+datetree "~/Documents/journal.org")
+	 entry (file+datetree "~/Documents/journal.org.gpg")
 	 "**** %U %^{Title}\n%?")
 	("g" "German vocabulary"
 	 entry (file+headline "~/org/german.org" "German")
@@ -203,6 +203,9 @@
 (unless (server-running-p)
   (server-start))
 
+;; encryption
+(require 'epa-file)
+(epa-file-enable)
 ;; set up xiki
 ;; Use rvm to manage ruby versions
 (use-package rvm
@@ -573,6 +576,8 @@
   ;; git commit buffers start in insert mode
   (evil-set-initial-state 'git-commit-mode 'insert)
   (evil-set-initial-state 'dired-mode 'emacs)
+  (evil-set-initial-state 'cider-repl 'emacs)
+  (evil-set-initial-state 'cider-error 'emacs)
   (add-to-list 'evil-emacs-state-modes 'forecast-mode)
   (setq-default evil-cross-lines t))
 

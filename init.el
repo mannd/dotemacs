@@ -11,16 +11,17 @@
 
 ;; below suppresses flycheck errors
 (setq-default flycheck-emacs-lisp-load-path 'inherit)
-;;(setq-default flycheck-emacs-lisp-initialize-packages t)
 
+;; Since we are using built-in org, don’t need this work around
 ;; Set up documenation
 ;; seems like this needs to come early, or is overriden by Info-directory-list
-(add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
+;; (add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
 
+;; NOTE: now using built-in org
 ;; override built-in org
 (package-initialize)
-(add-to-list 'load-path "~/git/org-mode/lisp")
-(add-to-list 'load-path  "~/git/org-mode/contrib/lisp")
+;; (add-to-list 'load-path "~/git/org-mode/lisp")
+;; (add-to-list 'load-path  "~/git/org-mode/contrib/lisp")
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 ;(package-initialize t)
 
@@ -39,11 +40,12 @@
 (require 'diminish)
 (require 'bind-key)
 
+;; NOT NEEDED, using built-in org
 ;; set up org-mode
-(require 'org)
-(require 'org-checklist)
-(require 'ob-tangle)
-(require 'org-drill)
+;; (require 'org)
+;; (require 'org-checklist)
+;; (require 'ob-tangle)
+;; (require 'org-drill)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -82,16 +84,32 @@
 			 "~/org/home.org"
 			 "~/org/epstudios.org"
 			 "~/org/family.org"
-			 "~/org/org.org"))
+			 "~/org/org.org"
+			 "~/org/gcal.org"
+			 "~/org/persgcal.org"
+			 "~/org/gretgcal.org"))
+
+;; custom agenda commands
+;; see https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
+(setq org-agenda-custom-commands
+      '(("p" "Projects" tags "project/TODO" nil)
+	("n" "Agenda and TODOs"
+	 ((agenda "")
+	  (alltodo "")))
+	("c" "Agenda and Projects"
+	 ((agenda "")
+	  (tags "project/TODO"
+		((org-agenda-overriding-header "Projects")))))
+	))
 
 ;; change default iCalendar target (org.ics conflicts with org.org file)
 (setq org-icalendar-combined-agenda-file "~/org/org-calendar.ics")
 (setq org-icalendar-include-todo t)
 
-;; For mobile org
-(setq org-mobile-inbox-for-pull "~/org/index.org")
-(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-(setq org-mobile-files org-agenda-files)
+;; For mobile org -- I’ve switched to beorg on iOS
+;;(setq org-mobile-inbox-for-pull "~/org/index.org")
+;;(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+;;(setq org-mobile-files org-agenda-files)
 
 ;; refile targets
 (setq org-refile-targets
@@ -105,12 +123,14 @@
 (setq org-tags-exclude-from-inheritance '("project"))
 ;; Capture templates
 (setq org-capture-templates
-      '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
+      '(("c" "Calendar appointment" entry (file "~/Dropbox/org/gcal.org")
+	 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+	("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
 	 "* TODO %?\n%U\n%a\n")
 	("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
 	 "* %? :NOTE:\n%U\n%a\n")
 	("j" "journal entry"
-	 entry (file+datetree "~/Documents/journal.org.gpg")
+	 entry (file+olp+datetree "~/Documents/journal.org.gpg")
 	 "**** %U %^{Title}\n%?")
 	("g" "German vocabulary"
 	 entry (file+headline "~/org/german.org" "German")
@@ -147,6 +167,20 @@
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
 
+
+;; Google calendar sync
+(use-package org-gcal
+  :ensure t
+  :config
+  (setq org-gcal-client-id "981452983982-lrd1cmkcrn6jf30k7v87ih24ai1ai2ea.apps.googleusercontent.com"
+	org-gcal-client-secret "MiMLtnyy51Sq_RxwBW9rwZMp"
+	org-gcal-file-alist '(("manndmd@gmail.com" . "~/Dropbox/org/gcal.org")
+			      ("a46egt8krbmcg72csc9vtmgdro@group.calendar.google.com" . "~/Dropbox/org/persgcal.org")
+			      ("manngmd@gmail.com" . "~/Dropbox/org/gretgcal.org"))))
+  
+(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+
 ;; evernote-mode - note requires ruby 1.9.3 (or later??)
 ;; disabled
 (use-package evernote-mode
@@ -166,8 +200,6 @@
   (use-package org-evernote))
 
 ;; screen stuff
-;; just-one-space makes deletion better
-(setq just-one-space t)
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;; but we'll keep menu-bar-mode, since it's up there anyway

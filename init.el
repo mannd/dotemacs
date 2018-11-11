@@ -79,15 +79,16 @@
 (setq org-startup-indented t)
 
 ;; agenda files
+;; Note org-gcal seems to not work with multiple calendars
 (setq org-agenda-files '("~/org/inbox.org"
 			 "~/org/personal.org"
 			 "~/org/home.org"
 			 "~/org/epstudios.org"
 			 "~/org/family.org"
 			 "~/org/org.org"
-			 "~/org/gcal.org"
-			 "~/org/persgcal.org"
-			 "~/org/gretgcal.org"))
+			 "~/org/calendars/gcal.org"))
+			 ;; "~/org/calendars/persgcal.org"
+			 ;; "~/org/calendars/gretgcal.org"))
 
 ;; custom agenda commands
 ;; see https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
@@ -142,13 +143,14 @@
 ;; experiment with more TODO states
 (setq org-todo-keywords
      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	(sequence "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+	(sequence "PENDING(p)" "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
 ;; we'll try making the colors prettier too
 (setq org-todo-keyword-faces
       (quote (("NEXT" :foreground "blue" :weight bold)
 	      ("DONE" :foreground "forest green" :weight bold)
 	      ("WAITING" :foreground "orange" :weight bold)
+	      ("PENDING" :foreground "orange" :weight bold)
 	      ("HOLD" :foreground "magenta" :weight bold)
 	      ("CANCELLED" :foreground "forest green" :weight bold)
 	      ("SOMEDAY" :foreground "cyan" :weight bold))))
@@ -167,6 +169,14 @@
 ;; supress footer in org html export files
 (setq org-html-postamble nil)
 
+;; widen margins in Latex export
+(setq org-latex-packages-alist '(("margin=2cm" "geometry" nil)))
+
+;; imenu-list
+(use-package imenu-list
+  :ensure t
+  :config
+  (setq imenu-list-position 'left))
 
 ;; Google calendar sync
 (use-package org-gcal
@@ -174,11 +184,11 @@
   :config
   (setq org-gcal-client-id "981452983982-lrd1cmkcrn6jf30k7v87ih24ai1ai2ea.apps.googleusercontent.com"
 	org-gcal-client-secret "MiMLtnyy51Sq_RxwBW9rwZMp"
-	org-gcal-file-alist '(("manndmd@gmail.com" . "~/Dropbox/org/gcal.org")
-			      ("a46egt8krbmcg72csc9vtmgdro@group.calendar.google.com" . "~/Dropbox/org/persgcal.org")
-			      ("manngmd@gmail.com" . "~/Dropbox/org/gretgcal.org"))))
+	org-gcal-file-alist '(("manndmd@gmail.com" . "~/Dropbox/org/calendars/gcal.org"))))
+			      ;; ("a46egt8krbmcg72csc9vtmgdro@group.calendar.google.com" . "~/Dropbox/org/calendars/persgcal.org")
+			      ;; ("manngmd@gmail.com" . "~/Dropbox/org/calendars/gretgcal.org"))))
   
-(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
 ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
 
 ;; evernote-mode - note requires ruby 1.9.3 (or later??)
@@ -273,7 +283,8 @@
   ("README\\.markdown\\'" . gfm-mode)
   ("\\.md\\'" . markdown-mode)
   ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "pandoc"))
+  :init (setq markdown-command "pandoc")
+  (electric-quote-mode -1))
 
   
 ;; multiple cursors (package installed)
@@ -612,6 +623,12 @@
   (evil-set-initial-state 'cider-error 'emacs)
   (add-to-list 'evil-emacs-state-modes 'forecast-mode)
   (setq-default evil-cross-lines t))
+
+;; use evil-magit to match tags
+(use-package evil-matchit
+  :ensure t
+  :init
+  (global-evil-matchit-mode 1))
 
 ;; figure out if .h files are C or Objective C
 ;; (add-to-list 'magic-mode-alist

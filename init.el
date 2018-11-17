@@ -265,7 +265,16 @@
 ;;(load-theme 'leuven t)
 ;;(load-theme 'dracula t)
 ;;(load-theme 'light-blue t)
-(load-theme 'leuven t)
+;;(load-theme 'leuven t)
+
+;; spacemacs light theme is nice!
+(use-package spacemacs-theme
+  :defer t
+  :init
+  (load-theme 'spacemacs-light t))
+;; and so is this font...
+(set-frame-font "Source Code Pro" nil t)
+(set-face-attribute 'default nil :height 150)
 
 ;; IRC
 (use-package erc

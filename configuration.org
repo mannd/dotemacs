@@ -1,0 +1,797 @@
+#+TITLE: David Mann’s Emacs configuration
+#+OPTIONS: toc:4 h:4
+* Introduction
+This is my new /literate/ Emacs configuration file.  Work in Progress!  This file is loaded by init.el, which basically just does that (and wraps the whole process in timing code).
+* Configuration
+** Startup package system
+
+Initialize package system and set load-path to elisp directory.
+
+#+BEGIN_SRC emacs-lisp
+  (package-initialize)
+  (add-to-list 'load-path "~/.emacs.d/elisp/")
+  ;; prevent loading packages twice after init.el is done
+  (setq package-enable-at-startup nil)
+  ;; set up package sources
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+#+END_SRC
+
+** Personal Information
+
+#+BEGIN_SRC emacs-lisp
+  (setq user-full-name "David Mann, MD"
+        user-mail-address "manndmd@gmail.com")
+#+END_SRC
+
+** Location
+
+Need to change location when traveling.
+
+#+BEGIN_SRC emacs-lisp
+  ;; longitude latitude for sunset/sunrise
+  ;; Paris, FR
+  ;; (setq calendar-latitude 48.9)
+  ;; (setq calendar-longitude 2.5)
+  ;; (setq calendar-location-name "Paris, FR")
+  ;; Parker, CO
+  (setq calendar-latitude 39.4868360)
+  (setq calendar-longitude -104.7450340)
+  (setq calendar-location-name "Parker, CO")
+#+END_SRC
+
+** Use use-package
+
+use-package must be setup early in the configuration.
+
+#+BEGIN_SRC emacs-lisp
+  ;; use-package setup
+  (eval-when-compile
+    (require 'use-package))
+  (require 'diminish)
+  (require 'bind-key)
+  ;; Ensure all packages are loaded
+  (setq use-package-always-ensure t)
+#+END_SRC
+
+** Custom file
+
+#+BEGIN_SRC emacs-lisp
+  ;; customizations in its own file
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file)
+#+END_SRC
+
+** Printing
+
+#+BEGIN_SRC emacs-lisp
+  ;; for mac printing
+  (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
+  (when (require 'mac-print-mode nil t)
+    (mac-print-mode 1)
+    ;; (global-set-key (kbd "M-p") 'mac-print-buffer))
+  )
+#+END_SRC
+
+** Get path right
+
+#+BEGIN_SRC emacs-lisp
+  ;; new and improved way to make PATH and exec-path match bash config
+  ;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
+  ;; it looks like it would prefer using .profile, so below I
+  ;; disable the error message that occurs.
+  (use-package exec-path-from-shell
+    :ensure t
+    :init
+    (setq exec-path-from-shell-check-startup-files nil)
+    :config
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize)))
+#+END_SRC
+
+** Org mode
+*** Setup org mode
+
+Set some global keys for org mode, set up my default org directory and tweak the appearance of org mode.
+
+#+BEGIN_SRC emacs-lisp
+  ;; org-mode setup
+  ;; Standard org key bindings
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-cb" 'org-switchb)
+  (setq org-agenda-include-diary t)
+  ;; ~/org is a symlink to "~/Dropbox/org" for easy sharing
+  (setq org-directory "~/org")
+  ;; I like visual-line-mode as default for text, org
+  (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+  ;; we hide stars by default even in buffers where we turn off
+  (setq org-hide-leading-stars 'hidestars) ; just one star visible
+  (setq org-startup-indented t)
+#+END_SRC
+
+*** Org agenda
+
+Set up the org agenda.
+
+#+BEGIN_SRC emacs-lisp
+  ;; agenda files
+  ;; Note org-gcal seems to not work with multiple calendars
+  (setq org-agenda-files '("~/org/inbox.org"
+                           "~/org/personal.org"
+                           "~/org/home.org"
+                           "~/org/epstudios.org"
+                           "~/org/family.org"
+                           "~/org/org.org"
+                           "~/org/calendars/gcal.org"))
+  ;; "~/org/calendars/persgcal.org"
+  ;; "~/org/calendars/gretgcal.org"))
+
+  ;; custom agenda commands
+  ;; see https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
+  (setq org-agenda-custom-commands
+        '(("p" "Projects" tags "project/TODO" nil)
+          ("n" "Agenda and TODOs"
+           ((agenda "")
+            (alltodo "")))
+          ("c" "Agenda and Projects"
+           ((agenda "")
+            (tags "project/TODO"
+                  ((org-agenda-overriding-header "Projects")))))
+          ))
+
+  ;; change default iCalendar target (org.ics conflicts with org.org file)
+  (setq org-icalendar-combined-agenda-file "~/org/org-calendar.ics")
+  (setq org-icalendar-include-todo t)
+#+END_SRC
+
+*** More org stuff
+
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (C . t)
+     (js . t)
+     (shell . t)
+     (java . t)))
+  ;; file types for org-mode
+  (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
+
+  ;; For mobile org -- I’ve switched to beorg on iOS
+  ;;(setq org-mobile-inbox-for-pull "~/org/index.org")
+  ;;(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+  ;;(setq org-mobile-files org-agenda-files)
+
+  ;; refile targets
+  (setq org-refile-targets
+        '((org-agenda-files :maxlevel . 2)))
+
+  ;; default tasks/notes/inbox file
+  (setq org-default-notes-file "~/org/inbox.org")
+
+  ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
+  (setq org-stuck-projects '("+project/-DONE-CANCELLED" ("NEXT") nil ""))
+  (setq org-tags-exclude-from-inheritance '("project"))
+  ;; Capture templates
+  (setq org-capture-templates
+        '(("c" "Calendar appointment" entry (file "~/Dropbox/org/gcal.org")
+           "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+          ("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
+           "* TODO %?\n%U\n%a\n")
+          ("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
+           "* %? :NOTE:\n%U\n%a\n")
+          ("j" "journal entry"
+           entry (file+olp+datetree "~/Documents/journal.org.gpg")
+           "**** %U %^{Title}\n%?")
+          ("g" "German vocabulary"
+           entry (file+headline "~/org/german.org" "German")
+           "* <[%^{German word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** German\n %^{Detailed German word|%\\1}\n** English\n %^{English translation}")
+          ("f" "French vocabulary"
+           entry (file+headline "~/org/french.org" "French")
+           "* <[%^{French word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** French\n %^{Detailed French word|%\\1}\n** English\n %^{English translation}")))
+
+  ;; experiment with more TODO states
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+                (sequence "PENDING(p)" "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+
+  ;; we'll try making the colors prettier too
+  (setq org-todo-keyword-faces
+        (quote (("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("PENDING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("SOMEDAY" :foreground "cyan" :weight bold))))
+
+  ;; activate org mode speed commands
+  (setq org-use-speed-commands t)
+
+  ;; log stuff into drawer
+  (setq org-log-done (quote time))
+  (setq org-log-into-drawer "LOGBOOK")
+  (setq org-clock-into-drawer 1)
+
+  ;; avoid blank lines in org files
+  (setq org-cycle-separator-lines 0)
+
+  ;; supress footer in org html export files
+  (setq org-html-postamble nil)
+
+  ;; widen margins in Latex export
+  (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil)))
+
+#+END_SRC
+
+*** org-gcal
+
+#+BEGIN_SRC emacs-lisp
+  ;; Google calendar sync
+  (use-package org-gcal
+    :ensure t
+    :config
+    (setq org-gcal-client-id "981452983982-lrd1cmkcrn6jf30k7v87ih24ai1ai2ea.apps.googleusercontent.com"
+          org-gcal-client-secret "MiMLtnyy51Sq_RxwBW9rwZMp"
+          org-gcal-file-alist '(("manndmd@gmail.com" . "~/Dropbox/org/calendars/gcal.org"))))
+  ;; ("a46egt8krbmcg72csc9vtmgdro@group.calendar.google.com" . "~/Dropbox/org/calendars/persgcal.org")
+  ;; ("manngmd@gmail.com" . "~/Dropbox/org/calendars/gretgcal.org"))))
+
+  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
+  ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+#+END_SRC
+
+** Customized keybindings
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "C-+" 'text-scale-increase)   
+  (bind-key "C--" 'text-scale-decrease)
+#+END_SRC
+
+** Emacs server
+
+#+BEGIN_SRC emacs-lisp
+  ;; problem with emacsclient was invoking wrong emacsclient
+  ;; (/usr/bin/emacsclient)
+  ;; make sure the emacslient appropriate to the Emacs I am using is used
+  (setenv "EDITOR" (expand-file-name "bin/emacsclient" invocation-directory))
+  ;; "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
+
+  ;; set up emacs as server
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+#+END_SRC
+
+** Flycheck
+
+#+BEGIN_SRC emacs-lisp
+  ;; flycheck
+  ;; note that flycheck C-c ! conflicts with org-mode
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode)
+    :config
+    (add-to-list 'flycheck-checkers 'swift)
+    (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
+    (setq-default flycheck-emacs-lisp-load-path 'inherit)
+    (define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
+  ;; flycheck-swift
+  ;; (use-package flycheck-swift
+  ;;   :load-path "~/git/flycheck-swift"
+  ;;   :config
+  ;;   (eval-after-load 'flycheck '(flycheck-swift-setup)))
+#+END_SRC
+
+** Evil mode
+
+#+BEGIN_SRC emacs-lisp
+  ;; play with evil mode
+  (use-package evil
+    :ensure t
+    :init
+    ;; c-u in evil-mode works like in vim (page up)
+    ;; must be set before package is loaded
+    (setq evil-want-C-u-scroll t)
+    :config
+    ;; Make movement keys work respect visual lines
+    (evil-mode 1)
+    (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+    (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+    (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+    (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+    (setq evil-search-module 'evil-search)
+    (setq-default evil-cross-lines t)
+    ;; git commit buffers start in insert mode
+    (evil-set-initial-state 'git-commit-mode 'insert)
+    (evil-set-initial-state 'dired-mode 'emacs)
+    (evil-set-initial-state 'cider-repl 'emacs)
+    (evil-set-initial-state 'cider-error 'emacs)
+    (add-to-list 'evil-emacs-state-modes 'forecast-mode)
+    (setq-default evil-cross-lines t))
+
+  ;; use evil-matchit to match tags
+  (use-package evil-matchit
+    :ensure t
+    :init
+    (global-evil-matchit-mode 1))
+#+END_SRC
+
+** Magit
+
+#+BEGIN_SRC emacs-lisp
+  ;; Magit
+  (use-package magit
+    :load-path "~/git/magit/lisp"
+    :init
+    (use-package magit-gitflow
+      :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+    (use-package with-editor
+      :load-path "~/git/with-editor")
+    (global-set-key (kbd "C-x g") 'magit-status)
+    :config
+    (with-eval-after-load 'info
+      (info-initialize)
+      (add-to-list 'Info-additional-directory-list
+                   "~/git/magit/Documentation/")))
+
+  ;; Magithub
+  (use-package magithub
+    :disabled t
+    :load-path "~/git/magithub"
+    :after magit
+    :config (magithub-feature-autoinject t))
+#+END_SRC
+
+** Evernote
+
+#+BEGIN_SRC emacs-lisp
+;; evernote-mode - note requires ruby 1.9.3 (or later??)
+;; disabled
+(use-package evernote-mode
+  :disabled t
+  :config
+  (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
+  (setq evernote-username "manndmd@gmail.com")
+  (setq exec-path (cons "/usr/local/bin" exec-path))
+  (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
+  (global-set-key "\C-cec" #'evernote-create-note)
+  (global-set-key "\C-ceo" 'evernote-open-note)
+  (global-set-key "\C-ces" 'evernote-search-notes)
+  (global-set-key "\C-ceS" 'evernote-do-saved-search)
+  (global-set-key "\C-cew" 'evernote-write-note)
+  (global-set-key "\C-cep" 'evernote-post-region)
+  (global-set-key "\C-ceb" 'evernote-browser)
+  (use-package org-evernote))
+#+END_SRC
+
+** Register shortcuts
+
+#+BEGIN_SRC emacs-lisp
+;; provide shortcut registers to files
+(set-register ?e '(file . "~/.emacs.d/init.el"))
+(set-register ?i '(file . "~/org/inbox.org"))
+(set-register ?g '(file . "~/.emacs.d/gnus.el"))
+(set-register ?c '(file . "~/.emacs.d/configuration.org"))
+#+END_SRC
+
+** Themes
+
+#+BEGIN_SRC emacs-lisp
+;; pick a theme
+;;(load-theme 'tsdh-light t)
+;;(load-theme 'wombat t)
+;;(load-theme 'leuven t)
+;;(load-theme 'dracula t)
+;;(load-theme 'light-blue t)
+;;(load-theme 'leuven t)
+
+;; spacemacs light theme is nice!
+(use-package spacemacs-theme
+:ensure t
+:defer t
+:init
+(load-theme 'spacemacs-light t))
+;; and so is this font...
+(set-frame-font "Source Code Pro" nil t)
+(set-face-attribute 'default nil :height 150)
+
+  ;; Zen-burn
+  (use-package zenburn-theme
+    :disabled nil
+    :ensure t
+    :config
+    (load-theme 'zenburn t t))
+
+  (use-package spaceline
+    :ensure t
+    :demand t
+    :init
+    (setq powerline-default-separator 'arrow-fade)
+    :config
+    (require 'spaceline-config)
+    (spaceline-spacemacs-theme))
+#+END_SRC
+
+** Tweak UI
+
+#+BEGIN_SRC emacs-lisp
+  ;; screen stuff
+  (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  ;; but we'll keep menu-bar-mode, since it's up there anyway
+  ;; eliminate splash screen
+  (setq inhibit-splash-screen t)
+  ;; inhibit scratch message
+  (setq initial-scratch-message "")
+  ;; No backup files
+  (setq make-backup-files nil)
+  ;; auto-revert-mode reloads buffer if file changes on disk
+  (global-auto-revert-mode t)
+  ;; Show column number
+  (column-number-mode t)
+  ;; Go ahead and ring the silent bell!
+  (setq visible-bell t)
+  (setq ring-bell-function 'ignore)
+  ;; save history
+  (savehist-mode t)
+
+  ;; try less jumpy trackpad scrolling
+  (setq mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control))))
+
+  ;; try improving scrolling with trackpad
+  (setq mouse-wheel-progressive-speed nil)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control) . nil)))
+
+  ;; iBuffer is better
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+  ;; use 'a' to open in current buffer, not create new buffer in dired
+  (put 'dired-find-alternate-file 'disabled nil)
+
+
+  ;; abbrev mode
+  (setq-default abbrev-mode t)
+  (setq save-abbrevs t)
+  (put 'upcase-region 'disabled nil)
+
+
+
+  (if (eq system-type 'windows-nt)
+  (progn
+    (info-initialize)
+    (add-to-list 'Info-additional-directory-list "~/git/org-mode/doc")
+    (add-to-list 'Info-additional-directory-list "C:/Users/mannd/bin/emacs-24.5-bin-i686-mingw32/share/info")
+    (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-12"))
+    (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))
+#+END_SRC
+
+** Deleted files go to trash
+
+#+BEGIN_SRC emacs-lisp
+  (setq delete-by-moving-to-trash t)
+  (setq trash-directory "~/.Trash")
+#+END_SRC
+
+** Encryption
+
+Enable encryption of gpg files
+
+#+BEGIN_SRC emacs-lisp
+  (require 'epa-file)
+  (epa-file-enable)
+#+END_SRC
+
+** Markdown mode
+
+#+BEGIN_SRC emacs-lisp
+  ;; markdown-mode
+  (use-package markdown-mode
+    :load-path "~/git/markdown-mode"
+    :mode (("README\\.md\\'" . gfm-mode)
+    ("README\\.markdown\\'" . gfm-mode)
+    ("\\.md\\'" . markdown-mode)
+    ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "pandoc")
+    (electric-quote-mode -1))
+#+END_SRC
+
+** Ledger
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ledger-mode
+    :load-path "~/lisp"
+    :mode ("\\.ledger$" "\\.dat$"))
+#+END_SRC
+
+** Gnus
+
+#+BEGIN_SRC emacs-lisp
+  ;; gnus
+  (setq gnus-init-file "~/.emacs.d/gnus")
+  (require 'nnir)
+  ;; quit gnus automatically on exit emacs
+  (defadvice save-buffers-kill-emacs (before rgb/gnus-exit)
+    (gnus-group-exit))
+  (add-hook 'gnus-started-hook
+            (lambda () (ad-activate 'save-buffers-kill-emacs)))
+  (add-hook 'gnus-after-exiting-gnus-hook
+            (lambda () (ad-deactivate 'save-buffers-kill-emacs)))
+  ;; (defun my-reset-gmail-server()
+    ;; (gnus-server-close-server "nnimap:gmail"))
+  ;; (add-hook 'gnus-get-new-news-hook
+            ;; 'my-reset-gmail-server)
+
+
+  ;; change gnus gmail links to All Mail links when tasks
+  ;; must use org-capture for this to work
+  (defun dem/replace()
+    (interactive)
+    (goto-char 1)
+    (setq-local search-invisible t)
+    (replace-string "gnus:INBOX" "gnus:%5BGmail%5D/All%20Mail"))
+
+  (add-hook 'org-capture-prepare-finalize-hook 'dem/replace)
+
+  ;; BBDB v3
+  (use-package bbdb-loaddefs
+    :load-path "~/.emacs.d/elisp/bbdb-3.1.2/lisp/"
+    :init
+    (use-package bbdb)
+    (add-hook
+   'gnus-summary-mode-hook
+   (lambda ()
+     (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
+     ))
+    :config
+    (setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
+    (bbdb-initialize 'gnus 'message)
+    (bbdb-mua-auto-update-init 'gnus 'message)
+    (setq bbdb-mua-pop-up-window-size 0.1)
+    (setq bbdb-mua-update-interactive-p '(query . create))
+    (setq bbdb-message-all-addresses t))
+#+END_SRC
+
+** Helm
+
+#+BEGIN_SRC emacs-lisp
+  ;; helm
+  ;;(add-to-list 'load-path "~/git/emacs-async")
+  (use-package helm-config
+    :demand t
+    :load-path "~/git/helm"
+    :config
+    (use-package helm-mode
+      :init
+      (helm-mode 1))
+    :init
+    (global-set-key (kbd "C-x C-f") 'helm-find-files)
+    (global-set-key (kbd "M-x") 'helm-M-x))
+#+END_SRC
+
+** Projectile
+
+#+BEGIN_SRC emacs-lisp
+  ;; projectile
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode))
+
+  (use-package helm-projectile
+    :ensure t
+    :config
+    (helm-projectile-on))
+#+END_SRC
+
+** Misc packages
+
+#+BEGIN_SRC emacs-lisp
+  ;; my elisp files from "Writing GNU Emacs Extensions"
+  (use-package extensions)
+  (use-package timestamp)
+
+  ;; imenu-list
+  (use-package imenu-list
+    :ensure t
+    :config
+    (setq imenu-list-position 'left))
+   
+  ;; IRC
+  (use-package erc
+               :config
+               (setq erc-autojoin-channels-alist '((".*\\.freenode.net"
+                                                    "#org-mode"
+                                                    "#emacs"
+                                                    "#android"
+                                                    "#android-dev"))))
+
+
+  ;; multiple cursors (package installed)
+  (use-package multiple-cursors
+    :init
+    (global-set-key (kbd "C-S-c C-S-C") 'mc/edit-lines)
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+
+
+  ;; ispell
+  (setq ispell-program-name "/usr/local/bin/ispell")
+
+  ;; some other packages
+  (use-package olivetti :ensure t :defer t)
+  (use-package htmlize :ensure t :defer t)
+  (use-package cider :ensure t :defer t)
+  (use-package w3m :ensure t :defer t)
+
+  ;; Proper title capitalization function
+  ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
+  (use-package title-capitalization)
+
+  ;; C-sharp mode
+  (use-package csharp-mode)
+
+  ;; twittering-mode
+  (use-package twittering-mode
+    :config (setq twittering-use-master-password t)
+    :load-path "~/git/twittering-mode/")
+
+  ;; for forecast-mode, darksky.net api key
+  (use-package forecast
+    :demand t
+    :config
+    ;; darksky.net api key
+    (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba"))
+
+  ;; try calfw calendar
+  (use-package calfw
+    :load-path "~/git/emacs-calfw"
+    :init
+    (use-package calfw-org))
+
+  ;; Hydra
+  (use-package hydra
+    :disabled t
+    :load-path "~/git/hydra")
+
+  ;; (defhydra hydra-zoom (global-map "<f2>")
+  ;;   "zoom"
+  ;;   ("g" text-scale-increase "in")
+  ;;   ("l" text-scale-decrease "out"))
+  
+  ;; auctex
+  (use-package tex-mode
+    :ensure t)
+
+  ;; graphviz dot mode
+  ;; seems broken in emacs 26 master branch for now
+  (use-package graphviz-dot-mode
+    :disabled t
+    :ensure t)
+#+END_SRC
+
+** Programming
+*** General
+
+#+BEGIN_SRC emacs-lisp
+  ;; compile buffer scrolls
+  (setq compilation-scroll-output t)
+#+END_SRC
+
+*** Clojure
+
+#+BEGIN_SRC emacs-lisp
+  ;; Clojure stuff taken from https://github.com/flyingmachine/emacs-for-clojure/blob/master/init.el
+
+  (defvar clojure-packages
+    '(paredit
+      clojure-mode
+      clojure-mode-extra-font-locking
+      smex
+      rainbow-delimiters
+      tagedit
+      ))
+  (dolist (p clojure-packages)
+    (when (not (package-installed-p p))
+      (package-install p)))
+#+END_SRC
+
+*** Ruby
+
+#+BEGIN_SRC emacs-lisp
+  ;; set up xiki
+  ;; Use rvm to manage ruby versions
+  (use-package rvm
+    :disabled t
+    :load-path "~/.emacs.d/rvm/"
+    :config
+    (rvm-use-default))
+  ;; If you want to play with Xiki, go
+  ;; to ~/.emacs.d/elisp/start-xiki.el
+  ;; and M-x eval-buffer
+
+  ;; this package needed to make rvm work in Emacs
+  (use-package rvm
+    :ensure t
+    :config
+    (rvm-use-default))
+#+END_SRC
+
+*** Lisp
+
+#+BEGIN_SRC emacs-lisp
+  ;; MIT-Scheme
+  (setq scheme-program-name "mit-scheme")
+  (setenv "MITSCHEME_LIBRARY_PATH" "/usr/local/lib/mit-scheme-c")
+
+  ;; Common Lisp
+  (setq inferior-lisp-program "clisp")
+#+END_SRC
+
+*** Swift
+
+#+BEGIN_SRC emacs-lisp
+  ;; xcode documentation -- Doesn't work
+  ;; (use-package xcode-document-viewer
+  ;;   :load-path "~/git/emacs-xcode-document-viewer"
+  ;;   :init
+  ;;   (use-package anything
+  ;;     :ensure t)
+  ;;   :config
+  ;;   (setq xcdoc:document-path "/Applications/Xcode.app/Contents/Developer/Documentation/DocSets/com.apple.adc.documentation.docset")
+  ;;   (setq xcdoc:open-w3m-other-buffer t))
+
+
+  ;; fix for yas-snippet breaking term-mode TABS
+  ;; see https://github.com/joaotavora/yasnippet/issues/289
+  (add-hook 'term-mode-hook (lambda()
+                              (yas-minor-mode -1)))
+
+  ;; swift-mode to use company-mode by default
+  (add-hook 'swift-mode-hook (lambda()
+                               (company-mode t)))
+  ;; xcode-mode -- doesn't work with Xcode 8 yet
+  ;; (use-package xcode-mode
+  ;;     :load-path "~/git/xcode-mode"
+  ;;    :ensure t)
+
+  ;; figure out if .h files are C or Objective C
+  ;; (add-to-list 'magic-mode-alist
+  ;; 	     `(,(lambda ()
+  ;; 		  (and (string= (file-name-extension buffer-file-name) "h")
+  ;; 		       (re-search-forward "@\\<interface\\>"
+  ;; 					  magic-mode-regexp-match-limit t)))
+  ;; 	       . objc-mode))
+#+END_SRC
+
+*** Company mode
+
+#+BEGIN_SRC emacs-lisp
+  ;; company-sourcekit for Swift programming
+  (use-package company-sourcekit
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-sourcekit))
+#+END_SRC
+
+*** Yasnippet
+
+#+BEGIN_SRC emacs-lisp
+  ;; yasnippet
+  (use-package yasnippet
+    :load-path "~/git/yasnippet"
+    :config
+    (yas-global-mode 1))
+#+END_SRC
+
+** Disabled packages
+
+#+BEGIN_SRC emacs-lisp
+  ;; put time and day in mode-line (good for full screen Emacs)
+  ;; (setq display-time-day-and-date t)
+  ;; (display-time-mode t)
+#+END_SRC
+

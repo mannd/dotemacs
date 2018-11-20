@@ -21,14 +21,6 @@ Initialize package system and set load-path to elisp directory.
 #+BEGIN_SRC emacs-lisp
   (setq user-full-name "David Mann, MD"
         user-mail-address "manndmd@gmail.com")
-#+END_SRC
-
-** Location
-
-Need to change location when traveling.
-
-#+BEGIN_SRC emacs-lisp
-  ;; longitude latitude for sunset/sunrise
   ;; Paris, FR
   ;; (setq calendar-latitude 48.9)
   ;; (setq calendar-longitude 2.5)
@@ -39,21 +31,29 @@ Need to change location when traveling.
   (setq calendar-location-name "Parker, CO")
 #+END_SRC
 
-** Use use-package
+** Configure =use-package=
 
 use-package must be setup early in the configuration.
 
 #+BEGIN_SRC emacs-lisp
-  ;; use-package setup
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
   (eval-when-compile
     (require 'use-package))
   (require 'diminish)
   (require 'bind-key)
   ;; Ensure all packages are loaded
   (setq use-package-always-ensure t)
+  (setq use-package-verbose t)
+  ;; compile packages and use the newest version
+  (use-package auto-compile
+    :config (auto-compile-on-load-mode))
+  (setq load-prefer-newer t)
 #+END_SRC
 
 ** Custom file
+
+Customizations get stored in their own file.
 
 #+BEGIN_SRC emacs-lisp
   ;; customizations in its own file
@@ -63,12 +63,16 @@ use-package must be setup early in the configuration.
 
 ** Printing
 
+Printing is only set up for mac so far.
+
 #+BEGIN_SRC emacs-lisp
-  ;; for mac printing
-  (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
-  (when (require 'mac-print-mode nil t)
-    (mac-print-mode 1)
-    ;; (global-set-key (kbd "M-p") 'mac-print-buffer))
+  (if (eq system-type 'darwin)
+    (progn
+        (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
+        (when (require 'mac-print-mode nil t)
+        (mac-print-mode 1))
+        ;; (global-set-key (kbd "M-p") 'mac-print-buffer)
+    )
   )
 #+END_SRC
 
@@ -80,7 +84,6 @@ use-package must be setup early in the configuration.
   ;; it looks like it would prefer using .profile, so below I
   ;; disable the error message that occurs.
   (use-package exec-path-from-shell
-    :ensure t
     :init
     (setq exec-path-from-shell-check-startup-files nil)
     :config
@@ -230,7 +233,6 @@ Set up the org agenda.
 #+BEGIN_SRC emacs-lisp
   ;; Google calendar sync
   (use-package org-gcal
-    :ensure t
     :config
     (setq org-gcal-client-id "981452983982-lrd1cmkcrn6jf30k7v87ih24ai1ai2ea.apps.googleusercontent.com"
           org-gcal-client-secret "MiMLtnyy51Sq_RxwBW9rwZMp"
@@ -270,7 +272,6 @@ Set up the org agenda.
   ;; flycheck
   ;; note that flycheck C-c ! conflicts with org-mode
   (use-package flycheck
-    :ensure t
     :init
     (global-flycheck-mode)
     :config
@@ -290,7 +291,6 @@ Set up the org agenda.
 #+BEGIN_SRC emacs-lisp
   ;; play with evil mode
   (use-package evil
-    :ensure t
     :init
     ;; c-u in evil-mode works like in vim (page up)
     ;; must be set before package is loaded
@@ -314,7 +314,6 @@ Set up the org agenda.
 
   ;; use evil-matchit to match tags
   (use-package evil-matchit
-    :ensure t
     :init
     (global-evil-matchit-mode 1))
 #+END_SRC
@@ -390,7 +389,6 @@ Set up the org agenda.
 
 ;; spacemacs light theme is nice!
 (use-package spacemacs-theme
-:ensure t
 :defer t
 :init
 (load-theme 'spacemacs-light t))
@@ -401,12 +399,10 @@ Set up the org agenda.
   ;; Zen-burn
   (use-package zenburn-theme
     :disabled nil
-    :ensure t
     :config
     (load-theme 'zenburn t t))
 
   (use-package spaceline
-    :ensure t
     :demand t
     :init
     (setq powerline-default-separator 'arrow-fade)
@@ -417,48 +413,85 @@ Set up the org agenda.
 
 ** Tweak UI
 
+Dump the toolbar and scrollbars, but keep the menu for discovery purposes.
+
 #+BEGIN_SRC emacs-lisp
-  ;; screen stuff
   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-  ;; but we'll keep menu-bar-mode, since it's up there anyway
-  ;; eliminate splash screen
+  #+END_SRC
+
+Also get rid of splash screen, scratch screen message.  
+
+#+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t)
-  ;; inhibit scratch message
   (setq initial-scratch-message "")
-  ;; No backup files
-  (setq make-backup-files nil)
-  ;; auto-revert-mode reloads buffer if file changes on disk
+#+END_SRC
+
+Handle backup files in their own directory.
+
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist '(("." . "~/.saves"))
+  kept-new-versions 6
+  kept-old-version 2
+  version-control t)
+#+END_SRC
+
+Auto-revert mode reloads buffer if file changes on disk.  It is especially good if I am editing simultaneously with Emacs and an external editor, such as Xcode.
+
+#+BEGIN_SRC emacs-lisp  
   (global-auto-revert-mode t)
-  ;; Show column number
-  (column-number-mode t)
+#+END_SRC
+
+Ring the silent bell.  Even that is annoying and maybe I should just can the bell entirely.
+
+#+BEGIN_SRC emacs-lisp
   ;; Go ahead and ring the silent bell!
   (setq visible-bell t)
   (setq ring-bell-function 'ignore)
-  ;; save history
-  (savehist-mode t)
+#+END_SRC
 
+Save history.
+
+#+BEGIN_SRC emacs-lisp
+  (savehist-mode t)
+#+END_SRC
+
+Tweak the mouse.
+
+#+BEGIN_SRC emacs-lisp
   ;; try less jumpy trackpad scrolling
   (setq mouse-wheel-scroll-amount '(2 ((shift) . 1) ((control))))
-
   ;; try improving scrolling with trackpad
   (setq mouse-wheel-progressive-speed nil)
   (setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control) . nil)))
+#+END_SRC
 
+Use iBuffer instead of regular buffer.
+
+#+BEGIN_SRC emacs-lisp
   ;; iBuffer is better
   (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC
 
-  ;; use 'a' to open in current buffer, not create new buffer in dired
+Tweak dired to open files in same buffer, not a new buffer.
+
+#+BEGIN_SRC emacs-lisp
   (put 'dired-find-alternate-file 'disabled nil)
+#+END_SRC
 
+Use abbrev mode.
 
+#+BEGIN_SRC emacs-lisp
   ;; abbrev mode
   (setq-default abbrev-mode t)
   (setq save-abbrevs t)
   (put 'upcase-region 'disabled nil)
 
+#+END_SRC
 
+Fix info and fonts on my Windows system.
 
+#+BEGIN_SRC emacs-lisp
   (if (eq system-type 'windows-nt)
   (progn
     (info-initialize)
@@ -564,6 +597,7 @@ Enable encryption of gpg files
     :load-path "~/git/helm"
     :config
     (use-package helm-mode
+      :load-path "~/git/helm"
       :init
       (helm-mode 1))
     :init
@@ -576,12 +610,10 @@ Enable encryption of gpg files
 #+BEGIN_SRC emacs-lisp
   ;; projectile
   (use-package projectile
-    :ensure t
     :config
     (projectile-mode))
 
   (use-package helm-projectile
-    :ensure t
     :config
     (helm-projectile-on))
 #+END_SRC
@@ -590,12 +622,12 @@ Enable encryption of gpg files
 
 #+BEGIN_SRC emacs-lisp
   ;; my elisp files from "Writing GNU Emacs Extensions"
-  (use-package extensions)
-  (use-package timestamp)
-
+  (use-package extensions
+    :load-path "~/.emacs.d/elisp")
+  (use-package timestamp
+    :load-path "~/.emacs.d/elisp")
   ;; imenu-list
   (use-package imenu-list
-    :ensure t
     :config
     (setq imenu-list-position 'left))
    
@@ -622,15 +654,16 @@ Enable encryption of gpg files
   (setq ispell-program-name "/usr/local/bin/ispell")
 
   ;; some other packages
-  (use-package olivetti :ensure t :defer t)
-  (use-package htmlize :ensure t :defer t)
-  (use-package cider :ensure t :defer t)
-  (use-package w3m :ensure t :defer t)
+  (use-package olivetti :defer t)
+  (use-package htmlize :defer t)
+  (use-package cider :defer t)
+  (use-package w3m :defer t)
 
   ;; Proper title capitalization function
   ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
-  (use-package title-capitalization)
-
+  (use-package title-capitalization
+    :load-path "~/emacs.d/elisp")
+  
   ;; C-sharp mode
   (use-package csharp-mode)
 
@@ -663,8 +696,7 @@ Enable encryption of gpg files
   ;;   ("l" text-scale-decrease "out"))
   
   ;; auctex
-  (use-package tex-mode
-    :ensure t)
+  (use-package tex-mode)
 
   ;; graphviz dot mode
   ;; seems broken in emacs 26 master branch for now

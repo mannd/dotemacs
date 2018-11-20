@@ -1,3 +1,8 @@
+# Note there are some redundencies here, due to combining
+# several found gitignores.  It's also possible some of the stuff
+# excluded here would be better off put under version control.
+# Only time and trial and error will tell...
+
 *~
 \#*#
 *.elc
@@ -23,3 +28,74 @@ url/
 viper
 network-security.data
 /server
+
+# Stuff below was cluttering up my Magit window.
+.litable-lists.el
+configuration.el
+configuration.html
+diary
+elisp/bbdb-3.1.2/autom4te.cache/
+eww-bookmarks
+leuven-theme.el.original
+nov-places
+org-gcal/
+.litable-lists.el
+configuration.el
+configuration.html
+diary
+elisp/bbdb-3.1.2/autom4te.cache/
+eww-bookmarks
+leuven-theme.el.original
+nov-places
+org-gcal/
+projectile-bookmarks.eld
+
+# From https://github.com/github/gitignore/blob/master/Global/Emacs.gitignore
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode
+.org-id-locations
+*_archive
+
+# flymake-mode
+*_flymake.*
+
+# eshell files
+/eshell/history
+/eshell/lastdir
+
+# elpa packages
+/elpa/
+
+# reftex files
+*.rel
+
+# AUCTeX auto folder
+/auto/
+
+# cask packages
+.cask/
+dist/
+
+# Flycheck
+flycheck_*.el
+
+# server auth directory
+/server/
+
+# projectiles files
+.projectile
+
+# directory configuration
+.dir-locals.el
+
+# network security
+/network-security.data
+

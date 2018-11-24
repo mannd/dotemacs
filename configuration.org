@@ -433,8 +433,15 @@ Handle backup files in their own directory.
   (setq backup-directory-alist '(("." . "~/.saves"))
   kept-new-versions 6
   kept-old-version 2
-  version-control t)
+  version-control t
+  ;; don't ask to delete old backup versions
+  delete-old-versions t)
+  ;; avoid problems with linked files by backing up by copying
+  (setq backup-by-copying t)
 #+END_SRC
+
+#+RESULTS:
+: t
 
 Auto-revert mode reloads buffer if file changes on disk.  It is especially good if I am editing simultaneously with Emacs and an external editor, such as Xcode.
 

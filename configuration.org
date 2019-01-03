@@ -279,7 +279,7 @@ Set up the org agenda.
     (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
     (setq-default flycheck-emacs-lisp-load-path 'inherit)
     (define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
-  ;; flycheck-swift
+    ;; flycheck-swift
   ;; (use-package flycheck-swift
   ;;   :load-path "~/git/flycheck-swift"
   ;;   :config
@@ -379,36 +379,47 @@ Set up the org agenda.
 ** Themes
 
 #+BEGIN_SRC emacs-lisp
-;; pick a theme
-;;(load-theme 'tsdh-light t)
-;;(load-theme 'wombat t)
-;;(load-theme 'leuven t)
-;;(load-theme 'dracula t)
-;;(load-theme 'light-blue t)
-;;(load-theme 'leuven t)
+  ;; pick a theme
+  ;;(load-theme 'tsdh-light t)
+  ;;(load-theme 'wombat t)
+  ;;(load-theme 'leuven t)
+  ;;(load-theme 'dracula t)
+  ;;(load-theme 'light-blue t)
+  ;;(load-theme 'leuven t)
 
-;; spacemacs light theme is nice!
-(use-package spacemacs-theme
-:defer t
-:init
-(load-theme 'spacemacs-light t))
-;; and so is this font...
-(set-frame-font "Source Code Pro" nil t)
-(set-face-attribute 'default nil :height 150)
+  ;; spacemacs light theme is nice!
+  (use-package spacemacs-theme
+  :disabled t
+  :defer t
+  :init
+  (load-theme 'spacemacs-light t))
+
+  ;; and so is this font...
+  (when (member "Source Code Pro" (font-family-list))
+       (set-frame-font "Source Code Pro" nil t))
+   (set-face-attribute 'default nil :height 150)
+
+  (use-package spaceline
+  :demand t
+  :init
+  (setq powerline-default-separator 'arrow-fade)
+  :config
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme))
 
   ;; Zen-burn
   (use-package zenburn-theme
-    :disabled nil
-    :config
-    (load-theme 'zenburn t t))
+  :disabled t
+  :config
+  (load-theme 'zenburn t t))
 
-  (use-package spaceline
-    :demand t
-    :init
-    (setq powerline-default-separator 'arrow-fade)
-    :config
-    (require 'spaceline-config)
-    (spaceline-spacemacs-theme))
+  ;; Modern color-themes
+  ;; See https://github.com/emacs-jp/replace-colorthemes.
+  ;; There are a lot more of these you could download.
+  (use-package color-theme-modern
+  :config
+  (load-theme 'midnight t t)
+  (enable-theme 'midnight))
 #+END_SRC
 
 ** Tweak UI
@@ -543,6 +554,15 @@ Enable encryption of gpg files
 #+BEGIN_SRC emacs-lisp
   (use-package ledger-mode
     :load-path "~/lisp"
+    ;; C-c C-c clears whole transaction
+    :init 
+    (setq ledger-clear-whole-transactions 1)
+    ;; use company-mode for auto-completion with ledger
+    :config  
+    (add-hook 'ledger-mode-hook (lambda() (company-mode t)))
+    ;; emacs mode for ledger-report-mode
+    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+    ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
     :mode ("\\.ledger$" "\\.dat$"))
 #+END_SRC
 

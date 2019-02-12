@@ -26,7 +26,7 @@
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))
  '(package-selected-packages
-   '(color-theme-modern yaml-mode title-capitalization timestamp extensions helm-mode bbdb spaceline treepy spacemacs-theme evil-matchit challenger-deep-theme imenu-list org-gcal org-brain color-theme-sanityinc-tomorrow ghub magit-popup ox-epub csharp-mode forecast nov evil evil-mode calfw-org calfw auctex with-editor litable graphviz-dot-mode helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser color-theme clojure-mode-extra-font-locking))
+   '(evil-numbers celestial-mode-line color-theme-modern yaml-mode title-capitalization timestamp extensions helm-mode bbdb spaceline treepy spacemacs-theme evil-matchit challenger-deep-theme imenu-list org-gcal org-brain color-theme-sanityinc-tomorrow ghub magit-popup ox-epub csharp-mode forecast nov evil evil-mode calfw-org calfw auctex with-editor litable graphviz-dot-mode helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser color-theme clojure-mode-extra-font-locking))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(send-mail-function 'mailclient-send-it)
  '(tramp-syntax 'default nil (tramp))

@@ -316,6 +316,12 @@ Set up the org agenda.
   (use-package evil-matchit
     :init
     (global-evil-matchit-mode 1))
+
+  ;; implement number functions
+  (use-package evil-numbers
+    :init
+    (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
+    (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)) 
 #+END_SRC
 
 ** Magit
@@ -442,8 +448,8 @@ Handle backup files in their own directory.
 
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist '(("." . "~/.saves"))
-  kept-new-versions 6
-  kept-old-version 2
+  kept-new-versions 10
+  kept-old-versions 10
   version-control t
   ;; don't ask to delete old backup versions
   delete-old-versions t)

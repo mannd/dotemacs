@@ -307,6 +307,9 @@ Set up the org agenda.
     ;; git commit buffers start in insert mode
     (evil-set-initial-state 'git-commit-mode 'insert)
     (evil-set-initial-state 'dired-mode 'emacs)
+    (evil-set-initial-state 'image-dired-mode 'emacs)
+    (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)
+    (evil-set-initial-state 'eww-mode 'emacs)
     (evil-set-initial-state 'cider-repl 'emacs)
     (evil-set-initial-state 'cider-error 'emacs)
     (add-to-list 'evil-emacs-state-modes 'forecast-mode)
@@ -497,10 +500,11 @@ Use iBuffer instead of regular buffer.
   (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+END_SRC
 
-Tweak dired to open files in same buffer, not a new buffer.
+Tweak dired to open files in same buffer, not a new buffer.  Also make file sizes human readable.
 
 #+BEGIN_SRC emacs-lisp
   (put 'dired-find-alternate-file 'disabled nil)
+  (setq-default dired-listing-switches "-ahl")
 #+END_SRC
 
 Use abbrev mode.
@@ -525,6 +529,29 @@ Fix info and fonts on my Windows system.
     (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))
 #+END_SRC
 
+** Winner mode
+Undo and redo window configuration changes
+
+#+BEGIN_SRC emacs-lisp
+  (when (fboundp 'winner-mode)
+    (winner-mode 1))
+#+END_SRC
+
+** Beacon mode
+Flashes cursor when scrolling or changing buffers
+
+#+BEGIN_SRC emacs-lisp
+  (use-package beacon
+    :init (beacon-mode 1))
+#+END_SRC
+** Rainbow mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+     :init 
+     (add-hook 'prog-mode-hook 'rainbow-mode))
+#+END_SRC
+
 ** Deleted files go to trash
 
 #+BEGIN_SRC emacs-lisp
@@ -542,6 +569,7 @@ Enable encryption of gpg files
 #+END_SRC
 
 ** Markdown mode
+Note that we use auto-fill-mode with Markdown.
 
 #+BEGIN_SRC emacs-lisp
   ;; markdown-mode
@@ -552,6 +580,7 @@ Enable encryption of gpg files
     ("\\.md\\'" . markdown-mode)
     ("\\.markdown\\'" . markdown-mode))
     :init (setq markdown-command "pandoc")
+    (add-hook 'markdown-mode-hook 'auto-fill-mode)
     (electric-quote-mode -1))
 #+END_SRC
 

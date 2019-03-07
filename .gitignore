@@ -101,3 +101,6 @@ flycheck_*.el
 
 # image-dired files
 /image-dired
+
+# semantic db
+semanticdb/

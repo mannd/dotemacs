@@ -39,6 +39,13 @@
 (global-set-key (kbd "M-p") 'scroll-n-lines-behind)
 (global-set-key (kbd "M-n") 'scroll-n-lines-ahead)
 
+;; This isn't from the book, but my own function
+;; to globally adjust font-size.
+(defun change-global-font-size (SIZE)
+  "Set global fontsize to SIZE."
+  (interactive "nFont size: ")
+  (set-face-attribute 'default nil :height (* SIZE 10)))
+
 ;; (global-set-key (kbd "\C-x q") 'quoted-insert)
 ;; (defun point-to-top ()
 ;;   "Put point on top line of window."

@@ -244,6 +244,14 @@ Set up the org agenda.
   ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
 #+END_SRC
 
+*** org-pomodoro
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-pomodoro)
+#+END_SRC
+
+#+RESULTS:
+
 ** Customized keybindings
 
 #+BEGIN_SRC emacs-lisp
@@ -312,6 +320,7 @@ Set up the org agenda.
     (evil-set-initial-state 'eww-mode 'emacs)
     (evil-set-initial-state 'cider-repl 'emacs)
     (evil-set-initial-state 'cider-error 'emacs)
+    (evil-set-initial-state 'semantic-symref-results-mode 'emacs)
     (add-to-list 'evil-emacs-state-modes 'forecast-mode)
     (setq-default evil-cross-lines t))
 
@@ -405,16 +414,23 @@ Set up the org agenda.
 
   ;; and so is this font...
   (when (member "Source Code Pro" (font-family-list))
-       (set-frame-font "Source Code Pro" nil t))
-   (set-face-attribute 'default nil :height 150)
+       (set-frame-font "Source Code Pro-14" nil t))
+   ;; (set-face-attribute 'default nil :height 140)
 
   (use-package spaceline
+  :disabled t
   :demand t
   :init
   (setq powerline-default-separator 'arrow-fade)
   :config
   (require 'spaceline-config)
   (spaceline-spacemacs-theme))
+
+  (use-package doom-themes
+  :config (load-theme 'doom-one-light t))
+
+  (use-package doom-modeline
+  :hook (after-init . doom-modeline-mode))
 
   ;; Zen-burn
   (use-package zenburn-theme
@@ -426,10 +442,13 @@ Set up the org agenda.
   ;; See https://github.com/emacs-jp/replace-colorthemes.
   ;; There are a lot more of these you could download.
   (use-package color-theme-modern
+  :disabled t
   :config
   (load-theme 'midnight t t)
   (enable-theme 'midnight))
 #+END_SRC
+
+#+RESULTS:
 
 ** Tweak UI
 
@@ -537,6 +556,14 @@ Undo and redo window configuration changes
     (winner-mode 1))
 #+END_SRC
 
+** Undo tree
+
+#+BEGIN_SRC emacs-lisp
+(global-undo-tree-mode)
+(setq undo-tree-visualizer-diff t)
+(setq undo-tree-visualizer-timestamps t)
+#+END_SRC
+
 ** Beacon mode
 Flashes cursor when scrolling or changing buffers
 
@@ -599,6 +626,13 @@ Note that we use auto-fill-mode with Markdown.
     (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
     ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
     :mode ("\\.ledger$" "\\.dat$"))
+#+END_SRC
+
+** Epub
+#+BEGIN_SRC emacs-lisp
+  (use-package nov
+    :config  
+    (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 #+END_SRC
 
 ** Gnus

@@ -10,15 +10,17 @@
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
  '(beacon-color "#ff9da4")
  '(canlock-password "f2adf01a9191e9787b0182f97eae18d118ae43d9")
- '(custom-enabled-themes nil)
+ '(custom-enabled-themes '(doom-one-light))
  '(custom-safe-themes
-   '("4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "b54826e5d9978d59f9e0a169bbd4739dd927eead3ef65f56786621b53c031a7c" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "4ad63526fc7cc542a258977a4b92c9709611720f7207164aa9df416dc0024be8" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" "3e644bef0aaf755a08cfe62e11a32787af86f9c411b529452bbec44dad7bbeab" "068677ee5dbde6e4a677267b7d0902a93ea82d9eb7fd1927dd0ec497c88ee938" "0e219d63550634bc5b0c214aced55eb9528640377daf486e13fb18a32bf39856" "427fed191e7a766152e59ef0e2904283f436dbbe259b9ccc04989f3acde50a55" "cc210a8d0cc72968e7c8516c9c7bd5043cc47199755abc5c23cb295a6e715d35" "40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" default))
+   '("d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "b54826e5d9978d59f9e0a169bbd4739dd927eead3ef65f56786621b53c031a7c" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "4ad63526fc7cc542a258977a4b92c9709611720f7207164aa9df416dc0024be8" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" "3e644bef0aaf755a08cfe62e11a32787af86f9c411b529452bbec44dad7bbeab" "068677ee5dbde6e4a677267b7d0902a93ea82d9eb7fd1927dd0ec497c88ee938" "0e219d63550634bc5b0c214aced55eb9528640377daf486e13fb18a32bf39856" "427fed191e7a766152e59ef0e2904283f436dbbe259b9ccc04989f3acde50a55" "cc210a8d0cc72968e7c8516c9c7bd5043cc47199755abc5c23cb295a6e715d35" "40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" default))
+ '(ecb-source-path '("~/AndroidstudioProjects/" ""))
  '(electric-quote-mode t)
  '(evernote-developer-token
    "S=s70:U=79f43a:E=14e6a93ed8b:C=14712e2c020:P=1cd:A=en-devtoken:V=2:H=d547691e1d7dec6c08951f34d37b660b")
  '(fci-rule-color "#383838")
  '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
  '(frame-background-mode 'dark)
+ '(global-prettify-symbols-mode t)
  '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
@@ -29,7 +31,7 @@
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))
  '(package-selected-packages
-   '(org-pomodoro doom-themes beacon rainbow-mode evil-numbers celestial-mode-line color-theme-modern yaml-mode title-capitalization timestamp extensions helm-mode bbdb spaceline treepy spacemacs-theme evil-matchit challenger-deep-theme imenu-list org-gcal org-brain color-theme-sanityinc-tomorrow ghub magit-popup ox-epub csharp-mode forecast nov evil evil-mode calfw-org calfw auctex with-editor litable graphviz-dot-mode helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser color-theme clojure-mode-extra-font-locking))
+   '(iedit auto-complete-config auto-complete org-pomodoro doom-themes beacon rainbow-mode evil-numbers celestial-mode-line color-theme-modern yaml-mode title-capitalization timestamp extensions helm-mode bbdb spaceline treepy spacemacs-theme evil-matchit challenger-deep-theme imenu-list org-gcal org-brain color-theme-sanityinc-tomorrow ghub magit-popup ox-epub csharp-mode forecast nov evil evil-mode calfw-org calfw auctex with-editor litable graphviz-dot-mode helm-projectile projectile kosmos-theme let-alist flycheck anything w3m-load company-sourcekit rvm exec-path-from-shell xcode-mode zenburn-theme frame-cmds wttrin lein htmlize dracula-theme fountain-mode js3-mode js2-mode writeroom-mode use-package tagedit swift-mode smex rainbow-delimiters paredit multiple-cursors geiser color-theme clojure-mode-extra-font-locking))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(send-mail-function 'mailclient-send-it)
  '(tramp-syntax 'default nil (tramp))

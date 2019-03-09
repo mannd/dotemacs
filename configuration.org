@@ -714,6 +714,40 @@ Note that we use auto-fill-mode with Markdown.
     (helm-projectile-on))
 #+END_SRC
 
+** CEDET
+We are not using CEDET at present, but using company mode and semantic mode.  Turn on semantic mode here.
+
+#+BEGIN_SRC emacs-lisp
+  (semantic-mode 1)
+  ;; (require 'cedet-global)
+  ;; (when (cedet-gnu-global-version-check t)
+  ;;   (semanticdb-enable-gnu-global-databases 'java-mode))
+#+END_SRC
+
+** Iedit
+Iedit is a way to refactor names in a file.
+
+#+BEGIN_SRC emacs-lisp
+(use-package iedit
+:config
+(define-key global-map (kbd "C-c ;") 'iedit-mode))
+#+END_SRC
+
+** Auto-complete
+We are using company mode instead of auto-complete for now.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-complete
+    :disabled t
+    :config
+    (ac-config-default))
+
+  ;; (defun my/add-semantic-to-autocomplete()
+  ;;   (add-to-list 'ac-sources 'ac-source-semantic))
+  ;; (add-hook 'c-mode-common-hook 'my/add-semantic-to-autocomplete)
+  ;; (add-hook 'java-mode-hook 'my/add-semantic-to-autocomplete)
+#+END_SRC
+
 ** Misc packages
 
 #+BEGIN_SRC emacs-lisp
@@ -898,10 +932,15 @@ Note that we use auto-fill-mode with Markdown.
 *** Company mode
 
 #+BEGIN_SRC emacs-lisp
-  ;; company-sourcekit for Swift programming
-  (use-package company-sourcekit
-    :ensure t
-    :config
+(use-package company
+:config
+    (add-hook 'prog-mode-hook 'company-mode)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous))
+
+;; company-sourcekit for Swift programming
+(use-package company-sourcekit
+:config
     (add-to-list 'company-backends 'company-sourcekit))
 #+END_SRC
 

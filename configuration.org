@@ -641,6 +641,11 @@ Note that we use auto-fill-mode with Markdown.
     ;; emacs mode for ledger-report-mode
     (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
     ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
+    ;; Map some long but common accounts to function keys
+    :bind 
+    (:map ledger-mode-map 
+    ("<f6>" . "Assets:Canvas:Checking")
+    ("<f7>" . "Assets:BanquePopulaire:Checking"))
     :mode ("\\.ledger$" "\\.dat$"))
 #+END_SRC
 

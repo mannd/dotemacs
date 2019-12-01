@@ -61,6 +61,12 @@ Customizations get stored in their own file.
   (load custom-file)
 #+END_SRC
 
+** Define hyper key as fn
+
+#+BEGIN_SRC emacs-lisp
+    (setq ns-function-modifier 'hyper)
+#+END_SRC
+
 ** Printing
 
 Printing is only set up for mac so far.
@@ -250,7 +256,17 @@ Set up the org agenda.
 (use-package org-pomodoro)
 #+END_SRC
 
-#+RESULTS:
+*** org-bullets
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+:config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+
+*** images
+#+BEGIN_SRC emacs-lisp
+(setq org-image-actual-width nil)
+#+END_SRC
 
 ** Customized keybindings
 
@@ -427,7 +443,7 @@ Set up the org agenda.
   (spaceline-spacemacs-theme))
 
   (use-package doom-themes
-  :config (load-theme 'doom-one-light t))
+  :config (load-theme 'doom-one t))
 
   (use-package doom-modeline
   :hook (after-init . doom-modeline-mode))
@@ -704,15 +720,20 @@ Note that we use auto-fill-mode with Markdown.
 ** Projectile
 
 #+BEGIN_SRC emacs-lisp
-  ;; projectile
-  (use-package projectile
-    :config
-    (projectile-mode))
+;; projectile
+(use-package projectile
+  :ensure t
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode +1))
 
-  (use-package helm-projectile
-    :config
-    (helm-projectile-on))
+(use-package helm-projectile
+  :config
+  (helm-projectile-on))
 #+END_SRC
+
+#+RESULTS:
+: t
 
 ** CEDET
 We are not using CEDET at present, but using company mode and semantic mode.  Turn on semantic mode here.
@@ -936,12 +957,19 @@ We are using company mode instead of auto-complete for now.
 :config
     (add-hook 'prog-mode-hook 'company-mode)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous))
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (setq company-transformers '(company-sort-by-occurrence)))
 
 ;; company-sourcekit for Swift programming
 (use-package company-sourcekit
 :config
     (add-to-list 'company-backends 'company-sourcekit))
+    
+(defun my-company-after-completion-hook (&rest _ignored)
+  (delete-trailing-whitespace))
+
+;; or setq-local in a mode hook
+(setq company-after-completion-hook #'my-company-after-completion-hook)
 #+END_SRC
 
 *** Yasnippet

@@ -446,7 +446,11 @@ Set up the org agenda.
   :config (load-theme 'doom-one t))
 
   (use-package doom-modeline
-  :hook (after-init . doom-modeline-mode))
+  :hook (after-init . doom-modeline-mode)
+  :custom
+  (doom-modeline-height 15)
+  (doom-modeline-major-mode-color-icon t))
+)
 
   ;; Zen-burn
   (use-package zenburn-theme
@@ -494,9 +498,6 @@ Handle backup files in their own directory.
   ;; avoid problems with linked files by backing up by copying
   (setq backup-by-copying t)
 #+END_SRC
-
-#+RESULTS:
-: t
 
 Auto-revert mode reloads buffer if file changes on disk.  It is especially good if I am editing simultaneously with Emacs and an external editor, such as Xcode.
 
@@ -562,6 +563,12 @@ Fix info and fonts on my Windows system.
     (add-to-list 'Info-additional-directory-list "C:/Users/mannd/bin/emacs-24.5-bin-i686-mingw32/share/info")
     (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-12"))
     (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))
+#+END_SRC
+
+Make title fancier.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default frame-title-format '("Emacs - " user-login-name "@" system-name " - %b"))
 #+END_SRC
 
 ** Winner mode

@@ -450,7 +450,7 @@ Set up the org agenda.
   :custom
   (doom-modeline-height 15)
   (doom-modeline-major-mode-color-icon t))
-)
+
 
   ;; Zen-burn
   (use-package zenburn-theme

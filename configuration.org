@@ -268,6 +268,16 @@ Set up the org agenda.
 (setq org-image-actual-width nil)
 #+END_SRC
 
+** Org2blog
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org2blog)
+  (setq org2blog/wp-blog-alist
+    `(("EP Studios"
+       :url "https://epstudiossoftware.com/xmlrpc.php"
+       :username ,(car (auth-source-user-and-password "epstudios.org"))
+       :password ,(cadr (auth-source-user-and-password "epstudios.org")))))
+#+END_SRC
 ** Customized keybindings
 
 #+BEGIN_SRC emacs-lisp
@@ -350,6 +360,17 @@ Set up the org agenda.
     :init
     (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
     (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)) 
+    
+  ;; evil-org
+  (use-package evil-org
+    :after org
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+          (lambda ()
+            (evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
 #+END_SRC
 
 ** Magit
@@ -443,7 +464,7 @@ Set up the org agenda.
   (spaceline-spacemacs-theme))
 
   (use-package doom-themes
-  :config (load-theme 'doom-one t))
+  :config (load-theme 'doom-one-light t))
 
   (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -638,7 +659,7 @@ Note that we use auto-fill-mode with Markdown.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ledger-mode
-    :load-path "~/lisp"
+    ;:load-path "~/lisp"
     ;; C-c C-c clears whole transaction
     :init 
     (setq ledger-clear-whole-transactions 1)
@@ -654,6 +675,12 @@ Note that we use auto-fill-mode with Markdown.
     ("<f6>" . "Assets:Canvas:Checking")
     ("<f7>" . "Assets:BanquePopulaire:Checking"))
     :mode ("\\.ledger$" "\\.dat$"))
+    
+    (use-package evil-ledger
+      :after ledger-mode
+      :config
+      (setq evil-ledger-sort-key "S")
+      (add-hook 'ledger-mode-hook #'evil-ledger-mode))
 #+END_SRC
 
 ** Epub

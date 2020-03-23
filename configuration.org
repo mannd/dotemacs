@@ -8,12 +8,18 @@ This is my new /literate/ Emacs configuration file.  Work in Progress!  This fil
 Initialize package system and set load-path to elisp directory.
 
 #+BEGIN_SRC emacs-lisp
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (setq package-load-list '(all))
+  (unless (package-installed-p 'org)
+   (package-intall 'org))
   (package-initialize)
   (add-to-list 'load-path "~/.emacs.d/elisp/")
   ;; prevent loading packages twice after init.el is done
   (setq package-enable-at-startup nil)
   ;; set up package sources
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 #+END_SRC
 
 ** Personal Information
@@ -82,6 +88,19 @@ Printing is only set up for mac so far.
   )
 #+END_SRC
 
+** Minibuffer uses selected buffer input method
+For entering those pesky accents in French, German, etc.
+
+#+BEGIN_SRC emacs-lisp
+  ;; (defun my-inherit-input-method ()
+  ;;   "Inherit input method from `minibuffer-selected-window'."
+  ;;   (let* ((win (minibuffer-selected-window))
+  ;;          (buf (and win (window-buffer win))))
+  ;;      (when buf
+  ;;        (activate-input-method (buffer-local-value 'current-input-method buf)))))
+
+  ;; (add-hook 'minibuffer-setup-hook #'my-inherit-input-method)
+#+END_SRC
 ** Get path right
 
 #+BEGIN_SRC emacs-lisp
@@ -239,6 +258,7 @@ Set up the org agenda.
 #+BEGIN_SRC emacs-lisp
   ;; Google calendar sync
   (use-package org-gcal
+    :disabled t
     :config
     (setq org-gcal-client-id "981452983982-lrd1cmkcrn6jf30k7v87ih24ai1ai2ea.apps.googleusercontent.com"
           org-gcal-client-secret "MiMLtnyy51Sq_RxwBW9rwZMp"
@@ -263,6 +283,20 @@ Set up the org agenda.
 :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
+*** org-drill
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-drill)
+#+END_SRC
+
+*** Have org capture use latin-9 input
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-hook 
+  ;;           'helm-mode-hook 
+  ;;   (lambda () (activate-input-method "latin-9-prefix")))
+  (setq default-input-method "latin-9-prefix")
+#+END_SRC
 *** images
 #+BEGIN_SRC emacs-lisp
 (setq org-image-actual-width nil)
@@ -271,14 +305,14 @@ Set up the org agenda.
 ** Org2blog
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org2blog)
-  (setq org2blog/wp-blog-alist
-    `(("EP Studios"
-       :url "https://epstudiossoftware.com/xmlrpc.php"
-       :username ,(car (auth-source-user-and-password "epstudios.org"))
-       :password ,(cadr (auth-source-user-and-password "epstudios.org")))))
+  ;; (use-package org2blog)
+  ;; (setq org2blog/wp-blog-alist
+  ;;   `(("EP Studios"
+  ;;      :url "https://epstudiossoftware.com/xmlrpc.php"
+  ;;      :username ,(car (auth-source-user-and-password "epstudios.org"))
+  ;;      :password ,(cadr (auth-source-user-and-password "epstudios.org")))))
 #+END_SRC
-** Customized keybindings
+** COMMENT Customized keybindings
 
 #+BEGIN_SRC emacs-lisp
   (bind-key "C-+" 'text-scale-increase)   
@@ -455,8 +489,6 @@ Set up the org agenda.
    ;; (set-face-attribute 'default nil :height 140)
 
   (use-package spaceline
-  :disabled t
-  :demand t
   :init
   (setq powerline-default-separator 'arrow-fade)
   :config
@@ -465,6 +497,10 @@ Set up the org agenda.
 
   (use-package doom-themes
   :config (load-theme 'doom-one-light t))
+  
+  (use-package leuven-theme
+  :disabled t
+  :config (load-theme 'leuven-dark t))
 
   (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -580,7 +616,6 @@ Fix info and fonts on my Windows system.
   (if (eq system-type 'windows-nt)
   (progn
     (info-initialize)
-    (add-to-list 'Info-additional-directory-list "~/git/org-mode/doc")
     (add-to-list 'Info-additional-directory-list "C:/Users/mannd/bin/emacs-24.5-bin-i686-mingw32/share/info")
     (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-12"))
     (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))
@@ -750,6 +785,7 @@ Note that we use auto-fill-mode with Markdown.
     (use-package helm-mode
       :load-path "~/git/helm"
       :init
+      (activate-input-method "latin-9-prefix")
       (helm-mode 1))
     :init
     (global-set-key (kbd "C-x C-f") 'helm-find-files)

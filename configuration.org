@@ -5,15 +5,7 @@ This is my new /literate/ Emacs configuration file.  Work in Progress!  This fil
 * Configuration
 ** Startup package system
 
-Initialize package system and set load-path to elisp directory.
-
 #+BEGIN_SRC emacs-lisp
-  (unless package-archive-contents
-    (package-refresh-contents))
-  (setq package-load-list '(all))
-  (unless (package-installed-p 'org)
-   (package-intall 'org))
-  (package-initialize)
   (add-to-list 'load-path "~/.emacs.d/elisp/")
   ;; prevent loading packages twice after init.el is done
   (setq package-enable-at-startup nil)
@@ -21,7 +13,8 @@ Initialize package system and set load-path to elisp directory.
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 #+END_SRC
-
+#+begin_src emacs-lisp
+#+end_src
 ** Personal Information
 
 #+BEGIN_SRC emacs-lisp
@@ -136,6 +129,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
   ;; we hide stars by default even in buffers where we turn off
   (setq org-hide-leading-stars 'hidestars) ; just one star visible
   (setq org-startup-indented t)
+  (setq org-hide-emphasis-markers t)
 #+END_SRC
 
 *** Org agenda
@@ -203,7 +197,7 @@ Set up the org agenda.
   (setq org-tags-exclude-from-inheritance '("project"))
   ;; Capture templates
   (setq org-capture-templates
-        '(("c" "Calendar appointment" entry (file "~/Dropbox/org/gcal.org")
+        '(("c" "Calendar appointment" entry (file "~/org/gcal.org")
            "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
           ("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
            "* TODO %?\n%U\n%a\n")
@@ -262,7 +256,7 @@ Set up the org agenda.
     :config
     (setq org-gcal-client-id "981452983982-lrd1cmkcrn6jf30k7v87ih24ai1ai2ea.apps.googleusercontent.com"
           org-gcal-client-secret "MiMLtnyy51Sq_RxwBW9rwZMp"
-          org-gcal-file-alist '(("manndmd@gmail.com" . "~/Dropbox/org/calendars/gcal.org"))))
+          org-gcal-file-alist '(("manndmd@gmail.com" . "~/org/calendars/gcal.org"))))
   ;; ("a46egt8krbmcg72csc9vtmgdro@group.calendar.google.com" . "~/Dropbox/org/calendars/persgcal.org")
   ;; ("manngmd@gmail.com" . "~/Dropbox/org/calendars/gretgcal.org"))))
 
@@ -380,6 +374,7 @@ Set up the org agenda.
     (evil-set-initial-state 'eww-mode 'emacs)
     (evil-set-initial-state 'cider-repl 'emacs)
     (evil-set-initial-state 'cider-error 'emacs)
+    (evil-set-initial-state 'deft-mode 'emacs)
     (evil-set-initial-state 'semantic-symref-results-mode 'emacs)
     (add-to-list 'evil-emacs-state-modes 'forecast-mode)
     (setq-default evil-cross-lines t))
@@ -485,7 +480,7 @@ Set up the org agenda.
 
   ;; and so is this font...
   (when (member "Source Code Pro" (font-family-list))
-       (set-frame-font "Source Code Pro-14" nil t))
+       (set-frame-font "Source Code Pro-16" nil t))
    ;; (set-face-attribute 'default nil :height 140)
 
   (use-package spaceline
@@ -496,7 +491,7 @@ Set up the org agenda.
   (spaceline-spacemacs-theme))
 
   (use-package doom-themes
-  :config (load-theme 'doom-one-light t))
+  :config (load-theme 'doom-dark+ t))
   
   (use-package leuven-theme
   :disabled t
@@ -707,7 +702,7 @@ Note that we use auto-fill-mode with Markdown.
     ;; Map some long but common accounts to function keys
     :bind 
     (:map ledger-mode-map 
-    ("<f6>" . "Assets:Canvas:Checking")
+    ("<f6>" . "Assets:TIAA:Checking")
     ("<f7>" . "Assets:BanquePopulaire:Checking"))
     :mode ("\\.ledger$" "\\.dat$"))
     
@@ -795,16 +790,16 @@ Note that we use auto-fill-mode with Markdown.
 ** Projectile
 
 #+BEGIN_SRC emacs-lisp
-;; projectile
-(use-package projectile
-  :ensure t
-  :config
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode +1))
+    ;; projectile
+    (use-package projectile
+      :ensure t
+      :config
+      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+      (projectile-mode +1))
 
-(use-package helm-projectile
-  :config
-  (helm-projectile-on))
+    (use-package helm-projectile
+      :config
+      (helm-projectile-on))
 #+END_SRC
 
 #+RESULTS:
@@ -992,39 +987,64 @@ We are using company mode instead of auto-complete for now.
 *** Swift
 
 #+BEGIN_SRC emacs-lisp
-  ;; xcode documentation -- Doesn't work
-  ;; (use-package xcode-document-viewer
-  ;;   :load-path "~/git/emacs-xcode-document-viewer"
-  ;;   :init
-  ;;   (use-package anything
-  ;;     :ensure t)
-  ;;   :config
-  ;;   (setq xcdoc:document-path "/Applications/Xcode.app/Contents/Developer/Documentation/DocSets/com.apple.adc.documentation.docset")
-  ;;   (setq xcdoc:open-w3m-other-buffer t))
+    (use-package swift-mode)
+    ;; xcode documentation -- Doesn't work
+    ;; (use-package xcode-document-viewer
+    ;;   :load-path "~/git/emacs-xcode-document-viewer"
+    ;;   :init
+    ;;   (use-package anything
+    ;;     :ensure t)
+    ;;   :config
+    ;;   (setq xcdoc:document-path "/Applications/Xcode.app/Contents/Developer/Documentation/DocSets/com.apple.adc.documentation.docset")
+    ;;   (setq xcdoc:open-w3m-other-buffer t))
 
 
-  ;; fix for yas-snippet breaking term-mode TABS
-  ;; see https://github.com/joaotavora/yasnippet/issues/289
-  (add-hook 'term-mode-hook (lambda()
-                              (yas-minor-mode -1)))
+    ;; fix for yas-snippet breaking term-mode TABS
+    ;; see https://github.com/joaotavora/yasnippet/issues/289
+    (add-hook 'term-mode-hook (lambda()
+                                (yas-minor-mode -1)))
 
-  ;; swift-mode to use company-mode by default
-  (add-hook 'swift-mode-hook (lambda()
-                               (company-mode t)))
-  ;; xcode-mode -- doesn't work with Xcode 8 yet
-  ;; (use-package xcode-mode
-  ;;     :load-path "~/git/xcode-mode"
-  ;;    :ensure t)
+    ;; swift-mode to use company-mode by default
+    (add-hook 'swift-mode-hook (lambda()
+                                 (company-mode t)))
+    ;; xcode-mode -- doesn't work with Xcode 8 yet
+    ;; (use-package xcode-mode
+    ;;     :load-path "~/git/xcode-mode"
+    ;;    :ensure t)
 
-  ;; figure out if .h files are C or Objective C
-  ;; (add-to-list 'magic-mode-alist
-  ;; 	     `(,(lambda ()
-  ;; 		  (and (string= (file-name-extension buffer-file-name) "h")
-  ;; 		       (re-search-forward "@\\<interface\\>"
-  ;; 					  magic-mode-regexp-match-limit t)))
-  ;; 	       . objc-mode))
+    ;; figure out if .h files are C or Objective C
+    ;; (add-to-list 'magic-mode-alist
+    ;; 	     `(,(lambda ()
+    ;; 		  (and (string= (file-name-extension buffer-file-name) "h")
+    ;; 		       (re-search-forward "@\\<interface\\>"
+    ;; 					  magic-mode-regexp-match-limit t)))
+    ;; 	       . objc-mode))
+  ;; From https://www.danielde.dev/blog/emacs-for-swift-development
+  (defun xcode-build()
+    (interactive)
+    (shell-command-to-string
+      "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'build targetProject' -e 'end tell'"))
+  (defun xcode-run()
+    (interactive)
+    (shell-command-to-string
+      "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'run targetProject' -e 'end tell'"))
+  (defun xcode-test()
+    (interactive)
+    (shell-command-to-string
+      "osascript -e 'tell application \"Xcode\"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'test targetProject' -e 'end tell'"))
+  (global-set-key (kbd "s-b") 'xcode-build)
+  (global-set-key (kbd "s-r") 'xcode-run)
+  (global-unset-key (kbd "s-u")) ;originally bound to revert-buffer
+  (global-set-key (kbd "s-u") 'xcode-test)
+
+  (defun xcode-open-current-file()
+  (interactive)
+  (shell-command-to-string
+    (concat "open -a \"/Applications/Xcode.app\" " (shell-quote-argument (buffer-file-name)))))
+  (global-set-key (kbd "C-c p x x") 'xcode-open-current-file)
+
+
 #+END_SRC
-
 *** Company mode
 
 #+BEGIN_SRC emacs-lisp
@@ -1055,6 +1075,58 @@ We are using company mode instead of auto-complete for now.
     :load-path "~/git/yasnippet"
     :config
     (yas-global-mode 1))
+#+END_SRC
+
+*** Rust
+
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode)
+(use-package cargo
+  :config
+  (add-hook 'rust-mode-hook 'cargo-minor-mode))
+#+END_SRC
+
+** Deft
+#+BEGIN_SRC emacs-lisp
+(use-package deft
+:after org
+:bind
+("C-c n d" . deft)
+:custom
+(deft-recursive t)
+(deft-use-filter-string-for-filename t)
+(deft-default-extension "org")
+(deft-directory "~/Documents/org/"))
+#+END_SRC
+
+** Zetteldeft
+
+#+BEGIN_SRC emacs-lisp
+(use-package avy)
+(use-package zetteldeft
+    :disabled t
+    :after deft
+    :config
+        (zetteldeft-set-classic-keybindings))
+#+END_SRC
+
+** Org-roam
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam
+    :disabled t
+    :hook
+(after-init . org-roam-mode)
+    :custom
+    (org-roam-directory "~/Documents/org/")
+    :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n j" . org-roam-jump-to-index)
+               ("C-c n b" . org-roam-switch-to-buffer)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
 #+END_SRC
 
 ** Disabled packages

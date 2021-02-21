@@ -35,6 +35,7 @@ This is my new /literate/ Emacs configuration file.  Work in Progress!  This fil
 use-package must be setup early in the configuration.
 
 #+BEGIN_SRC emacs-lisp
+  (require 'ert)
   (unless (package-installed-p 'use-package)
     (package-install 'use-package))
   (eval-when-compile
@@ -139,16 +140,13 @@ Set up the org agenda.
 #+BEGIN_SRC emacs-lisp
   ;; agenda files
   ;; Note org-gcal seems to not work with multiple calendars
+  ;;(setq org-agenda-files '("~/org/inbox.org"))
   (setq org-agenda-files '("~/org/inbox.org"
                            "~/org/personal.org"
                            "~/org/home.org"
                            "~/org/epstudios.org"
                            "~/org/family.org"
-                           "~/org/org.org"
-                           "~/org/calendars/gcal.org"))
-  ;; "~/org/calendars/persgcal.org"
-  ;; "~/org/calendars/gretgcal.org"))
-
+                           "~/org/org.org"))
   ;; custom agenda commands
   ;; see https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
   (setq org-agenda-custom-commands
@@ -197,9 +195,7 @@ Set up the org agenda.
   (setq org-tags-exclude-from-inheritance '("project"))
   ;; Capture templates
   (setq org-capture-templates
-        '(("c" "Calendar appointment" entry (file "~/org/gcal.org")
-           "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-          ("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
+        '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
            "* TODO %?\n%U\n%a\n")
           ("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
            "* %? :NOTE:\n%U\n%a\n")
@@ -245,23 +241,6 @@ Set up the org agenda.
   ;; widen margins in Latex export
   (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil)))
 
-#+END_SRC
-
-*** org-gcal
-
-#+BEGIN_SRC emacs-lisp
-  ;; Google calendar sync
-  (use-package org-gcal
-    :disabled t
-    :config
-    (setq org-gcal-client-id "981452983982-lrd1cmkcrn6jf30k7v87ih24ai1ai2ea.apps.googleusercontent.com"
-          org-gcal-client-secret "MiMLtnyy51Sq_RxwBW9rwZMp"
-          org-gcal-file-alist '(("manndmd@gmail.com" . "~/org/calendars/gcal.org"))))
-  ;; ("a46egt8krbmcg72csc9vtmgdro@group.calendar.google.com" . "~/Dropbox/org/calendars/persgcal.org")
-  ;; ("manngmd@gmail.com" . "~/Dropbox/org/calendars/gretgcal.org"))))
-
-  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
-  ;;(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
 #+END_SRC
 
 *** org-pomodoro
@@ -342,10 +321,9 @@ Set up the org agenda.
     (setq-default flycheck-emacs-lisp-load-path 'inherit)
     (define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
     ;; flycheck-swift
-  ;; (use-package flycheck-swift
-  ;;   :load-path "~/git/flycheck-swift"
-  ;;   :config
-  ;;   (eval-after-load 'flycheck '(flycheck-swift-setup)))
+  (use-package flycheck-swift
+    :config
+    (eval-after-load 'flycheck '(flycheck-swift-setup)))
 #+END_SRC
 
 ** Evil mode
@@ -389,7 +367,7 @@ Set up the org agenda.
     :init
     (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
     (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)) 
-    
+
   ;; evil-org
   (use-package evil-org
     :after org
@@ -407,7 +385,6 @@ Set up the org agenda.
 #+BEGIN_SRC emacs-lisp
   ;; Magit
   (use-package magit
-    :load-path "~/git/magit/lisp"
     :init
     (use-package magit-gitflow
       :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
@@ -878,7 +855,6 @@ We are using company mode instead of auto-complete for now.
   (use-package olivetti :defer t)
   (use-package htmlize :defer t)
   (use-package cider :defer t)
-  (use-package w3m :defer t)
 
   ;; Proper title capitalization function
   ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp

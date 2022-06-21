@@ -98,16 +98,17 @@ For entering those pesky accents in French, German, etc.
 ** Get path right
 
 #+BEGIN_SRC emacs-lisp
-  ;; new and improved way to make PATH and exec-path match bash config
-  ;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
-  ;; it looks like it would prefer using .profile, so below I
-  ;; disable the error message that occurs.
-  (use-package exec-path-from-shell
-    :init
-    (setq exec-path-from-shell-check-startup-files nil)
-    :config
-    (when (memq window-system '(mac ns))
-      (exec-path-from-shell-initialize)))
+      ;; new and improved way to make PATH and exec-path match bash config
+      ;; exec-path-from-shell doesn't like using .bashrc for .bash_profile,
+      ;; it looks like it would prefer using .profile, so below I
+      ;; disable the error message that occurs.
+      (use-package exec-path-from-shell
+        :init
+        (setq exec-path-from-shell-check-startup-files nil)
+        :config
+        (when (memq window-system '(mac ns))
+          (exec-path-from-shell-initialize)))
+ 
 #+END_SRC
 
 ** Org mode
@@ -468,7 +469,7 @@ Set up the org agenda.
   (spaceline-spacemacs-theme))
 
   (use-package doom-themes
-  :config (load-theme 'doom-dark+ t))
+  :config (load-theme 'doom-gruvbox-light t))
   
   (use-package leuven-theme
   :disabled t
@@ -610,9 +611,17 @@ Undo and redo window configuration changes
 ** Undo tree
 
 #+BEGIN_SRC emacs-lisp
-(global-undo-tree-mode)
-(setq undo-tree-visualizer-diff t)
-(setq undo-tree-visualizer-timestamps t)
+  (use-package undo-tree
+    :ensure t
+    :after evil
+    :diminish
+    :config
+    (evil-set-undo-system 'undo-tree)
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+    (global-undo-tree-mode 1)
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-diff t)
+    (setq undo-tree-visualizer-timestamps t))
 #+END_SRC
 
 ** Beacon mode
@@ -679,10 +688,13 @@ Note that we use auto-fill-mode with Markdown.
     ;; Map some long but common accounts to function keys
     :bind 
     (:map ledger-mode-map 
+    ("<f5>" . "Assets:Canvas:Checking")
     ("<f6>" . "Assets:TIAA:Checking")
-    ("<f7>" . "Assets:BanquePopulaire:Checking"))
+    ("<f7>" . "Assets:BanquePopulaire:Checking")
+    ("<f8>" . "€"))
     :mode ("\\.ledger$" "\\.dat$"))
-    
+
+
     (use-package evil-ledger
       :after ledger-mode
       :config
@@ -752,10 +764,10 @@ Note that we use auto-fill-mode with Markdown.
   ;;(add-to-list 'load-path "~/git/emacs-async")
   (use-package helm-config
     :demand t
-    :load-path "~/git/helm"
+    :load-path "~/git/helm"		
     :config
     (use-package helm-mode
-      :load-path "~/git/helm"
+      :load-path "~/git/helm"		
       :init
       (activate-input-method "latin-9-prefix")
       (helm-mode 1))
@@ -1064,15 +1076,16 @@ We are using company mode instead of auto-complete for now.
 
 ** Deft
 #+BEGIN_SRC emacs-lisp
-(use-package deft
-:after org
-:bind
-("C-c n d" . deft)
-:custom
-(deft-recursive t)
-(deft-use-filter-string-for-filename t)
-(deft-default-extension "org")
-(deft-directory "~/Documents/org/"))
+  (use-package deft
+  :after org 
+  :bind
+  ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
+  (deft-use-filename-as-title t)
+  (deft-default-extension "org")
+  (deft-directory "~/Documents/org-roam/"))
 #+END_SRC
 
 ** Zetteldeft
@@ -1089,22 +1102,38 @@ We are using company mode instead of auto-complete for now.
 ** Org-roam
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-roam
-    :disabled t
-    :hook
-(after-init . org-roam-mode)
-    :custom
-    (org-roam-directory "~/Documents/org/")
-    :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n j" . org-roam-jump-to-index)
-               ("C-c n b" . org-roam-switch-to-buffer)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
+    (use-package org-roam
+      :init
+      (setq org-roam-v2-ack t)
+      :custom
+      (org-roam-directory "~/Documents/org-roam/")
+      :config
+      (org-roam-db-autosync-enable)
+      :bind (("C-c n l" . org-roam-buffer-toggle)
+             ("C-c n f" . org-roam-node-find)
+             ("C-c n i" . org-roam-node-insert))
+      :config
+      (setq org-roam-node-display-template
+          (concat "${title} "
+                  (propertize "${tags:10}" 'face 'org-tag)))
+      (org-roam-setup))
 #+END_SRC
 
+** Auctex
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tex
+      :ensure auctex)
+#+END_SRC
+
+** Errors
+Fix error in loading packages in emacs 27.2
+See https://emacs.stackexchange.com/questions/68288/error-retrieving-https-elpa-gnu-org-packages-archive-contents
+#+BEGIN_SRC emacs-lisp
+  (when (and (equal emacs-version "27.2")
+             (eql system-type 'darwin))
+    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+#+END_SRC
 ** Disabled packages
 
 #+BEGIN_SRC emacs-lisp

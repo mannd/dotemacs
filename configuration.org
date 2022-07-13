@@ -6,7 +6,19 @@ This is my new /literate/ Emacs configuration file.  Work in Progress!  This fil
 ** Startup package system
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/elisp/")
+  (if (eq system-type 'darwin)
+      (progn 
+        (add-to-list 'load-path "~/.emacs.d/elisp/")
+        (setq lisp-load-path "~/.emacs.d/elisp")
+        )
+    )
+  (if (eq system-type 'windows-nt)
+      (progn 
+        (add-to-list 'load-path "/msys64/home/mannd/.emacs.d/elisp/")
+        (setq lisp-load-path "/msys64/home/mannd/.emacs.d/elisp/")
+        )
+    )
+  ;; (add-to-list 'load-path "~/.emacs.d/elisp/")
   ;; prevent loading packages twice after init.el is done
   (setq package-enable-at-startup nil)
   ;; set up package sources
@@ -709,54 +721,6 @@ Note that we use auto-fill-mode with Markdown.
     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 #+END_SRC
 
-** Gnus
-
-#+BEGIN_SRC emacs-lisp
-  ;; gnus
-  (setq gnus-init-file "~/.emacs.d/gnus")
-  (require 'nnir)
-  ;; quit gnus automatically on exit emacs
-  (defadvice save-buffers-kill-emacs (before rgb/gnus-exit)
-    (gnus-group-exit))
-  (add-hook 'gnus-started-hook
-            (lambda () (ad-activate 'save-buffers-kill-emacs)))
-  (add-hook 'gnus-after-exiting-gnus-hook
-            (lambda () (ad-deactivate 'save-buffers-kill-emacs)))
-  ;; (defun my-reset-gmail-server()
-    ;; (gnus-server-close-server "nnimap:gmail"))
-  ;; (add-hook 'gnus-get-new-news-hook
-            ;; 'my-reset-gmail-server)
-
-
-  ;; change gnus gmail links to All Mail links when tasks
-  ;; must use org-capture for this to work
-  (defun dem/replace()
-    (interactive)
-    (goto-char 1)
-    (setq-local search-invisible t)
-    (replace-string "gnus:INBOX" "gnus:%5BGmail%5D/All%20Mail"))
-
-  (add-hook 'org-capture-prepare-finalize-hook 'dem/replace)
-
-  ;; BBDB v3
-  (use-package bbdb-loaddefs
-    :load-path "~/.emacs.d/elisp/bbdb-3.1.2/lisp/"
-    :init
-    (use-package bbdb)
-    (add-hook
-   'gnus-summary-mode-hook
-   (lambda ()
-     (define-key gnus-summary-mode-map (kbd ";") 'bddb-mua-edit-field)
-     ))
-    :config
-    (setq bbdb-print-text-path "~/.emacs.d/elisp/bbdb-3.1.2")
-    (bbdb-initialize 'gnus 'message)
-    (bbdb-mua-auto-update-init 'gnus 'message)
-    (setq bbdb-mua-pop-up-window-size 0.1)
-    (setq bbdb-mua-update-interactive-p '(query . create))
-    (setq bbdb-message-all-addresses t))
-#+END_SRC
-
 ** Helm
 
 #+BEGIN_SRC emacs-lisp
@@ -876,23 +840,12 @@ We are using company mode instead of auto-complete for now.
   ;; C-sharp mode
   (use-package csharp-mode)
 
-  ;; twittering-mode
-  (use-package twittering-mode
-    :config (setq twittering-use-master-password t)
-    :load-path "~/git/twittering-mode/")
-
   ;; for forecast-mode, darksky.net api key
   (use-package forecast
     :demand t
     :config
     ;; darksky.net api key
     (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba"))
-
-  ;; try calfw calendar
-  (use-package calfw
-    :load-path "~/git/emacs-calfw"
-    :init
-    (use-package calfw-org))
 
   ;; Hydra
   (use-package hydra
@@ -1060,7 +1013,6 @@ We are using company mode instead of auto-complete for now.
 #+BEGIN_SRC emacs-lisp
   ;; yasnippet
   (use-package yasnippet
-    :load-path "~/git/yasnippet"
     :config
     (yas-global-mode 1))
 #+END_SRC

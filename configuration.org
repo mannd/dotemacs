@@ -32,7 +32,7 @@ This is my new /literate/ Emacs configuration file.  Work in Progress!  This fil
 
 ** Configure =use-package=
 
-use-package must be setup early in the configuration.
+use-package must be setup early in the configuration.  Note that if this file fails to load with an error showing that package diminish is missing, it will be necessary to add the diminish package from elpa and then try again.
 
 #+BEGIN_SRC emacs-lisp
   (require 'ert)

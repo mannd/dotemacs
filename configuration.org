@@ -137,8 +137,10 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (global-set-key "\C-cb" 'org-switchb)
   (setq org-agenda-include-diary t)
   ;; ~/org is a symlink to "~/Dropbox/org" for easy sharing
-  (setq org-directory "~/org")
-  ;; I like visual-line-mode as default for text, org
+  (if (eq system-type 'darwin)
+    (setq org-directory "~/org"))
+  (if (eq system-type 'windows-nt)
+    (setq org-directory "/msys64/home/mannd/org"))
   (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
   ;; we hide stars by default even in buffers where we turn off
   (setq org-hide-leading-stars 'hidestars) ; just one star visible
@@ -154,12 +156,12 @@ Set up the org agenda.
   ;; agenda files
   ;; Note org-gcal seems to not work with multiple calendars
   ;;(setq org-agenda-files '("~/org/inbox.org"))
-  (setq org-agenda-files '("~/org/inbox.org"
-                           "~/org/personal.org"
-                           "~/org/home.org"
-                           "~/org/epstudios.org"
-                           "~/org/family.org"
-                           "~/org/org.org"))
+  (setq org-agenda-files '("inbox.org"
+                           "personal.org"
+                           "home.org"
+                           "epstudios.org"
+                           "family.org"
+                           "org.org"))
   ;; custom agenda commands
   ;; see https://stackoverflow.com/questions/31639086/emacs-org-mode-how-can-i-filter-on-tags-and-todo-status-simultaneously
   (setq org-agenda-custom-commands

@@ -1,32 +1,7 @@
 #+TITLE: David Mann’s Emacs configuration
 #+OPTIONS: toc:4 h:4
 * Introduction
-This is my new /literate/ Emacs configuration file.  Work in Progress!  This file is loaded by init.el, which basically just does that (and wraps the whole process in timing code).
-* Configuration
-** Startup package system
-
-#+BEGIN_SRC emacs-lisp
-  (if (eq system-type 'darwin)
-      (progn 
-        (add-to-list 'load-path "~/.emacs.d/elisp/")
-        (setq lisp-load-path "~/.emacs.d/elisp")
-        )
-    )
-  (if (eq system-type 'windows-nt)
-      (progn 
-        (add-to-list 'load-path "/msys64/home/mannd/.emacs.d/elisp/")
-        (setq lisp-load-path "/msys64/home/mannd/.emacs.d/elisp/")
-        )
-    )
-  ;; (add-to-list 'load-path "~/.emacs.d/elisp/")
-  ;; prevent loading packages twice after init.el is done
-  (setq package-enable-at-startup nil)
-  ;; set up package sources
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-#+END_SRC
-#+begin_src emacs-lisp
-#+end_src
+This is my new /literate/ Emacs configuration file.  W_src
 ** Personal Information
 
 #+BEGIN_SRC emacs-lisp
@@ -344,12 +319,14 @@ Set up the org agenda.
 ** Evil mode
 
 #+BEGIN_SRC emacs-lisp
-  ;; play with evil mode
+  (use-package undo-fu)
+
   (use-package evil
     :init
     ;; c-u in evil-mode works like in vim (page up)
     ;; must be set before package is loaded
     (setq evil-want-C-u-scroll t)
+    (setq evil-undo-system 'undo-fu)
     :config
     ;; Make movement keys work respect visual lines
     (evil-mode 1)
@@ -625,17 +602,17 @@ Undo and redo window configuration changes
 ** Undo tree
 
 #+BEGIN_SRC emacs-lisp
-  (use-package undo-tree
-    :ensure t
-    :after evil
-    :diminish
-    :config
-    (evil-set-undo-system 'undo-tree)
-    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-    (global-undo-tree-mode 1)
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-diff t)
-    (setq undo-tree-visualizer-timestamps t))
+  ;; (use-package undo-tree
+  ;;   :ensure t
+  ;;   :after evil
+  ;;   :diminish
+  ;;   :config
+  ;;   (evil-set-undo-system 'undo-tree)
+  ;;   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+  ;;   (global-undo-tree-mode 1)
+  ;;   (global-undo-tree-mode)
+  ;;   (setq undo-tree-visualizer-diff t)
+  ;;   (setq undo-tree-visualizer-timestamps t))
 #+END_SRC
 
 ** Beacon mode

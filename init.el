@@ -20,7 +20,8 @@
 ;(setq package-load-list '(all))
 ;(unless (package-installed-p 'org)
 ;  (package-intall 'org))
-(package-initialize)
+; Note package-initialize is not required in emacs version > 27
+;(package-initialize)
 
 (defconst emacs-start-time (current-time))
 (unless noninteractive

@@ -49,6 +49,12 @@ leuven-theme.el.original
 nov-places
 org-gcal/
 projectile-bookmarks.eld
+org-roam.db
+org-gcal-old/
+request/
+transient/
+ac-comphist.dat
+projectile.cache
 
 # From https://github.com/github/gitignore/blob/master/Global/Emacs.gitignore
 *~
@@ -104,3 +110,53 @@ flycheck_*.el
 
 # semantic db
 semanticdb/
+
+# Another redundant addition to gitignore
+# -*- mode: gitignore; -*-
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode
+.org-id-locations
+*_archive
+
+# flymake-mode
+*_flymake.*
+
+# eshell files
+/eshell/history
+/eshell/lastdir
+
+# elpa packages
+/elpa/
+
+# reftex files
+*.rel
+
+# AUCTeX auto folder
+/auto/
+
+# cask packages
+.cask/
+dist/
+
+# Flycheck
+flycheck_*.el
+
+# server auth directory
+/server/
+
+# projectiles files
+.projectile
+
+# directory configuration
+.dir-locals.el
+
+# network security
+/network-security.data

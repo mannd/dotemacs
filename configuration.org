@@ -36,6 +36,10 @@ use-package must be setup early in the configuration.  Note that if this file fa
   (use-package auto-compile
     :config (auto-compile-on-load-mode))
   (setq load-prefer-newer t)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+;; and `package-pinned-packages`. Most users will not need or want to do this.
+;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 ** Custom file
@@ -121,6 +125,9 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (setq org-hide-leading-stars 'hidestars) ; just one star visible
   (setq org-startup-indented t)
   (setq org-hide-emphasis-markers t)
+
+  (use-package org-appear
+     :hook (org-mode . org-appear-mode))
 #+END_SRC
 
 *** Org agenda
@@ -672,8 +679,12 @@ Note that we use auto-fill-mode with Markdown.
     (setq ledger-clear-whole-transactions 1)
     ;; use company-mode for auto-completion with ledger
     :config  
-    (add-hook 'ledger-mode-hook (lambda() (company-mode t)))
-    ;; emacs mode for ledger-report-mode
+    (add-hook 'ledger-mode-hook
+               (lambda ()
+                 (company-mode t)))
+                 ;; (setq-local tab-always-indent 'complete)
+                 ;; (setq-local completion-cycle-threshold t)
+                 ;; (setq-local ledger-complete-in-steps t)))    ;; emacs mode for ledger-report-mode
     (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
     ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
     ;; Map some long but common accounts to function keys
@@ -685,6 +696,12 @@ Note that we use auto-fill-mode with Markdown.
     ("<f8>" . "€"))
     :mode ("\\.ledger$" "\\.dat$"))
 
+  ;; (use-package company-ledger
+  ;; :ensure company
+  ;; :init
+  ;; (with-eval-after-load 'company
+  ;;   (add-to-list 'company-backends 'company-ledger)))
+    (use-package flycheck-ledger)
 
     (use-package evil-ledger
       :after ledger-mode
@@ -816,8 +833,8 @@ We are using company mode instead of auto-complete for now.
   (use-package title-capitalization
     :load-path "~/emacs.d/elisp")
   
-  ;; C-sharp mode
-  (use-package csharp-mode)
+  ;; C-sharp mode - NOT NEEDED, is now part of Emacs
+  ;; (use-package csharp-mode)
 
   ;; for forecast-mode, darksky.net api key
   (use-package forecast
@@ -1033,21 +1050,32 @@ We are using company mode instead of auto-complete for now.
 ** Org-roam
 
 #+BEGIN_SRC emacs-lisp
-    (use-package org-roam
-      :init
-      (setq org-roam-v2-ack t)
-      :custom
-      (org-roam-directory "~/Documents/org-roam/")
-      :config
-      (org-roam-db-autosync-enable)
-      :bind (("C-c n l" . org-roam-buffer-toggle)
-             ("C-c n f" . org-roam-node-find)
-             ("C-c n i" . org-roam-node-insert))
-      :config
-      (setq org-roam-node-display-template
+  (use-package org-roam
+    :init
+    (setq org-roam-v2-ack t)
+    :custom
+    (org-roam-directory "~/Documents/org-roam/")
+    :config
+    (setq org-roam-capture-templates
+          '(("d" "default" plain "%?" :target
+              (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: ")
+              :unnarrowed t)
+            ("r" "bibliography reference" plain "%?"
+             :target
+             (file+head "references/${citekey}.org" "#+title: ${title}\n")
+             :unnarrowed t)))
+    (org-roam-db-autosync-enable)
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert))
+    :config
+    (setq org-roam-node-display-template
           (concat "${title} "
                   (propertize "${tags:10}" 'face 'org-tag)))
-      (org-roam-setup))
+    (org-roam-setup))
+
+  (use-package org-roam-ui
+    :no-require)
 #+END_SRC
 
 ** Auctex
@@ -1055,6 +1083,46 @@ We are using company mode instead of auto-complete for now.
 #+BEGIN_SRC emacs-lisp
   (use-package tex
       :ensure auctex)
+#+END_SRC
+
+** Citar
+#+BEGIN_SRC emacs-lisp
+  (use-package citar
+    :custom
+    (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    (citar-bibliography org-cite-global-bibliography)
+    ;; optional: org-cite-insert is also bound to C-c C-x C-@
+    :bind
+    (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+
+  (use-package citar-org-roam
+    :after (citar org-roam)
+    :config (citar-org-roam-mode))
+  #+END_SRC
+
+** Helm-bibtex
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-bibtex
+    :after org-roam 
+    :custom
+    (helm-bibtex-bibliography '("~/Documents/Bibtex/My Library.bib"))
+    (bibtex-completion-library-path '("~/Zotero/storage/"))
+    ;(bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool) 
+    (bibtex-completion-notes-path org-roam-directory)
+    (bibtex-completion-pdf-field "File"))
+#+END_SRC
+
+** Org-roam-bibtex
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam-bibtex
+    :after org-roam
+    :config
+    (org-roam-bibtex-mode 1)
+    (setq orb-insert-interface 'helm-bibtex)
+    (setq orb-attached-file-extensions '("pdf" "epub")))
 #+END_SRC
 
 ** Errors

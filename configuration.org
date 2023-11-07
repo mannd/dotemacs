@@ -1,7 +1,7 @@
 #+TITLE: David Mann’s Emacs configuration
 #+OPTIONS: toc:4 h:4
 * Introduction
-This is my new /literate/ Emacs configuration file.  W_src
+This is my new /literate/ Emacs configuration file.  
 ** Personal Information
 
 #+BEGIN_SRC emacs-lisp
@@ -19,7 +19,7 @@ This is my new /literate/ Emacs configuration file.  W_src
 
 ** Configure =use-package=
 
-use-package must be setup early in the configuration.  Note that if this file fails to load with an error showing that package diminish is missing, it will be necessary to add the diminish package from elpa and then try again.
+~use-package~ must be setup early in the configuration.  Note that if this file fails to load with an error showing that package ~diminish~ is missing, it will be necessary to add the ~diminish~ package from elpa and then try again.
 
 #+BEGIN_SRC emacs-lisp
   (require 'ert)
@@ -75,6 +75,7 @@ Printing is only set up for mac so far.
 
 ** Minibuffer uses selected buffer input method
 For entering those pesky accents in French, German, etc.
+Need to revisit this, is it useful?
 
 #+BEGIN_SRC emacs-lisp
   ;; (defun my-inherit-input-method ()
@@ -86,6 +87,7 @@ For entering those pesky accents in French, German, etc.
 
   ;; (add-hook 'minibuffer-setup-hook #'my-inherit-input-method)
 #+END_SRC
+
 ** Get path right
 
 #+BEGIN_SRC emacs-lisp
@@ -104,7 +106,6 @@ For entering those pesky accents in French, German, etc.
 
 ** Org mode
 *** Setup org mode
-
 Set some global keys for org mode, set up my default org directory and tweak the appearance of org mode.
 
 #+BEGIN_SRC emacs-lisp
@@ -262,11 +263,9 @@ Set up the org agenda.
 *** Have org capture use latin-9 input
 
 #+BEGIN_SRC emacs-lisp
-  ;; (add-hook 
-  ;;           'helm-mode-hook 
-  ;;   (lambda () (activate-input-method "latin-9-prefix")))
   (setq default-input-method "latin-9-prefix")
 #+END_SRC
+
 *** images
 #+BEGIN_SRC emacs-lisp
 (setq org-image-actual-width nil)
@@ -282,6 +281,7 @@ Set up the org agenda.
   ;;      :username ,(car (auth-source-user-and-password "epstudios.org"))
   ;;      :password ,(cadr (auth-source-user-and-password "epstudios.org")))))
 #+END_SRC
+
 ** COMMENT Customized keybindings
 
 #+BEGIN_SRC emacs-lisp
@@ -308,7 +308,7 @@ Set up the org agenda.
 
 #+BEGIN_SRC emacs-lisp
   ;; flycheck
-  ;; note that flycheck C-c ! conflicts with org-mode
+  ;; note that flycheck C-c ! conflicts with org-mode, so using C-c !! in org-mode
   (use-package flycheck
     :init
     (global-flycheck-mode)
@@ -404,28 +404,6 @@ Set up the org agenda.
     :config (magithub-feature-autoinject t))
 #+END_SRC
 
-** Evernote
-
-#+BEGIN_SRC emacs-lisp
-;; evernote-mode - note requires ruby 1.9.3 (or later??)
-;; disabled
-(use-package evernote-mode
-  :disabled t
-  :config
-  (setq evernote-ruby-command "/Users/mannd/.rvm/rubies/ruby-1.9.3-p547/bin/ruby")
-  (setq evernote-username "manndmd@gmail.com")
-  (setq exec-path (cons "/usr/local/bin" exec-path))
-  (setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
-  (global-set-key "\C-cec" #'evernote-create-note)
-  (global-set-key "\C-ceo" 'evernote-open-note)
-  (global-set-key "\C-ces" 'evernote-search-notes)
-  (global-set-key "\C-ceS" 'evernote-do-saved-search)
-  (global-set-key "\C-cew" 'evernote-write-note)
-  (global-set-key "\C-cep" 'evernote-post-region)
-  (global-set-key "\C-ceb" 'evernote-browser)
-  (use-package org-evernote))
-#+END_SRC
-
 ** Register shortcuts
 
 #+BEGIN_SRC emacs-lisp
@@ -437,6 +415,7 @@ Set up the org agenda.
 #+END_SRC
 
 ** Themes
+Now I mostly try out different Doom Emacs themes.
 
 #+BEGIN_SRC emacs-lisp
   ;; pick a theme
@@ -468,7 +447,7 @@ Set up the org agenda.
 
   (use-package doom-themes
   :config (load-theme 'doom-gruvbox-light t))
-  
+
   (use-package leuven-theme
   :disabled t
   :config (load-theme 'leuven-dark t))
@@ -478,7 +457,6 @@ Set up the org agenda.
   :custom
   (doom-modeline-height 15)
   (doom-modeline-major-mode-color-icon t))
-
 
   ;; Zen-burn
   (use-package zenburn-theme
@@ -495,8 +473,6 @@ Set up the org agenda.
   (load-theme 'midnight t t)
   (enable-theme 'midnight))
 #+END_SRC
-
-#+RESULTS:
 
 ** Tweak UI
 
@@ -607,6 +583,7 @@ Undo and redo window configuration changes
 #+END_SRC
 
 ** Undo tree
+I stopped using it because it slowed down processing large files.
 
 #+BEGIN_SRC emacs-lisp
   ;; (use-package undo-tree
@@ -701,6 +678,8 @@ Note that we use auto-fill-mode with Markdown.
   ;; :init
   ;; (with-eval-after-load 'company
   ;;   (add-to-list 'company-backends 'company-ledger)))
+  
+  ;; This slows down processing and probably should disable it.jjjjjjjjjjjjjjjjjjj
     (use-package flycheck-ledger)
 
     (use-package evil-ledger
@@ -722,16 +701,14 @@ Note that we use auto-fill-mode with Markdown.
 #+BEGIN_SRC emacs-lisp
   ;; helm
   ;;(add-to-list 'load-path "~/git/emacs-async")
-  (use-package helm-config
-    :demand t
-    :load-path "~/git/helm"		
-    :config
-    (use-package helm-mode
-      :load-path "~/git/helm"		
-      :init
-      (activate-input-method "latin-9-prefix")
-      (helm-mode 1))
+  ;; (use-package helm-config
+  ;;  ; :demand t
+  ;;  ; :load-path "~/git/helm"		
+  ;;   :config
+  (use-package helm
     :init
+    (activate-input-method "latin-9-prefix")
+    (helm-mode 1)
     (global-set-key (kbd "C-x C-f") 'helm-find-files)
     (global-set-key (kbd "M-x") 'helm-M-x))
 #+END_SRC
@@ -800,7 +777,7 @@ We are using company mode instead of auto-complete for now.
   (use-package imenu-list
     :config
     (setq imenu-list-position 'left))
-   
+
   ;; IRC
   (use-package erc
                :config
@@ -813,6 +790,7 @@ We are using company mode instead of auto-complete for now.
 
   ;; multiple cursors (package installed)
   (use-package multiple-cursors
+  :disabled 
     :init
     (global-set-key (kbd "C-S-c C-S-C") 'mc/edit-lines)
     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -832,7 +810,7 @@ We are using company mode instead of auto-complete for now.
   ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
   (use-package title-capitalization
     :load-path "~/emacs.d/elisp")
-  
+
   ;; C-sharp mode - NOT NEEDED, is now part of Emacs
   ;; (use-package csharp-mode)
 
@@ -852,7 +830,7 @@ We are using company mode instead of auto-complete for now.
   ;;   "zoom"
   ;;   ("g" text-scale-increase "in")
   ;;   ("l" text-scale-decrease "out"))
-  
+
   ;; auctex
   (use-package tex-mode)
 
@@ -890,6 +868,7 @@ We are using company mode instead of auto-complete for now.
 #+END_SRC
 
 *** Ruby
+Not using Ruby at the moment.
 
 #+BEGIN_SRC emacs-lisp
   ;; set up xiki
@@ -905,7 +884,7 @@ We are using company mode instead of auto-complete for now.
 
   ;; this package needed to make rvm work in Emacs
   (use-package rvm
-    :ensure t
+    :disabled
     :config
     (rvm-use-default))
 #+END_SRC
@@ -1039,7 +1018,7 @@ We are using company mode instead of auto-complete for now.
 ** Zetteldeft
 
 #+BEGIN_SRC emacs-lisp
-(use-package avy)
+;(use-package avy)
 (use-package zetteldeft
     :disabled t
     :after deft
@@ -1051,6 +1030,7 @@ We are using company mode instead of auto-complete for now.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
+    :after org
     :init
     (setq org-roam-v2-ack t)
     :custom
@@ -1088,6 +1068,7 @@ We are using company mode instead of auto-complete for now.
 ** Citar
 #+BEGIN_SRC emacs-lisp
   (use-package citar
+    :ensure t
     :custom
     (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
     (org-cite-insert-processor 'citar)
@@ -1106,19 +1087,19 @@ We are using company mode instead of auto-complete for now.
 ** Helm-bibtex
 #+BEGIN_SRC emacs-lisp
   (use-package helm-bibtex
-    :after org-roam 
-    :custom
-    (helm-bibtex-bibliography '("~/Documents/Bibtex/My Library.bib"))
-    (bibtex-completion-library-path '("~/Zotero/storage/"))
+    :config
+    (setq bibtex-completion-bibliography '("~/Documents/Bibtex/My Library.bib"))
+    (setq bibtex-completion-library-path '("~/Zotero/storage/"))
     ;(bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool) 
-    (bibtex-completion-notes-path org-roam-directory)
-    (bibtex-completion-pdf-field "File"))
+    (setq bibtex-completion-notes-path "~/Documents/org-roam/")
+    (setq bibtex-completion-pdf-field "File"))
 #+END_SRC
 
 ** Org-roam-bibtex
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-bibtex
-    :after org-roam
+    :ensure t
+    :after (org-roam helm-bibtex)
     :config
     (org-roam-bibtex-mode 1)
     (setq orb-insert-interface 'helm-bibtex)

@@ -18,6 +18,8 @@
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
+(setq modus-themes-mode-line '(accented borderless))
+
 ;; Load my literate Emacs configuration.
 (org-babel-load-file "~/.emacs.d/configuration.org")
 

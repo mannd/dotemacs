@@ -2,6 +2,7 @@
 #+OPTIONS: toc:4 h:4
 * Introduction
 This is my new /literate/ Emacs configuration file.  
+
 ** Personal Information
 
 #+BEGIN_SRC emacs-lisp
@@ -19,27 +20,23 @@ This is my new /literate/ Emacs configuration file.
 
 ** Configure =use-package=
 
-~use-package~ must be setup early in the configuration.  Note that if this file fails to load with an error showing that package ~diminish~ is missing, it will be necessary to add the ~diminish~ package from elpa and then try again.
+~use-package~ is now part of emacs core, so no need to install it.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'ert)
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-  (eval-when-compile
-    (require 'use-package))
-  (require 'diminish)
-  (require 'bind-key)
-  ;; Ensure all packages are loaded
-  (setq use-package-always-ensure t)
-  (setq use-package-verbose t)
-  ;; compile packages and use the newest version
-  (use-package auto-compile
-    :config (auto-compile-on-load-mode))
-  (setq load-prefer-newer t)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-;; and `package-pinned-packages`. Most users will not need or want to do this.
-;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+    (require 'ert)
+    (require 'diminish)
+    (require 'bind-key)
+    ;; Ensure all packages are loaded
+    (setq use-package-always-ensure t)
+    (setq use-package-verbose t)
+    ;; compile packages and use the newest version
+    (use-package auto-compile
+      :config (auto-compile-on-load-mode))
+    (setq load-prefer-newer t)
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+  ;; and `package-pinned-packages`. Most users will not need or want to do this.
+  ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 ** Custom file
@@ -48,7 +45,10 @@ Customizations get stored in their own file.
 
 #+BEGIN_SRC emacs-lisp
   ;; customizations in its own file
-  (setq custom-file "~/.emacs.d/custom.el")
+  (if (eq system-type 'darwin)
+    (setq custom-file "~/.emacs.d/custom.el")
+  (if (eq system-type 'windows-nt)
+    (setq org-directory "/msys64/home/mannd/.emacs.d/custom.el"))
   (load custom-file)
 #+END_SRC
 
@@ -323,6 +323,14 @@ Set up the org agenda.
     (eval-after-load 'flycheck '(flycheck-swift-setup)))
 #+END_SRC
 
+** Golden ratio
+
+#+BEGIN_SRC emacs-lisp
+(use-package golden-ratio
+  :ensure t
+  :hook (after-init . golden-ratio-mode))
+#+END_SRC
+
 ** Evil mode
 
 #+BEGIN_SRC emacs-lisp
@@ -416,6 +424,7 @@ Set up the org agenda.
 
 ** Themes
 Now I mostly try out different Doom Emacs themes.
+However, the two modus themes look good too.
 
 #+BEGIN_SRC emacs-lisp
   ;; pick a theme
@@ -444,9 +453,12 @@ Now I mostly try out different Doom Emacs themes.
   :config
   (require 'spaceline-config)
   (spaceline-spacemacs-theme))
-
+  
   (use-package doom-themes
-  :config (load-theme 'doom-gruvbox-light t))
+  ;:config (load-theme 'doom-gruvbox-light t))
+  :config
+    (load-theme 'modus-vivendi t))
+  ;:config (load-theme 'doom-shades-of-purple t))
 
   (use-package leuven-theme
   :disabled t
@@ -696,6 +708,25 @@ Note that we use auto-fill-mode with Markdown.
     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 #+END_SRC
 
+** Vertico and friends
+#+BEGIN_SRC emacs-lisp
+  (use-package vertico
+    :init
+    (vertico-mode))
+
+  (use-package marginalia
+    :after vertico
+    :config
+    (marginalia-mode 1))
+
+  (use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+
+#+END_SRc
 ** Helm
 
 #+BEGIN_SRC emacs-lisp
@@ -706,6 +737,7 @@ Note that we use auto-fill-mode with Markdown.
   ;;  ; :load-path "~/git/helm"		
   ;;   :config
   (use-package helm
+    :disabled t
     :init
     (activate-input-method "latin-9-prefix")
     (helm-mode 1)
@@ -716,20 +748,18 @@ Note that we use auto-fill-mode with Markdown.
 ** Projectile
 
 #+BEGIN_SRC emacs-lisp
-    ;; projectile
-    (use-package projectile
-      :ensure t
-      :config
-      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-      (projectile-mode +1))
+  ;; projectile
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode +1))
 
-    (use-package helm-projectile
-      :config
-      (helm-projectile-on))
+  (use-package helm-projectile
+    :disabled t
+    :config
+    (helm-projectile-on))
 #+END_SRC
-
-#+RESULTS:
-: t
 
 ** CEDET
 We are not using CEDET at present, but using company mode and semantic mode.  Turn on semantic mode here.
@@ -1071,13 +1101,15 @@ Not using Ruby at the moment.
     :ensure t
     :custom
     (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
+    (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
     (org-cite-insert-processor 'citar)
     (org-cite-follow-processor 'citar)
     (org-cite-activate-processor 'citar)
+    (org-cite-export-processors '((t . (csl "american-medical-association.csl"))))
     (citar-bibliography org-cite-global-bibliography)
     ;; optional: org-cite-insert is also bound to C-c C-x C-@
     :bind
-    (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+    (:map org-mode-map :package org ("C-c C-b" . #'org-cite-insert)))
 
   (use-package citar-org-roam
     :after (citar org-roam)

@@ -46,7 +46,7 @@ Customizations get stored in their own file.
 #+BEGIN_SRC emacs-lisp
   ;; customizations in its own file
   (if (eq system-type 'darwin)
-    (setq custom-file "~/.emacs.d/custom.el")
+    (setq custom-file "~/.emacs.d/custom.el"))
   (if (eq system-type 'windows-nt)
     (setq org-directory "/msys64/home/mannd/.emacs.d/custom.el"))
   (load custom-file)

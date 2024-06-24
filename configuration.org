@@ -176,11 +176,6 @@ Set up the org agenda.
   ;; file types for org-mode
   (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 
-  ;; For mobile org -- I’ve switched to beorg on iOS
-  ;;(setq org-mobile-inbox-for-pull "~/org/index.org")
-  ;;(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  ;;(setq org-mobile-files org-agenda-files)
-
   ;; refile targets
   (setq org-refile-targets
         '((org-agenda-files :maxlevel . 2)))
@@ -207,12 +202,12 @@ Set up the org agenda.
            entry (file+headline "~/org/french.org" "French")
            "* <[%^{French word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** French\n %^{Detailed French word|%\\1}\n** English\n %^{English translation}")))
 
-  ;; experiment with more TODO states
+  ;; more TODO states
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
                 (sequence "PENDING(p)" "WAITING(w@/!)" "HOLD(h@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
-  ;; we'll try making the colors prettier too
+  ;; pretty todo colors
   (setq org-todo-keyword-faces
         (quote (("NEXT" :foreground "blue" :weight bold)
                 ("DONE" :foreground "forest green" :weight bold)
@@ -238,13 +233,6 @@ Set up the org agenda.
 
   ;; widen margins in Latex export
   (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil)))
-
-#+END_SRC
-
-*** org-pomodoro
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-pomodoro)
 #+END_SRC
 
 *** org-bullets
@@ -254,39 +242,15 @@ Set up the org agenda.
 :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
-*** org-drill
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-drill)
-#+END_SRC
-
 *** Have org capture use latin-9 input
 
 #+BEGIN_SRC emacs-lisp
   (setq default-input-method "latin-9-prefix")
 #+END_SRC
 
-*** images
+*** Images
 #+BEGIN_SRC emacs-lisp
 (setq org-image-actual-width nil)
-#+END_SRC
-
-** Org2blog
-
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package org2blog)
-  ;; (setq org2blog/wp-blog-alist
-  ;;   `(("EP Studios"
-  ;;      :url "https://epstudiossoftware.com/xmlrpc.php"
-  ;;      :username ,(car (auth-source-user-and-password "epstudios.org"))
-  ;;      :password ,(cadr (auth-source-user-and-password "epstudios.org")))))
-#+END_SRC
-
-** COMMENT Customized keybindings
-
-#+BEGIN_SRC emacs-lisp
-  (bind-key "C-+" 'text-scale-increase)   
-  (bind-key "C--" 'text-scale-decrease)
 #+END_SRC
 
 ** Emacs server
@@ -397,28 +361,15 @@ Set up the org agenda.
       :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
     (use-package with-editor
       :load-path "~/git/with-editor")
-    (global-set-key (kbd "C-x g") 'magit-status)
-    :config
-    (with-eval-after-load 'info
-      (info-initialize)
-      (add-to-list 'Info-additional-directory-list
-                   "~/git/magit/Documentation/")))
-
-  ;; Magithub
-  (use-package magithub
-    :disabled t
-    :load-path "~/git/magithub"
-    :after magit
-    :config (magithub-feature-autoinject t))
+    (global-set-key (kbd "C-x g") 'magit-status))
 #+END_SRC
 
-** Register shortcuts
+** TODO fix paths for windows Register shortcuts
 
 #+BEGIN_SRC emacs-lisp
 ;; provide shortcut registers to files
 (set-register ?e '(file . "~/.emacs.d/init.el"))
 (set-register ?i '(file . "~/org/inbox.org"))
-(set-register ?g '(file . "~/.emacs.d/gnus.el"))
 (set-register ?c '(file . "~/.emacs.d/configuration.org"))
 #+END_SRC
 
@@ -435,13 +386,6 @@ However, the two modus themes look good too.
   ;;(load-theme 'light-blue t)
   ;;(load-theme 'leuven t)
 
-  ;; spacemacs light theme is nice!
-  (use-package spacemacs-theme
-  :disabled t
-  :defer t
-  :init
-  (load-theme 'spacemacs-light t))
-
   ;; and so is this font...
   (when (member "Source Code Pro" (font-family-list))
        (set-frame-font "Source Code Pro-16" nil t))
@@ -453,37 +397,16 @@ However, the two modus themes look good too.
   :config
   (require 'spaceline-config)
   (spaceline-spacemacs-theme))
-  
-  (use-package doom-themes
-  ;:config (load-theme 'doom-gruvbox-light t))
-  :config
-    (load-theme 'modus-vivendi t))
-  ;:config (load-theme 'doom-shades-of-purple t))
 
-  (use-package leuven-theme
-  :disabled t
-  :config (load-theme 'leuven-dark t))
+  (use-package doom-themes)
+  
+  (load-theme 'modus-vivendi t)
 
   (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :custom
   (doom-modeline-height 15)
   (doom-modeline-major-mode-color-icon t))
-
-  ;; Zen-burn
-  (use-package zenburn-theme
-  :disabled t
-  :config
-  (load-theme 'zenburn t t))
-
-  ;; Modern color-themes
-  ;; See https://github.com/emacs-jp/replace-colorthemes.
-  ;; There are a lot more of these you could download.
-  (use-package color-theme-modern
-  :disabled t
-  :config
-  (load-theme 'midnight t t)
-  (enable-theme 'midnight))
 #+END_SRC
 
 ** Tweak UI
@@ -493,7 +416,7 @@ Dump the toolbar and scrollbars, but keep the menu for discovery purposes.
 #+BEGIN_SRC emacs-lisp
   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
   (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-  #+END_SRC
+#+END_SRC
 
 Also get rid of splash screen, scratch screen message.  
 
@@ -566,18 +489,6 @@ Use abbrev mode.
   (setq-default abbrev-mode t)
   (setq save-abbrevs t)
   (put 'upcase-region 'disabled nil)
-
-#+END_SRC
-
-Fix info and fonts on my Windows system.
-
-#+BEGIN_SRC emacs-lisp
-  (if (eq system-type 'windows-nt)
-  (progn
-    (info-initialize)
-    (add-to-list 'Info-additional-directory-list "C:/Users/mannd/bin/emacs-24.5-bin-i686-mingw32/share/info")
-    (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-12"))
-    (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))))
 #+END_SRC
 
 Make title fancier.
@@ -595,21 +506,7 @@ Undo and redo window configuration changes
 #+END_SRC
 
 ** Undo tree
-I stopped using it because it slowed down processing large files.
-
-#+BEGIN_SRC emacs-lisp
-  ;; (use-package undo-tree
-  ;;   :ensure t
-  ;;   :after evil
-  ;;   :diminish
-  ;;   :config
-  ;;   (evil-set-undo-system 'undo-tree)
-  ;;   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-  ;;   (global-undo-tree-mode 1)
-  ;;   (global-undo-tree-mode)
-  ;;   (setq undo-tree-visualizer-diff t)
-  ;;   (setq undo-tree-visualizer-timestamps t))
-#+END_SRC
+I stopped using it because it slowed down processing large files.  I use undo-fu now.
 
 ** Beacon mode
 Flashes cursor when scrolling or changing buffers
@@ -618,6 +515,7 @@ Flashes cursor when scrolling or changing buffers
   (use-package beacon
     :init (beacon-mode 1))
 #+END_SRC
+
 ** Rainbow mode
 
 #+BEGIN_SRC emacs-lisp
@@ -648,7 +546,6 @@ Note that we use auto-fill-mode with Markdown.
 #+BEGIN_SRC emacs-lisp
   ;; markdown-mode
   (use-package markdown-mode
-    :load-path "~/git/markdown-mode"
     :mode (("README\\.md\\'" . gfm-mode)
     ("README\\.markdown\\'" . gfm-mode)
     ("\\.md\\'" . markdown-mode)
@@ -662,8 +559,6 @@ Note that we use auto-fill-mode with Markdown.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ledger-mode
-    ;:load-path "~/lisp"
-    ;; C-c C-c clears whole transaction
     :init 
     (setq ledger-clear-whole-transactions 1)
     ;; use company-mode for auto-completion with ledger
@@ -685,13 +580,6 @@ Note that we use auto-fill-mode with Markdown.
     ("<f8>" . "€"))
     :mode ("\\.ledger$" "\\.dat$"))
 
-  ;; (use-package company-ledger
-  ;; :ensure company
-  ;; :init
-  ;; (with-eval-after-load 'company
-  ;;   (add-to-list 'company-backends 'company-ledger)))
-  
-  ;; This slows down processing and probably should disable it.jjjjjjjjjjjjjjjjjjj
     (use-package flycheck-ledger)
 
     (use-package evil-ledger
@@ -727,23 +615,7 @@ Note that we use auto-fill-mode with Markdown.
 
 
 #+END_SRc
-** Helm
-
-#+BEGIN_SRC emacs-lisp
-  ;; helm
-  ;;(add-to-list 'load-path "~/git/emacs-async")
-  ;; (use-package helm-config
-  ;;  ; :demand t
-  ;;  ; :load-path "~/git/helm"		
-  ;;   :config
-  (use-package helm
-    :disabled t
-    :init
-    (activate-input-method "latin-9-prefix")
-    (helm-mode 1)
-    (global-set-key (kbd "C-x C-f") 'helm-find-files)
-    (global-set-key (kbd "M-x") 'helm-M-x))
-#+END_SRC
+** Helm - replaced by Vertico and friends
 
 ** Projectile
 
@@ -754,46 +626,10 @@ Note that we use auto-fill-mode with Markdown.
     :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (projectile-mode +1))
-
-  (use-package helm-projectile
-    :disabled t
-    :config
-    (helm-projectile-on))
-#+END_SRC
-
-** CEDET
-We are not using CEDET at present, but using company mode and semantic mode.  Turn on semantic mode here.
-
-#+BEGIN_SRC emacs-lisp
-  (semantic-mode 1)
-  ;; (require 'cedet-global)
-  ;; (when (cedet-gnu-global-version-check t)
-  ;;   (semanticdb-enable-gnu-global-databases 'java-mode))
-#+END_SRC
-
-** Iedit
-Iedit is a way to refactor names in a file.
-
-#+BEGIN_SRC emacs-lisp
-(use-package iedit
-:config
-(define-key global-map (kbd "C-c ;") 'iedit-mode))
 #+END_SRC
 
 ** Auto-complete
 We are using company mode instead of auto-complete for now.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package auto-complete
-    :disabled t
-    :config
-    (ac-config-default))
-
-  ;; (defun my/add-semantic-to-autocomplete()
-  ;;   (add-to-list 'ac-sources 'ac-source-semantic))
-  ;; (add-hook 'c-mode-common-hook 'my/add-semantic-to-autocomplete)
-  ;; (add-hook 'java-mode-hook 'my/add-semantic-to-autocomplete)
-#+END_SRC
 
 ** Misc packages
 
@@ -817,18 +653,8 @@ We are using company mode instead of auto-complete for now.
                                                     "#android"
                                                     "#android-dev"))))
 
-
-  ;; multiple cursors (package installed)
-  (use-package multiple-cursors
-  :disabled 
-    :init
-    (global-set-key (kbd "C-S-c C-S-C") 'mc/edit-lines)
-    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
-
-
   ;; ispell
+  ;; fix for Windows
   (setq ispell-program-name "/usr/local/bin/ispell")
 
   ;; some other packages
@@ -840,26 +666,6 @@ We are using company mode instead of auto-complete for now.
   ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
   (use-package title-capitalization
     :load-path "~/emacs.d/elisp")
-
-  ;; C-sharp mode - NOT NEEDED, is now part of Emacs
-  ;; (use-package csharp-mode)
-
-  ;; for forecast-mode, darksky.net api key
-  (use-package forecast
-    :demand t
-    :config
-    ;; darksky.net api key
-    (setq forecast-api-key "1806e2e569afcd58feb6a8568e0857ba"))
-
-  ;; Hydra
-  (use-package hydra
-    :disabled t
-    :load-path "~/git/hydra")
-
-  ;; (defhydra hydra-zoom (global-map "<f2>")
-  ;;   "zoom"
-  ;;   ("g" text-scale-increase "in")
-  ;;   ("l" text-scale-decrease "out"))
 
   ;; auctex
   (use-package tex-mode)
@@ -895,28 +701,6 @@ We are using company mode instead of auto-complete for now.
   (dolist (p clojure-packages)
     (when (not (package-installed-p p))
       (package-install p)))
-#+END_SRC
-
-*** Ruby
-Not using Ruby at the moment.
-
-#+BEGIN_SRC emacs-lisp
-  ;; set up xiki
-  ;; Use rvm to manage ruby versions
-  (use-package rvm
-    :disabled t
-    :load-path "~/.emacs.d/rvm/"
-    :config
-    (rvm-use-default))
-  ;; If you want to play with Xiki, go
-  ;; to ~/.emacs.d/elisp/start-xiki.el
-  ;; and M-x eval-buffer
-
-  ;; this package needed to make rvm work in Emacs
-  (use-package rvm
-    :disabled
-    :config
-    (rvm-use-default))
 #+END_SRC
 
 *** Lisp
@@ -1045,17 +829,6 @@ Not using Ruby at the moment.
   (deft-directory "~/Documents/org-roam/"))
 #+END_SRC
 
-** Zetteldeft
-
-#+BEGIN_SRC emacs-lisp
-;(use-package avy)
-(use-package zetteldeft
-    :disabled t
-    :after deft
-    :config
-        (zetteldeft-set-classic-keybindings))
-#+END_SRC
-
 ** Org-roam
 
 #+BEGIN_SRC emacs-lisp
@@ -1064,7 +837,10 @@ Not using Ruby at the moment.
     :init
     (setq org-roam-v2-ack t)
     :custom
-    (org-roam-directory "~/Documents/org-roam/")
+    (if (eq system-type 'darwin)
+        (setq org-roam-directory "~/Documents/org-roam"))
+    (if (eq system-type 'windows-nt)
+        (setq org-roam- directory "z:Documents/org-roam"))
     :config
     (setq org-roam-capture-templates
           '(("d" "default" plain "%?" :target
@@ -1136,21 +912,5 @@ Not using Ruby at the moment.
     (org-roam-bibtex-mode 1)
     (setq orb-insert-interface 'helm-bibtex)
     (setq orb-attached-file-extensions '("pdf" "epub")))
-#+END_SRC
-
-** Errors
-Fix error in loading packages in emacs 27.2
-See https://emacs.stackexchange.com/questions/68288/error-retrieving-https-elpa-gnu-org-packages-archive-contents
-#+BEGIN_SRC emacs-lisp
-  (when (and (equal emacs-version "27.2")
-             (eql system-type 'darwin))
-    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
-#+END_SRC
-** Disabled packages
-
-#+BEGIN_SRC emacs-lisp
-  ;; put time and day in mode-line (good for full screen Emacs)
-  ;; (setq display-time-day-and-date t)
-  ;; (display-time-mode t)
 #+END_SRC
 

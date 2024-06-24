@@ -6,7 +6,7 @@ This is my new /literate/ Emacs configuration file.
 ** Default coding system
 
 #+BEGIN_SRC emacs-lisp
-  (set-default-coding-systems 'utf-8)
+  (set-default-coding-systems 'utf-8)	
 #+END_SRC
 
 ** Personal Information
@@ -54,7 +54,7 @@ Customizations get stored in their own file.
   (if (eq system-type 'darwin)
     (setq custom-file "~/.emacs.d/custom.el"))
   (if (eq system-type 'windows-nt)
-    (setq org-directory "/msys64/home/mannd/.emacs.d/custom.el"))
+    (setq custom-file "/msys64/home/mannd/.emacs.d/custom.el"))
   (load custom-file)
 #+END_SRC
 
@@ -621,21 +621,8 @@ Note that we use auto-fill-mode with Markdown.
 
 
 #+END_SRc
+
 ** Helm - replaced by Vertico and friends
-#+BEGIN_SRC emacs-lisp
-  ;; ;; helm
-  ;; ;;(add-to-list 'load-path "~/git/emacs-async")
-  ;; (use-package helm-config
-  ;;   :demand t
-  ;;   :config
-  ;;   (use-package helm-mode
-  ;;     :init
-  ;;     (activate-input-method "latin-9-prefix")
-  ;;     (helm-mode 1)))
-  ;;   :init
-  ;;   ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  ;;   ;; (global-set-key (kbd "M-x") 'helm-M-x))
-#+END_SRC
 
 ** Projectile
 
@@ -838,7 +825,7 @@ We are using company mode instead of auto-complete for now.
 ** Deft
 #+BEGIN_SRC emacs-lisp
     (use-package deft
-    :after org 
+    :after org org-roam
     :bind
     ("C-c n d" . deft)
     :custom
@@ -846,7 +833,7 @@ We are using company mode instead of auto-complete for now.
     (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
     (deft-use-filename-as-title t)
     (deft-default-extension "org")
-    (deft-directory "~/Documents/org-roam/"))
+    (deft-directory org-roam-directory))
 #+END_SRC
 
 ** Org-roam
@@ -857,7 +844,7 @@ We are using company mode instead of auto-complete for now.
     :init
     (setq org-roam-v2-ack t)
     :custom
-    (org-roam-directory "~/Documents/org-roam")
+    (org-roam-directory (file-truename "~/Documents/org-roam"))
     :config
     (setq org-roam-capture-templates
           '(("d" "default" plain "%?" :target
@@ -870,12 +857,12 @@ We are using company mode instead of auto-complete for now.
     (org-roam-db-autosync-enable)
     :bind (("C-c n l" . org-roam-buffer-toggle)
            ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert))
+           ("C-c n i" . org-roam-node-insert)))
     :config
     (setq org-roam-node-display-template
-          (concat "${title} "
-                  (propertize "${tags:10}" 'face 'org-tag)))
-    (org-roam-setup))
+         (concat "${title} "
+                 (propertize "${tags:10}" 'face 'org-tag)))
+    ;(org-roam-setup))
 
   (use-package org-roam-ui
     :no-require)

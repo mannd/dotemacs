@@ -1,7 +1,13 @@
 #+TITLE: David Mann’s Emacs configuration
 #+OPTIONS: toc:4 h:4
 * Introduction
-This is my new /literate/ Emacs configuration file.  
+This is my new /literate/ Emacs configuration file.
+
+** Default coding system
+
+#+BEGIN_SRC emacs-lisp
+  (set-default-coding-systems 'utf-8)
+#+END_SRC
 
 ** Personal Information
 
@@ -616,6 +622,20 @@ Note that we use auto-fill-mode with Markdown.
 
 #+END_SRc
 ** Helm - replaced by Vertico and friends
+#+BEGIN_SRC emacs-lisp
+  ;; ;; helm
+  ;; ;;(add-to-list 'load-path "~/git/emacs-async")
+  ;; (use-package helm-config
+  ;;   :demand t
+  ;;   :config
+  ;;   (use-package helm-mode
+  ;;     :init
+  ;;     (activate-input-method "latin-9-prefix")
+  ;;     (helm-mode 1)))
+  ;;   :init
+  ;;   ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  ;;   ;; (global-set-key (kbd "M-x") 'helm-M-x))
+#+END_SRC
 
 ** Projectile
 
@@ -817,16 +837,16 @@ We are using company mode instead of auto-complete for now.
 
 ** Deft
 #+BEGIN_SRC emacs-lisp
-  (use-package deft
-  :after org 
-  :bind
-  ("C-c n d" . deft)
-  :custom
-  (deft-recursive t)
-  (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
-  (deft-use-filename-as-title t)
-  (deft-default-extension "org")
-  (deft-directory "~/Documents/org-roam/"))
+    (use-package deft
+    :after org 
+    :bind
+    ("C-c n d" . deft)
+    :custom
+    (deft-recursive t)
+    (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
+    (deft-use-filename-as-title t)
+    (deft-default-extension "org")
+    (deft-directory "~/Documents/org-roam/"))
 #+END_SRC
 
 ** Org-roam
@@ -837,10 +857,7 @@ We are using company mode instead of auto-complete for now.
     :init
     (setq org-roam-v2-ack t)
     :custom
-    (if (eq system-type 'darwin)
-        (setq org-roam-directory "~/Documents/org-roam"))
-    (if (eq system-type 'windows-nt)
-        (setq org-roam- directory "z:Documents/org-roam"))
+    (org-roam-directory "~/Documents/org-roam")
     :config
     (setq org-roam-capture-templates
           '(("d" "default" plain "%?" :target

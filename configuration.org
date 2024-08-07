@@ -287,14 +287,12 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 ** Evil mode
 
 #+BEGIN_SRC emacs-lisp
-  (use-package undo-fu)
-
   (use-package evil
     :init
-    ;; c-u in evil-mode works like in vim (page up)
+    ;; Make C-u in evil-mode works like in vim (page up)
     ;; must be set before package is loaded
     (setq evil-want-C-u-scroll t)
-    (setq evil-undo-system 'undo-fu)
+    (setq evil-undo-system 'undo-redo)
     :config
     ;; Make movement keys work respect visual lines
     (evil-mode 1)
@@ -490,9 +488,6 @@ Undo and redo window configuration changes
     (winner-mode 1))
 #+END_SRC
 
-** Undo tree
-I stopped using it because it slowed down processing large files.  I use undo-fu now.
-
 ** Beacon mode
 Flashes cursor when scrolling or changing buffers
 
@@ -502,6 +497,7 @@ Flashes cursor when scrolling or changing buffers
 #+END_SRC
 
 ** Rainbow mode
+Colorizes strings that represent colors.
 
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
@@ -515,6 +511,8 @@ Flashes cursor when scrolling or changing buffers
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash")
 #+END_SRC
+
+*** TODO do same for Windows
 
 ** Encryption
 
@@ -575,6 +573,8 @@ Note that we use auto-fill-mode with Markdown.
 #+END_SRC
 
 ** Epub
+Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
+
 #+BEGIN_SRC emacs-lisp
   (use-package nov
     :config  
@@ -595,13 +595,13 @@ Note that we use auto-fill-mode with Markdown.
   (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(basic partial-completion orderless ))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 
 #+END_SRc
 
-** Helm - replaced by Vertico and friends
+** Helm - replaced by Vertico and friends, except for helm-bibtex.
 
 ** Projectile
 
@@ -613,6 +613,8 @@ Note that we use auto-fill-mode with Markdown.
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (projectile-mode +1))
 #+END_SRC
+
+*** TODO Consider replace with built-in emacs project support
 
 ** Auto-complete
 We are using company mode instead of auto-complete for now.
@@ -630,15 +632,6 @@ We are using company mode instead of auto-complete for now.
     :config
     (setq imenu-list-position 'left))
 
-  ;; IRC
-  (use-package erc
-               :config
-               (setq erc-autojoin-channels-alist '((".*\\.freenode.net"
-                                                    "#org-mode"
-                                                    "#emacs"
-                                                    "#android"
-                                                    "#android-dev"))))
-
   ;; ispell
   ;; fix for Windows
   (setq ispell-program-name "/usr/local/bin/ispell")
@@ -653,8 +646,6 @@ We are using company mode instead of auto-complete for now.
   (use-package title-capitalization
     :load-path "~/emacs.d/elisp")
 
-  ;; auctex
-  (use-package tex-mode)
 
   ;; graphviz dot mode
   ;; seems broken in emacs 26 master branch for now
@@ -783,24 +774,6 @@ We are using company mode instead of auto-complete for now.
 (setq company-after-completion-hook #'my-company-after-completion-hook)
 #+END_SRC
 
-*** Yasnippet
-
-#+BEGIN_SRC emacs-lisp
-  ;; yasnippet
-  (use-package yasnippet
-    :config
-    (yas-global-mode 1))
-#+END_SRC
-
-*** Rust
-
-#+BEGIN_SRC emacs-lisp
-(use-package rust-mode)
-(use-package cargo
-  :config
-  (add-hook 'rust-mode-hook 'cargo-minor-mode))
-#+END_SRC
-
 ** Deft
 #+BEGIN_SRC emacs-lisp
     (use-package deft
@@ -850,6 +823,8 @@ We are using company mode instead of auto-complete for now.
 ** Auctex
 
 #+BEGIN_SRC emacs-lisp
+  (use-package tex-mode)
+  
   (use-package tex
       :ensure auctex)
 #+END_SRC

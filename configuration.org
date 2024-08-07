@@ -40,9 +40,9 @@ This is my new /literate/ Emacs configuration file.
       :config (auto-compile-on-load-mode))
     (setq load-prefer-newer t)
     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-  ;; and `package-pinned-packages`. Most users will not need or want to do this.
-  ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+    ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+    ;; and `package-pinned-packages`. Most users will not need or want to do this.
+    ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 ** Custom file
@@ -66,7 +66,7 @@ Customizations get stored in their own file.
 
 ** Printing
 
-Printing is only set up for mac so far.
+Printing is only set up for mac.
 
 #+BEGIN_SRC emacs-lisp
   (if (eq system-type 'darwin)
@@ -79,22 +79,7 @@ Printing is only set up for mac so far.
   )
 #+END_SRC
 
-** Minibuffer uses selected buffer input method
-For entering those pesky accents in French, German, etc.
-Need to revisit this, is it useful?
-
-#+BEGIN_SRC emacs-lisp
-  ;; (defun my-inherit-input-method ()
-  ;;   "Inherit input method from `minibuffer-selected-window'."
-  ;;   (let* ((win (minibuffer-selected-window))
-  ;;          (buf (and win (window-buffer win))))
-  ;;      (when buf
-  ;;        (activate-input-method (buffer-local-value 'current-input-method buf)))))
-
-  ;; (add-hook 'minibuffer-setup-hook #'my-inherit-input-method)
-#+END_SRC
-
-** Get path right
+** Get path right, takes it from the shell
 
 #+BEGIN_SRC emacs-lisp
       ;; new and improved way to make PATH and exec-path match bash config
@@ -126,7 +111,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (if (eq system-type 'darwin)
     (setq org-directory "~/org"))
   (if (eq system-type 'windows-nt)
-    (setq org-directory "/msys64/home/mannd/org"))
+    (setq org-directory "/msys64/home/mannd/org")) ; does this link to ~/org on Mac?
   (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
   ;; we hide stars by default even in buffers where we turn off
   (setq org-hide-leading-stars 'hidestars) ; just one star visible
@@ -136,6 +121,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (use-package org-appear
      :hook (org-mode . org-appear-mode))
 #+END_SRC
+**** TODO Consider moving org files to iCloud
 
 *** Org agenda
 
@@ -249,12 +235,14 @@ Set up the org agenda.
 #+END_SRC
 
 *** Have org capture use latin-9 input
+This allows accented characters to be use.
 
 #+BEGIN_SRC emacs-lisp
   (setq default-input-method "latin-9-prefix")
 #+END_SRC
 
 *** Images
+Note that this requires emacs build with imagemagick.
 #+BEGIN_SRC emacs-lisp
 (setq org-image-actual-width nil)
 #+END_SRC
@@ -293,13 +281,8 @@ Set up the org agenda.
     (eval-after-load 'flycheck '(flycheck-swift-setup)))
 #+END_SRC
 
-** Golden ratio
-
-#+BEGIN_SRC emacs-lisp
-(use-package golden-ratio
-  :ensure t
-  :hook (after-init . golden-ratio-mode))
-#+END_SRC
+*** TODO Change to Flymake/Eglot see https://joaotavora.github.io/eglot/#Quick-Start
+Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankruptcy.html
 
 ** Evil mode
 
@@ -380,8 +363,7 @@ Set up the org agenda.
 #+END_SRC
 
 ** Themes
-Now I mostly try out different Doom Emacs themes.
-However, the two modus themes look good too.
+I am satisfied with the modus themes, but many doom themes are good, as well as others.
 
 #+BEGIN_SRC emacs-lisp
   ;; pick a theme
@@ -391,11 +373,10 @@ However, the two modus themes look good too.
   ;;(load-theme 'dracula t)
   ;;(load-theme 'light-blue t)
   ;;(load-theme 'leuven t)
+  (load-theme 'modus-vivendi t)
 
-  ;; and so is this font...
   (when (member "Source Code Pro" (font-family-list))
        (set-frame-font "Source Code Pro-16" nil t))
-   ;; (set-face-attribute 'default nil :height 140)
 
   (use-package spaceline
   :init
@@ -405,8 +386,6 @@ However, the two modus themes look good too.
   (spaceline-spacemacs-theme))
 
   (use-package doom-themes)
-  
-  (load-theme 'modus-vivendi t)
 
   (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -417,7 +396,7 @@ However, the two modus themes look good too.
 
 ** Tweak UI
 
-Dump the toolbar and scrollbars, but keep the menu for discovery purposes.
+Dump the toolbar and scrollbars, but keep the menu for discovery purposes, though I rarely look at it.
 
 #+BEGIN_SRC emacs-lisp
   (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))

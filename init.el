@@ -4,21 +4,15 @@
 
 ;;; Commentary:
 
-;; This is the Emacs “init file after declaring .emacs bandkruptcy.
-;; Most of the actual initing happens in configuration.el/org
+;; Most of the actual initing happens in ~/.emacs.d/configuration.org
 
 ;;; Code:
-
-; Note package-initialize is not required in emacs version > 27
-;(package-initialize)
 
 ;; Time Emacs startup.
 
 (defconst emacs-start-time (current-time))
 (unless noninteractive
   (message "Loading %s..." load-file-name))
-
-;; (setq modus-themes-mode-line '(accented borderless))
 
 ;; Load my literate Emacs configuration.
 (org-babel-load-file "~/.emacs.d/configuration.org")
@@ -33,4 +27,4 @@
 	       (let ((elapsed (float-time (time-subtract (current-time) emacs-start-time))))
 		 (message "Loading %s...done (%.3fs) [after-init]" ,load-file-name elapsed))) t))
 
-;;; init ends here
+;;; init end here

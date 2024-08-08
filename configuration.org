@@ -29,36 +29,39 @@ This is my new /literate/ Emacs configuration file.
 ~use-package~ is now part of emacs core, so no need to install it.
 
 #+BEGIN_SRC emacs-lisp
-    (require 'ert)
-    (require 'diminish)
-    (require 'bind-key)
-    ;; Ensure all packages are loaded
-    (setq use-package-always-ensure t)
-    (setq use-package-verbose t)
-    ;; compile packages and use the newest version
-    (use-package auto-compile
-      :config (auto-compile-on-load-mode))
-    (setq load-prefer-newer t)
-    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-    ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-    ;; and `package-pinned-packages`. Most users will not need or want to do this.
-    ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+  (require 'ert)
+  (require 'diminish)
+  (require 'bind-key)
+  ;; Ensure all packages are loaded
+  (setq use-package-always-ensure t)
+  (setq use-package-verbose t)
+  ;; compile packages and use the newest version
+  (use-package auto-compile
+    :config (auto-compile-on-load-mode))
+  (setq load-prefer-newer t)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  
+  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+  ;; and `package-pinned-packages`. Most users will not need or want to do this.
+  ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 ** Custom file
 
-Customizations get stored in their own file.
+Customizations get stored in their own file.  I have arranged this so that there is a separate init.el and configuration.org for Mac and Windows.  I considered pointing init.el to the same file, but thought it best to separate the two systems, other than certain shared files like the org files.
 
 #+BEGIN_SRC emacs-lisp
-  ;; customizations in its own file
-  (if (eq system-type 'darwin)
-    (setq custom-file "~/.emacs.d/custom.el"))
-  (if (eq system-type 'windows-nt)
-    (setq custom-file "/msys64/home/mannd/.emacs.d/custom.el"))
+  ;; customizations in its own file.  
+  (setq custom-file (expand-file-name "custom.el" "~/.emacs.d"))
+  ;; (if (eq system-type 'darwin)
+  ;;   (setq custom-file (expand-file-name "custom.el" emacs-folder)))
+  ;; (if (eq system-type 'windows-nt)
+  ;;   (setq custom-file "/msys64/home/mannd/.emacs.d/custom.el"))
   (load custom-file)
 #+END_SRC
 
-** Define hyper key as fn
+** Define function key as hyper
+Not sure if this only applies to macOS?
 
 #+BEGIN_SRC emacs-lisp
     (setq ns-function-modifier 'hyper)
@@ -73,13 +76,12 @@ Printing is only set up for mac.
     (progn
         (add-to-list 'load-path "~/.emacs.d/elisp/mac-print-mode")
         (when (require 'mac-print-mode nil t)
-        (mac-print-mode 1))
-        ;; (global-set-key (kbd "M-p") 'mac-print-buffer)
-    )
-  )
+        (mac-print-mode 1))))
+        ;; (global-set-key (kbd "M-p") 'mac-print-buffer)))
 #+END_SRC
 
 ** Get path right, takes it from the shell
+Only used in macOS.
 
 #+BEGIN_SRC emacs-lisp
       ;; new and improved way to make PATH and exec-path match bash config
@@ -111,7 +113,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (if (eq system-type 'darwin)
     (setq org-directory "~/org"))
   (if (eq system-type 'windows-nt)
-    (setq org-directory "/msys64/home/mannd/org")) ; does this link to ~/org on Mac?
+    (setq org-directory "z:/Library/CloudStorage/Dropbox/org")) 
   (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
   ;; we hide stars by default even in buffers where we turn off
   (setq org-hide-leading-stars 'hidestars) ; just one star visible
@@ -121,6 +123,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (use-package org-appear
      :hook (org-mode . org-appear-mode))
 #+END_SRC
+
 **** TODO Consider moving org files to iCloud
 
 *** Org agenda
@@ -151,7 +154,7 @@ Set up the org agenda.
           ))
 
   ;; change default iCalendar target (org.ics conflicts with org.org file)
-  (setq org-icalendar-combined-agenda-file "~/org/org-calendar.ics")
+  (setq org-icalendar-combined-agenda-file (expand-file-name "org-calendar.ics" org-directory))
   (setq org-icalendar-include-todo t)
 #+END_SRC
 
@@ -173,7 +176,7 @@ Set up the org agenda.
         '((org-agenda-files :maxlevel . 2)))
 
   ;; default tasks/notes/inbox file
-  (setq org-default-notes-file "~/org/inbox.org")
+  (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
 
   ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
   (setq org-stuck-projects '("+project/-DONE-CANCELLED" ("NEXT") nil ""))
@@ -595,7 +598,7 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
   (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(basic partial-completion orderless ))
+  (completion-styles '(orderless basic ))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 
@@ -856,7 +859,7 @@ We are using company mode instead of auto-complete for now.
     :config
     (setq bibtex-completion-bibliography '("~/Documents/Bibtex/My Library.bib"))
     (setq bibtex-completion-library-path '("~/Zotero/storage/"))
-    ;(bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool) 
+    (setq bibtex-completion-pdf-open-function 'helm-open-file-with-default-tool) 
     (setq bibtex-completion-notes-path "~/Documents/org-roam/")
     (setq bibtex-completion-pdf-field "File"))
 #+END_SRC

@@ -183,18 +183,18 @@ Set up the org agenda.
   (setq org-tags-exclude-from-inheritance '("project"))
   ;; Capture templates
   (setq org-capture-templates
-        '(("t" "todo" entry (file+headline "~/org/inbox.org" "Tasks")
+        '(("t" "todo" entry (file+headline (expand-file-name "inbox.org" org-directory) "Tasks")
            "* TODO %?\n%U\n%a\n")
-          ("n" "note" entry (file+headline "~/org/inbox.org" "Notes")
+          ("n" "note" entry (file+headline (expand-file-name "inbox.org" org-directory) "Notes")
            "* %? :NOTE:\n%U\n%a\n")
-          ("j" "journal entry"
-           entry (file+olp+datetree "~/Documents/journal.org.gpg")
-           "**** %U %^{Title}\n%?")
+          ;; ("j" "journal entry"
+          ;;  entry (file+olp+datetree "~/Documents/journal.org.gpg")
+          ;;  "**** %U %^{Title}\n%?")
           ("g" "German vocabulary"
-           entry (file+headline "~/org/german.org" "German")
+           entry (file+headline (expand-file-name "german.org" org-directory) "German")
            "* <[%^{German word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** German\n %^{Detailed German word|%\\1}\n** English\n %^{English translation}")
           ("f" "French vocabulary"
-           entry (file+headline "~/org/french.org" "French")
+           entry (file+headline (expand-file-name "french.org" org-directory) "French")
            "* <[%^{French word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** French\n %^{Detailed French word|%\\1}\n** English\n %^{English translation}")))
 
   ;; more TODO states
@@ -256,7 +256,8 @@ Note that this requires emacs build with imagemagick.
   ;; problem with emacsclient was invoking wrong emacsclient
   ;; (/usr/bin/emacsclient)
   ;; make sure the emacslient appropriate to the Emacs I am using is used
-  (setenv "EDITOR" (expand-file-name "bin/emacsclient" invocation-directory))
+  ;; (setenv "EDITOR" (expand-file-name "bin/emacsclient" invocation-directory))
+  
   ;; "/Applications/Emacs.app/Contents/MacOS/bin-x86_64-10_5/emacsclient")
 
   ;; set up emacs as server
@@ -265,12 +266,16 @@ Note that this requires emacs build with imagemagick.
     (server-start))
 #+END_SRC
 
+*** TODO See if setenv "EDITOR" can be used for Windows, or if it is even needed.
+
 ** Flycheck
+Just enabled for Mac now.
 
 #+BEGIN_SRC emacs-lisp
   ;; flycheck
   ;; note that flycheck C-c ! conflicts with org-mode, so using C-c !! in org-mode
   (use-package flycheck
+    :disabled (eq system-type 'windows-nt)
     :init
     (global-flycheck-mode)
     :config
@@ -349,18 +354,17 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     :init
     (use-package magit-gitflow
       :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
-    (use-package with-editor
-      :load-path "~/git/with-editor")
+    (use-package with-editor)
     (global-set-key (kbd "C-x g") 'magit-status))
 #+END_SRC
 
 ** TODO fix paths for windows Register shortcuts
 
 #+BEGIN_SRC emacs-lisp
-;; provide shortcut registers to files
-(set-register ?e '(file . "~/.emacs.d/init.el"))
-(set-register ?i '(file . "~/org/inbox.org"))
-(set-register ?c '(file . "~/.emacs.d/configuration.org"))
+  ;; provide shortcut registers to files
+  (set-register ?e '(file . "~/.emacs.d/init.el"))
+  (set-register ?i '(file . (expand-file-name "inbox.org" org-directory)))
+  (set-register ?c '(file . "~/.emacs.d/configuration.org"))
 #+END_SRC
 
 ** Themes
@@ -637,7 +641,8 @@ We are using company mode instead of auto-complete for now.
 
   ;; ispell
   ;; fix for Windows
-  (setq ispell-program-name "/usr/local/bin/ispell")
+  (if (eq system-type 'darwin)
+    (setq ispell-program-name "/usr/local/bin/ispell"))
 
   ;; some other packages
   (use-package olivetti :defer t)
@@ -798,8 +803,10 @@ We are using company mode instead of auto-complete for now.
     :after org
     :init
     (setq org-roam-v2-ack t)
-    :custom
-    (org-roam-directory (file-truename "~/Documents/org-roam"))
+    (if (eq system-type 'darwin)
+        (setq org-roam-directory (file-truename "~/Documents/org-roam")))
+    (if (eq system-type 'windows-nt)
+        (setq org-roam-directory (file-truename "z:/Documents/org-roam")))
     :config
     (setq org-roam-capture-templates
           '(("d" "default" plain "%?" :target
@@ -832,7 +839,8 @@ We are using company mode instead of auto-complete for now.
       :ensure auctex)
 #+END_SRC
 
-** Citar
+** TODO Citar - set up for Windows too
+
 #+BEGIN_SRC emacs-lisp
   (use-package citar
     :ensure t

@@ -113,7 +113,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (if (eq system-type 'darwin)
     (setq org-directory "~/org"))
   (if (eq system-type 'windows-nt)
-    (setq org-directory "z:/Library/CloudStorage/Dropbox/org")) 
+    (setq org-directory "x:/org")) 
   (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
   ;; we hide stars by default even in buffers where we turn off
   (setq org-hide-leading-stars 'hidestars) ; just one star visible
@@ -554,29 +554,30 @@ Note that we use auto-fill-mode with Markdown.
     ;; use company-mode for auto-completion with ledger
     :config  
     (add-hook 'ledger-mode-hook
-               (lambda ()
-                 (company-mode t)))
-                 ;; (setq-local tab-always-indent 'complete)
-                 ;; (setq-local completion-cycle-threshold t)
-                 ;; (setq-local ledger-complete-in-steps t)))    ;; emacs mode for ledger-report-mode
+              (lambda ()
+                (company-mode t)))
+    ;; (setq-local tab-always-indent 'complete)
+    ;; (setq-local completion-cycle-threshold t)
+    ;; (setq-local ledger-complete-in-steps t)))    ;; emacs mode for ledger-report-mode
     (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
     ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
     ;; Map some long but common accounts to function keys
     :bind 
     (:map ledger-mode-map 
-    ("<f5>" . "Assets:Canvas:Checking")
-    ("<f6>" . "Assets:TIAA:Checking")
-    ("<f7>" . "Assets:BanquePopulaire:Checking")
-    ("<f8>" . "€"))
+          ("<f5>" . "Assets:Canvas:Checking")
+          ("<f6>" . "Assets:TIAA:Checking")
+          ("<f7>" . "Assets:BanquePopulaire:Checking")
+          ("<f8>" . "€"))
     :mode ("\\.ledger$" "\\.dat$"))
 
-    (use-package flycheck-ledger)
+  (use-package flycheck-ledger
+    :disabled (eq system-type 'windows-nt))
 
-    (use-package evil-ledger
-      :after ledger-mode
-      :config
-      (setq evil-ledger-sort-key "S")
-      (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+  (use-package evil-ledger
+    :after ledger-mode
+    :config
+    (setq evil-ledger-sort-key "S")
+    (add-hook 'ledger-mode-hook #'evil-ledger-mode))
 #+END_SRC
 
 ** Epub
@@ -629,21 +630,6 @@ We are using company mode instead of auto-complete for now.
 ** Misc packages
 
 #+BEGIN_SRC emacs-lisp
-  ;; my elisp files from "Writing GNU Emacs Extensions"
-  (use-package extensions
-    :load-path "~/.emacs.d/elisp")
-  (use-package timestamp
-    :load-path "~/.emacs.d/elisp")
-  ;; imenu-list
-  (use-package imenu-list
-    :config
-    (setq imenu-list-position 'left))
-
-  ;; ispell
-  ;; fix for Windows
-  (if (eq system-type 'darwin)
-    (setq ispell-program-name "/usr/local/bin/ispell"))
-
   ;; some other packages
   (use-package olivetti :defer t)
   (use-package htmlize :defer t)
@@ -652,14 +638,7 @@ We are using company mode instead of auto-complete for now.
   ;; Proper title capitalization function
   ;; Now just use Karls Voigt's improved version in ~/.emacs.d/elisp
   (use-package title-capitalization
-    :load-path "~/emacs.d/elisp")
-
-
-  ;; graphviz dot mode
-  ;; seems broken in emacs 26 master branch for now
-  (use-package graphviz-dot-mode
-    :disabled t
-    :ensure t)
+    :load-path "elisp/")
 #+END_SRC
 
 ** Programming
@@ -763,28 +742,31 @@ We are using company mode instead of auto-complete for now.
 *** Company mode
 
 #+BEGIN_SRC emacs-lisp
-(use-package company
-:config
+  (use-package company
+    :disabled (eq system-type 'windows-nt)
+    :config
     (add-hook 'prog-mode-hook 'company-mode)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
     (define-key company-active-map (kbd "C-p") #'company-select-previous)
     (setq company-transformers '(company-sort-by-occurrence)))
 
-;; company-sourcekit for Swift programming
-(use-package company-sourcekit
-:config
+  ;; company-sourcekit for Swift programming
+  (use-package company-sourcekit
+    :disabled (eq system-type 'windows-nt)
+    :config
     (add-to-list 'company-backends 'company-sourcekit))
-    
-(defun my-company-after-completion-hook (&rest _ignored)
-  (delete-trailing-whitespace))
 
-;; or setq-local in a mode hook
-(setq company-after-completion-hook #'my-company-after-completion-hook)
+  (defun my-company-after-completion-hook (&rest _ignored)
+    (delete-trailing-whitespace))
+
+  ;; or setq-local in a mode hook
+  (setq company-after-completion-hook #'my-company-after-completion-hook)
 #+END_SRC
 
 ** Deft
 #+BEGIN_SRC emacs-lisp
     (use-package deft
+    :disabled (eq system-type 'windows-nt)
     :after org org-roam
     :bind
     ("C-c n d" . deft)
@@ -800,6 +782,7 @@ We are using company mode instead of auto-complete for now.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
+    :disabled (eq system-type 'windows-nt)
     :after org
     :init
     (setq org-roam-v2-ack t)
@@ -843,6 +826,7 @@ We are using company mode instead of auto-complete for now.
 
 #+BEGIN_SRC emacs-lisp
   (use-package citar
+    :disabled (eq system-type 'windows-nt)
     :ensure t
     :custom
     (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
@@ -864,6 +848,7 @@ We are using company mode instead of auto-complete for now.
 ** Helm-bibtex
 #+BEGIN_SRC emacs-lisp
   (use-package helm-bibtex
+    :disabled (eq system-type 'windows-nt)
     :config
     (setq bibtex-completion-bibliography '("~/Documents/Bibtex/My Library.bib"))
     (setq bibtex-completion-library-path '("~/Zotero/storage/"))
@@ -875,6 +860,7 @@ We are using company mode instead of auto-complete for now.
 ** Org-roam-bibtex
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-bibtex
+    :disabled (eq system-type 'windows-nt)
     :ensure t
     :after (org-roam helm-bibtex)
     :config

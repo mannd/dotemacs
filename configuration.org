@@ -67,6 +67,16 @@ Not sure if this only applies to macOS?
     (setq ns-function-modifier 'hyper)
 #+END_SRC
 
+** Windmove
+However S-<arrow> conflicts with calendar in org-mode.  So use the super key (Command in macOS) but only in macOS.  Windows uses the Windows key for other functions, so just don't use windmove with Windows.
+
+#+BEGIN_SRC emacs-lisp
+  (if (eq system-type 'darwin) (windmove-default-keybindings 'super))
+  ; But also retain these old keybindings I am used to.
+  (global-set-key (kbd "C-x C-n") 'other-window)
+  (global-set-key (kbd "C-x C-p") 'previous-multiframe-window)
+#+END_SRC
+
 ** Printing
 
 Printing is only set up for mac.

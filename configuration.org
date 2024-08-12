@@ -393,7 +393,8 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   (load-theme 'modus-vivendi t)
 
   (when (member "Source Code Pro" (font-family-list))
-       (set-frame-font "Source Code Pro-16" nil t))
+    (if (eq system-type 'windows-nt) (set-frame-font "Source Code Pro-12" nil t))
+    (if (eq system-type 'darwin) (set-frame-font "Source Code Pro-16" nil t)))
 
   (use-package spaceline
   :init

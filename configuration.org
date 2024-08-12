@@ -3,7 +3,6 @@
 * Introduction
 This is my new /literate/ Emacs configuration file.
 
-
 ** Default coding system
 
 #+BEGIN_SRC emacs-lisp
@@ -828,24 +827,24 @@ We are using company mode instead of auto-complete for now.
 ** TODO Citar - set up for Windows too
 
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package citar
-  ;;   :if (eq system-type 'darwin)
-  ;;   :after (org-roam org)
-  ;;   :custom
-  ;;   (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
-  ;;   (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
-  ;;   (org-cite-insert-processor 'citar)
-  ;;   (org-cite-follow-processor 'citar)
-  ;;   (org-cite-activate-processor 'citar)
-  ;;   (org-cite-export-processors '((t . (csl "american-medical-association.csl"))))
-  ;;   (citar-bibliography org-cite-global-bibliography)
-  ;;   ;; optional: org-cite-insert is also bound to C-c C-x C-@
-  ;;   :bind
-  ;;   (:map org-mode-map :package org ("C-c C-b" . #'org-cite-insert)))
+  (use-package citar
+    :if (eq system-type 'darwin)
+    :after (org-roam org)
+    :custom
+    (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
+    (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    (org-cite-export-processors '((t . (csl "american-medical-association.csl"))))
+    (citar-bibliography org-cite-global-bibliography)
+    ;; optional: org-cite-insert is also bound to C-c C-x C-@
+    :bind
+    (:map org-mode-map :package org ("C-c C-b" . #'org-cite-insert)))
 
-  ;; (use-package citar-org-roam
-  ;;   :after (citar org-roam org)
-  ;;   :config (citar-org-roam-mode))
+  (use-package citar-org-roam
+    :after (citar org-roam org)
+    :config (citar-org-roam-mode))
   #+END_SRC
 
 ** Helm-bibtex

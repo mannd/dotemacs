@@ -3,6 +3,7 @@
 * Introduction
 This is my new /literate/ Emacs configuration file.
 
+
 ** Default coding system
 
 #+BEGIN_SRC emacs-lisp
@@ -347,7 +348,7 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 
   ;; evil-org
   (use-package evil-org
-    :after org
+    :after (org)
     :config
     (add-hook 'org-mode-hook 'evil-org-mode)
     (add-hook 'evil-org-mode-hook
@@ -581,10 +582,10 @@ Note that we use auto-fill-mode with Markdown.
         :mode ("\\.ledger$" "\\.dat$"))
 
       (use-package flycheck-ledger
-         :after ledger-mode)
+         :after (ledger-mode))
 
       (use-package evil-ledger
-        :after ledger-mode
+        :after (ledger-mode)
         :config
         (setq evil-ledger-sort-key "S")
         (add-hook 'ledger-mode-hook #'evil-ledger-mode))
@@ -606,7 +607,7 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
     (vertico-mode))
 
   (use-package marginalia
-    :after vertico
+    :after (vertico)
     :config
     (marginalia-mode 1))
 
@@ -776,7 +777,7 @@ We are using company mode instead of auto-complete for now.
 #+BEGIN_SRC emacs-lisp
   ;; (use-package deft
   ;;   :if (eq system-type 'darwin)
-  ;;   :after org org-roam
+  ;;   :after (org org-roam)
   ;;   :bind
   ;;   ("C-c n d" . deft)
   ;;   :custom
@@ -792,11 +793,10 @@ We are using company mode instead of auto-complete for now.
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
     :if (eq system-type 'darwin)
-    :after org
+    :after (org)
     :hook
     (after-init . org-roam-mode)
     :init
-    ;(setq org-roam-v2-ack t)
     (if (eq system-type 'darwin)
         (setq org-roam-directory (file-truename "~/Documents/org-roam")))
     (if (eq system-type 'windows-nt)
@@ -819,10 +819,10 @@ We are using company mode instead of auto-complete for now.
          (concat "${title} "
                  (propertize "${tags:10}" 'face 'org-tag))))
 
-  ;; (use-package org-roam-ui
-  ;;   :if (eq system-type 'darwin)
-  ;;   :after org-roam
-  ;;   :no-require)
+  (use-package org-roam-ui
+    :if (eq system-type 'darwin)
+    :after (org-roam)
+    :no-require)
 #+END_SRC
 
 ** TODO Citar - set up for Windows too
@@ -830,7 +830,7 @@ We are using company mode instead of auto-complete for now.
 #+BEGIN_SRC emacs-lisp
   ;; (use-package citar
   ;;   :if (eq system-type 'darwin)
-  ;;   :after org-roam
+  ;;   :after (org-roam org)
   ;;   :custom
   ;;   (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
   ;;   (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
@@ -844,7 +844,7 @@ We are using company mode instead of auto-complete for now.
   ;;   (:map org-mode-map :package org ("C-c C-b" . #'org-cite-insert)))
 
   ;; (use-package citar-org-roam
-  ;;   :after (citar org-roam)
+  ;;   :after (citar org-roam org)
   ;;   :config (citar-org-roam-mode))
   #+END_SRC
 

@@ -91,7 +91,7 @@ Printing is only set up for mac.
 #+END_SRC
 
 ** Get path right, takes it from the shell
-Only used in macOS.
+Only used in macOS?
 
 #+BEGIN_SRC emacs-lisp
       ;; new and improved way to make PATH and exec-path match bash config
@@ -256,6 +256,7 @@ This allows accented characters to be use.
 
 *** Images
 Note that this requires emacs build with imagemagick.
+
 #+BEGIN_SRC emacs-lisp
 (setq org-image-actual-width nil)
 #+END_SRC
@@ -279,13 +280,11 @@ Note that this requires emacs build with imagemagick.
 *** TODO See if setenv "EDITOR" can be used for Windows, or if it is even needed.
 
 ** Flycheck
-Just enabled for Mac now.
 
 #+BEGIN_SRC emacs-lisp
   ;; flycheck
   ;; note that flycheck C-c ! conflicts with org-mode, so using C-c !! in org-mode
   (use-package flycheck
-    :disabled (eq system-type 'windows-nt)
     :init
     (global-flycheck-mode)
     :config
@@ -558,36 +557,36 @@ Note that we use auto-fill-mode with Markdown.
 ** Ledger
 
 #+BEGIN_SRC emacs-lisp
-  (use-package ledger-mode
-    :init 
-    (setq ledger-clear-whole-transactions 1)
-    ;; use company-mode for auto-completion with ledger
-    :config  
-    (add-hook 'ledger-mode-hook
-              (lambda ()
-                (company-mode t)))
-    ;; (setq-local tab-always-indent 'complete)
-    ;; (setq-local completion-cycle-threshold t)
-    ;; (setq-local ledger-complete-in-steps t)))    ;; emacs mode for ledger-report-mode
-    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-    ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
-    ;; Map some long but common accounts to function keys
-    :bind 
-    (:map ledger-mode-map 
-          ("<f5>" . "Assets:Canvas:Checking")
-          ("<f6>" . "Assets:TIAA:Checking")
-          ("<f7>" . "Assets:BanquePopulaire:Checking")
-          ("<f8>" . "€"))
-    :mode ("\\.ledger$" "\\.dat$"))
+    (use-package ledger-mode
+      :init 
+      (setq ledger-clear-whole-transactions 1)
+      ;; use company-mode for auto-completion with ledger
+      :config  
+      (add-hook 'ledger-mode-hook
+                (lambda ()
+                  (company-mode t)))
+      ;; (setq-local tab-always-indent 'complete)
+      ;; (setq-local completion-cycle-threshold t)
+      ;; (setq-local ledger-complete-in-steps t)))
+      ;; emacs mode for ledger-report-mode
+      (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+      ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
+      ;; Map some long but common accounts to function keys
+      :bind 
+      (:map ledger-mode-map 
+            ("<f5>" . "Assets:Canvas:Checking")
+            ("<f6>" . "Assets:TIAA:Checking")
+            ("<f7>" . "Assets:BanquePopulaire:Checking")
+            ("<f8>" . "€"))
+      :mode ("\\.ledger$" "\\.dat$"))
 
-  (use-package flycheck-ledger
-    :disabled (eq system-type 'windows-nt))
+    (use-package flycheck-ledger)
 
-  (use-package evil-ledger
-    :after ledger-mode
-    :config
-    (setq evil-ledger-sort-key "S")
-    (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+    (use-package evil-ledger
+      :after ledger-mode
+      :config
+      (setq evil-ledger-sort-key "S")
+      (add-hook 'ledger-mode-hook #'evil-ledger-mode))
 #+END_SRC
 
 ** Epub
@@ -753,7 +752,6 @@ We are using company mode instead of auto-complete for now.
 
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    :disabled (eq system-type 'windows-nt)
     :config
     (add-hook 'prog-mode-hook 'company-mode)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
@@ -762,7 +760,7 @@ We are using company mode instead of auto-complete for now.
 
   ;; company-sourcekit for Swift programming
   (use-package company-sourcekit
-    :disabled (eq system-type 'windows-nt)
+    :if (eq system-type 'darwin)
     :config
     (add-to-list 'company-backends 'company-sourcekit))
 
@@ -775,8 +773,8 @@ We are using company mode instead of auto-complete for now.
 
 ** Deft
 #+BEGIN_SRC emacs-lisp
-    (use-package deft
-    :disabled (eq system-type 'windows-nt)
+  (use-package deft
+    :if (eq system-type 'darwin)
     :after org org-roam
     :bind
     ("C-c n d" . deft)
@@ -792,7 +790,7 @@ We are using company mode instead of auto-complete for now.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
-    :disabled (eq system-type 'windows-nt)
+    :if (eq system-type 'darwin)
     :after org
     :init
     (setq org-roam-v2-ack t)
@@ -812,12 +810,12 @@ We are using company mode instead of auto-complete for now.
     (org-roam-db-autosync-enable)
     :bind (("C-c n l" . org-roam-buffer-toggle)
            ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert)))
+           ("C-c n i" . org-roam-node-insert))
     :config
     (setq org-roam-node-display-template
          (concat "${title} "
                  (propertize "${tags:10}" 'face 'org-tag)))
-    ;(org-roam-setup))
+    (org-roam-setup))
 
   (use-package org-roam-ui
     :no-require)
@@ -836,7 +834,7 @@ We are using company mode instead of auto-complete for now.
 
 #+BEGIN_SRC emacs-lisp
   (use-package citar
-    :disabled (eq system-type 'windows-nt)
+    :if (eq system-type 'darwin)
     :ensure t
     :custom
     (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
@@ -856,9 +854,10 @@ We are using company mode instead of auto-complete for now.
   #+END_SRC
 
 ** Helm-bibtex
+
 #+BEGIN_SRC emacs-lisp
   (use-package helm-bibtex
-    :disabled (eq system-type 'windows-nt)
+    :if (eq system-type 'darwin)
     :config
     (setq bibtex-completion-bibliography '("~/Documents/Bibtex/My Library.bib"))
     (setq bibtex-completion-library-path '("~/Zotero/storage/"))
@@ -870,8 +869,7 @@ We are using company mode instead of auto-complete for now.
 ** Org-roam-bibtex
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam-bibtex
-    :disabled (eq system-type 'windows-nt)
-    :ensure t
+    :if (eq system-type 'darwin)
     :after (org-roam helm-bibtex)
     :config
     (org-roam-bibtex-mode 1)

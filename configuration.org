@@ -29,21 +29,24 @@ This is my new /literate/ Emacs configuration file.
 ~use-package~ is now part of emacs core, so no need to install it.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'ert)
-  (require 'diminish)
-  (require 'bind-key)
-  ;; Ensure all packages are loaded
-  (setq use-package-always-ensure t)
-  (setq use-package-verbose t)
-  ;; compile packages and use the newest version
-  (use-package auto-compile
-    :config (auto-compile-on-load-mode))
-  (setq load-prefer-newer t)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  
-  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-  ;; and `package-pinned-packages`. Most users will not need or want to do this.
-  ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+  (use-package ert)
+  (use-package diminish)
+  (use-package bind-key)
+    ;  (require 'ert)
+     ; (require 'diminish)
+     ; (require 'bind-key)
+      ;; Ensure all packages are loaded
+      (setq use-package-always-ensure t)
+      (setq use-package-verbose t)
+      ;; compile packages and use the newest version
+      (use-package auto-compile
+        :config (auto-compile-on-load-mode))
+      (setq load-prefer-newer t)
+      (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+
+      ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+      ;; and `package-pinned-packages`. Most users will not need or want to do this.
+      ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 ** Custom file
@@ -395,13 +398,6 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   (when (member "Source Code Pro" (font-family-list))
     (if (eq system-type 'windows-nt) (set-frame-font "Source Code Pro-12" nil t))
     (if (eq system-type 'darwin) (set-frame-font "Source Code Pro-16" nil t)))
-
-  (use-package spaceline
-  :init
-  (setq powerline-default-separator 'arrow-fade)
-  :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
 
   (use-package doom-themes)
 

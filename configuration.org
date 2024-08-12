@@ -39,7 +39,7 @@ This is my new /literate/ Emacs configuration file.
   (use-package auto-compile
     :config (auto-compile-on-load-mode))
   (setq load-prefer-newer t)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   
   ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
   ;; and `package-pinned-packages`. Most users will not need or want to do this.
@@ -285,12 +285,11 @@ Note that this requires emacs build with imagemagick.
   ;; flycheck
   ;; note that flycheck C-c ! conflicts with org-mode, so using C-c !! in org-mode
   (use-package flycheck
-    :init
-    (global-flycheck-mode)
     :config
     (add-to-list 'flycheck-checkers 'swift)
     (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
     (setq-default flycheck-emacs-lisp-load-path 'inherit)
+    (global-flycheck-mode)
     (define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
     ;; flycheck-swift
   (use-package flycheck-swift
@@ -334,7 +333,7 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 
   ;; use evil-matchit to match tags
   (use-package evil-matchit
-    :init
+    :config
     (global-evil-matchit-mode 1))
 
   ;; implement number functions
@@ -356,15 +355,19 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 #+END_SRC
 
 ** Magit
+Install Magit from nongnu repository using package manager.
 
 #+BEGIN_SRC emacs-lisp
   ;; Magit
-  (use-package magit
-    :init
-    (use-package magit-gitflow
-      :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
-    (use-package with-editor)
-    (global-set-key (kbd "C-x g") 'magit-status))
+  ;;(use-package magit)
+
+  ;; (use-package magit-gitflow
+  ;;   :after magit
+  ;;   :config (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+
+  ;;   (use-package with-editor :after magit)
+
+  ;;   (global-set-key (kbd "C-x g") 'magit-status)
 #+END_SRC
 
 ** TODO fix paths for windows Register shortcuts
@@ -383,7 +386,7 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   ;; pick a theme
   ;;(load-theme 'tsdh-light t)
   ;;(load-theme 'wombat t)
-  ;;(load-theme 'leuven t)
+  ;;(load-theme 'leuven t) 
   ;;(load-theme 'dracula t)
   ;;(load-theme 'light-blue t)
   ;;(load-theme 'leuven t)
@@ -509,7 +512,7 @@ Flashes cursor when scrolling or changing buffers
 
 #+BEGIN_SRC emacs-lisp
   (use-package beacon
-    :init (beacon-mode 1))
+    :config (beacon-mode 1))
 #+END_SRC
 
 ** Rainbow mode
@@ -517,7 +520,7 @@ Colorizes strings that represent colors.
 
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-     :init 
+     :config 
      (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 
@@ -557,36 +560,37 @@ Note that we use auto-fill-mode with Markdown.
 ** Ledger
 
 #+BEGIN_SRC emacs-lisp
-    (use-package ledger-mode
-      :init 
-      (setq ledger-clear-whole-transactions 1)
-      ;; use company-mode for auto-completion with ledger
-      :config  
-      (add-hook 'ledger-mode-hook
-                (lambda ()
-                  (company-mode t)))
-      ;; (setq-local tab-always-indent 'complete)
-      ;; (setq-local completion-cycle-threshold t)
-      ;; (setq-local ledger-complete-in-steps t)))
-      ;; emacs mode for ledger-report-mode
-      (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-      ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
-      ;; Map some long but common accounts to function keys
-      :bind 
-      (:map ledger-mode-map 
-            ("<f5>" . "Assets:Canvas:Checking")
-            ("<f6>" . "Assets:TIAA:Checking")
-            ("<f7>" . "Assets:BanquePopulaire:Checking")
-            ("<f8>" . "€"))
-      :mode ("\\.ledger$" "\\.dat$"))
+      (use-package ledger-mode
+        :init 
+        (setq ledger-clear-whole-transactions 1)
+        ;; use company-mode for auto-completion with ledger
+        :config  
+        (add-hook 'ledger-mode-hook
+                  (lambda ()
+                    (company-mode t)))
+        ;; (setq-local tab-always-indent 'complete)
+        ;; (setq-local completion-cycle-threshold t)
+        ;; (setq-local ledger-complete-in-steps t)))
+        ;; emacs mode for ledger-report-mode
+        (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+        ;; (set-face-attribute 'ledger-font-xact-highlight-face nil :background "#ff00ff")
+        ;; Map some long but common accounts to function keys
+        :bind 
+        (:map ledger-mode-map 
+              ("<f5>" . "Assets:Canvas:Checking")
+              ("<f6>" . "Assets:TIAA:Checking")
+              ("<f7>" . "Assets:BanquePopulaire:Checking")
+              ("<f8>" . "€"))
+        :mode ("\\.ledger$" "\\.dat$"))
 
-    (use-package flycheck-ledger)
+      (use-package flycheck-ledger
+         :after ledger-mode)
 
-    (use-package evil-ledger
-      :after ledger-mode
-      :config
-      (setq evil-ledger-sort-key "S")
-      (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+      (use-package evil-ledger
+        :after ledger-mode
+        :config
+        (setq evil-ledger-sort-key "S")
+        (add-hook 'ledger-mode-hook #'evil-ledger-mode))
 #+END_SRC
 
 ** Epub
@@ -601,7 +605,7 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
 ** Vertico and friends
 #+BEGIN_SRC emacs-lisp
   (use-package vertico
-    :init
+    :config
     (vertico-mode))
 
   (use-package marginalia
@@ -818,16 +822,8 @@ We are using company mode instead of auto-complete for now.
     (org-roam-setup))
 
   (use-package org-roam-ui
+    :if (eq system-type 'darwin)
     :no-require)
-#+END_SRC
-
-** Auctex
-
-#+BEGIN_SRC emacs-lisp
-  (use-package tex-mode)
-  
-  (use-package tex
-      :ensure auctex)
 #+END_SRC
 
 ** TODO Citar - set up for Windows too

@@ -645,7 +645,7 @@ We are using company mode instead of auto-complete for now.
 
 #+BEGIN_SRC emacs-lisp
   ;; some other packages
-  (use-package olivetti :defer t)
+  (use-package olivetti)
   (use-package htmlize :defer t)
   (use-package cider :defer t)
 
@@ -778,17 +778,17 @@ We are using company mode instead of auto-complete for now.
 
 ** Deft
 #+BEGIN_SRC emacs-lisp
-  (use-package deft
-    :if (eq system-type 'darwin)
-    :after org org-roam
-    :bind
-    ("C-c n d" . deft)
-    :custom
-    (deft-recursive t)
-    (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
-    (deft-use-filename-as-title t)
-    (deft-default-extension "org")
-    (deft-directory org-roam-directory))
+  ;; (use-package deft
+  ;;   :if (eq system-type 'darwin)
+  ;;   :after org org-roam
+  ;;   :bind
+  ;;   ("C-c n d" . deft)
+  ;;   :custom
+  ;;   (deft-recursive t)
+  ;;   (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
+  ;;   (deft-use-filename-as-title t)
+  ;;   (deft-default-extension "org")
+  ;;   (deft-directory org-roam-directory))
 #+END_SRC
 
 ** Org-roam
@@ -797,13 +797,19 @@ We are using company mode instead of auto-complete for now.
   (use-package org-roam
     :if (eq system-type 'darwin)
     :after org
+    :hook
+    (after-init . org-roam-mode)
     :init
-    (setq org-roam-v2-ack t)
+    ;(setq org-roam-v2-ack t)
     (if (eq system-type 'darwin)
         (setq org-roam-directory (file-truename "~/Documents/org-roam")))
     (if (eq system-type 'windows-nt)
         (setq org-roam-directory (file-truename "z:/Documents/org-roam")))
-    :config
+    ;(org-roam-setup)
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert))
+   :config
     (setq org-roam-capture-templates
           '(("d" "default" plain "%?" :target
               (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: ")
@@ -813,41 +819,37 @@ We are using company mode instead of auto-complete for now.
              (file+head "references/${citekey}.org" "#+title: ${title}\n")
              :unnarrowed t)))
     (org-roam-db-autosync-enable)
-    :bind (("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert))
-    :config
     (setq org-roam-node-display-template
          (concat "${title} "
-                 (propertize "${tags:10}" 'face 'org-tag)))
-    (org-roam-setup))
+                 (propertize "${tags:10}" 'face 'org-tag))))
 
-  (use-package org-roam-ui
-    :if (eq system-type 'darwin)
-    :no-require)
+  ;; (use-package org-roam-ui
+  ;;   :if (eq system-type 'darwin)
+  ;;   :after org-roam
+  ;;   :no-require)
 #+END_SRC
 
 ** TODO Citar - set up for Windows too
 
 #+BEGIN_SRC emacs-lisp
-  (use-package citar
-    :if (eq system-type 'darwin)
-    :ensure t
-    :custom
-    (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
-    (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
-    (org-cite-insert-processor 'citar)
-    (org-cite-follow-processor 'citar)
-    (org-cite-activate-processor 'citar)
-    (org-cite-export-processors '((t . (csl "american-medical-association.csl"))))
-    (citar-bibliography org-cite-global-bibliography)
-    ;; optional: org-cite-insert is also bound to C-c C-x C-@
-    :bind
-    (:map org-mode-map :package org ("C-c C-b" . #'org-cite-insert)))
+  ;; (use-package citar
+  ;;   :if (eq system-type 'darwin)
+  ;;   :after org-roam
+  ;;   :custom
+  ;;   (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
+  ;;   (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))
+  ;;   (org-cite-insert-processor 'citar)
+  ;;   (org-cite-follow-processor 'citar)
+  ;;   (org-cite-activate-processor 'citar)
+  ;;   (org-cite-export-processors '((t . (csl "american-medical-association.csl"))))
+  ;;   (citar-bibliography org-cite-global-bibliography)
+  ;;   ;; optional: org-cite-insert is also bound to C-c C-x C-@
+  ;;   :bind
+  ;;   (:map org-mode-map :package org ("C-c C-b" . #'org-cite-insert)))
 
-  (use-package citar-org-roam
-    :after (citar org-roam)
-    :config (citar-org-roam-mode))
+  ;; (use-package citar-org-roam
+  ;;   :after (citar org-roam)
+  ;;   :config (citar-org-roam-mode))
   #+END_SRC
 
 ** Helm-bibtex

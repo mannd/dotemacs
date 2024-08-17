@@ -194,20 +194,20 @@ Set up the org agenda.
   ;; stuck project tweak: projects are level 2 headlines, lacking NEXT action
   (setq org-stuck-projects '("+project/-DONE-CANCELLED" ("NEXT") nil ""))
   (setq org-tags-exclude-from-inheritance '("project"))
-  ;; Capture templates
+  ;; Capture templates - set up just for macOS
   (setq org-capture-templates
-        '(("t" "todo" entry (file+headline (expand-file-name "inbox.org" org-directory) "Tasks")
+        '(("t" "todo" entry (file+headline "~/inbox.org" "Tasks")
            "* TODO %?\n%U\n%a\n")
-          ("n" "note" entry (file+headline (expand-file-name "inbox.org" org-directory) "Notes")
+          ("n" "note" entry (file+headline "~/inbox.org" "Notes")
            "* %? :NOTE:\n%U\n%a\n")
-          ;; ("j" "journal entry"
-          ;;  entry (file+olp+datetree "~/Documents/journal.org.gpg")
-          ;;  "**** %U %^{Title}\n%?")
+          ("j" "journal entry"
+           entry (file+olp+datetree "~/Documents/journal.org.gpg")
+           "**** %U %^{Title}\n%?")
           ("g" "German vocabulary"
-           entry (file+headline (expand-file-name "german.org" org-directory) "German")
+           entry (file+headline "~/org/german.org" "German")
            "* <[%^{German word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** German\n %^{Detailed German word|%\\1}\n** English\n %^{English translation}")
           ("f" "French vocabulary"
-           entry (file+headline (expand-file-name "french.org" org-directory) "French")
+           entry (file+headline "~/org/french.org" "French")
            "* <[%^{French word}]> :drill:\n :PROPERTIES:\n    :DRILL_CARD_TYPE: twosided\n    :END:\n** French\n %^{Detailed French word|%\\1}\n** English\n %^{English translation}")))
 
   ;; more TODO states
@@ -774,17 +774,17 @@ We are using company mode instead of auto-complete for now.
 
 ** Deft
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package deft
-  ;;   :if (eq system-type 'darwin)
-  ;;   :after (org org-roam)
-  ;;   :bind
-  ;;   ("C-c n d" . deft)
-  ;;   :custom
-  ;;   (deft-recursive t)
-  ;;   (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
-  ;;   (deft-use-filename-as-title t)
-  ;;   (deft-default-extension "org")
-  ;;   (deft-directory org-roam-directory))
+  (use-package deft
+    :if (eq system-type 'darwin)
+    :after (org org-roam)
+    :bind
+    ("C-c n d" . deft)
+    :custom
+    (deft-recursive t)
+    (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
+    (deft-use-filename-as-title t)
+    (deft-default-extension "org")
+    (deft-directory org-roam-directory))
 #+END_SRC
 
 ** Org-roam

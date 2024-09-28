@@ -820,7 +820,7 @@ We are using company mode instead of auto-complete for now.
     (org-roam-db-autosync-enable)
     (setq org-roam-node-display-template
          (concat "${title} "
-                 (propertize "${tags:10}" 'face 'org-tag))))
+                 (propertize "${tags}" 'face 'org-tag))))
 
   (use-package org-roam-ui
     :if (eq system-type 'darwin)

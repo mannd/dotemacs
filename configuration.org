@@ -361,16 +361,12 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 Install Magit from nongnu repository using package manager.
 
 #+BEGIN_SRC emacs-lisp
-  ;; Magit
-  ;;(use-package magit)
+    ;; Magit
+    (use-package magit)
 
-  ;; (use-package magit-gitflow
-  ;;   :after magit
-  ;;   :config (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
-
-  ;;   (use-package with-editor :after magit)
-
-  ;;   (global-set-key (kbd "C-x g") 'magit-status)
+    (use-package magit-gitflow
+      :after magit
+      :config (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
 #+END_SRC
 
 ** TODO fix paths for windows Register shortcuts

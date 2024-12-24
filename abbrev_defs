@@ -14,5 +14,6 @@
   '(
     ("e'" "é" nil :count 3)
     ("finsateride" "finasteride" nil :count 4)
+    ("supchooms" "Sup chooms!  How you all living?  Hope everything is nova and you're all having a preem week." nil :count 1)
    ))
 

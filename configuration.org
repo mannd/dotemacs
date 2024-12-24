@@ -331,6 +331,7 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     (evil-set-initial-state 'cider-error 'emacs)
     (evil-set-initial-state 'deft-mode 'emacs)
     (evil-set-initial-state 'semantic-symref-results-mode 'emacs)
+    (evil-set-initial-state 'ledger-reconcile-mode 'emacs)
     (add-to-list 'evil-emacs-state-modes 'forecast-mode)
     (setq-default evil-cross-lines t))
 

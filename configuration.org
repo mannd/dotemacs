@@ -368,6 +368,25 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 
 #+END_SRC
 
+** Dired
+Tweak dired.  
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dired
+  :ensure nil
+  :commands (dired)
+  :hook
+  ((dired-mode . dired-hide-details-mode)
+   (dired-mode . hl-line-mode))
+  :config
+  ;; (setq dired-recursive-copies 'always)
+  ;; (setq dired-recursive-deletes 'always)
+  ;; (setq delete-by-moving-to-trash t)
+  (setq dired-dwim-target t)
+  (put 'dired-find-alternate-file 'disabled nil)
+  (add-hook 'dired-mode #'dired-hide-details-mode))
+#+END_SRC
+
 ** Magit
 Install Magit from nongnu repository using package manager.
 
@@ -420,6 +439,24 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   (doom-modeline-height 15)
   (doom-modeline-major-mode-color-icon t))
 #+END_SRC
+
+** Nerd icons
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+  :ensure t)
+
+(use-package nerd-icons-completion
+  :ensure t
+  :after marginalia
+  :config
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+  (use-package nerd-icons-dired
+  :ensure t
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+#+end_src
 
 ** Tweak UI
 
@@ -485,13 +522,6 @@ Use iBuffer instead of regular buffer.
 #+BEGIN_SRC emacs-lisp
   ;; iBuffer is better
   (global-set-key (kbd "C-x C-b") 'ibuffer)
-#+END_SRC
-
-Tweak dired to open files in same buffer, not a new buffer.  Also make file sizes human readable.
-
-#+BEGIN_SRC emacs-lisp
-  (put 'dired-find-alternate-file 'disabled nil)
-  (setq-default dired-listing-switches "-ahl")
 #+END_SRC
 
 Use abbrev mode.
@@ -630,10 +660,27 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
   (completion-styles '(orderless basic ))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-  (use-package consult)
-
+  (use-package consult
+    :bind (
+      ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+      ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+      ("M-s r" . consult-ripgrep)               ;; rg is faster than grep
+ ))
 
 #+END_SRc
+
+** Consult-notes
+Combine org-roam and denote notes
+
+#+begin_src emacs
+  (use-package consult-notes
+    :config
+    (setq consult-notes-file-dir-sources
+  
+       '(("Org Roam" ?r "~/Documents/org-roam")
+         ("Denote" ?d "~/Documents/Notes")))
+  
+#+end_src
 
 ** Helm - replaced by Vertico and friends, except for helm-bibtex.
 

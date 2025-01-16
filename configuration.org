@@ -325,7 +325,7 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     (setq evil-search-module 'evil-search)
     (setq-default evil-cross-lines t)
     ;; git commit buffers start in insert mode
-    ;; (evil-set-initial-state 'git-commit-mode 'insert)
+    (evil-set-initial-state 'git-commit-mode 'insert)
     ;; (evil-set-initial-state 'dired-mode 'normal)
     ;; (evil-set-initial-state 'image-dired-mode 'emacs)
     ;; (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)

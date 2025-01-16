@@ -309,6 +309,8 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
     ;; Make C-u in evil-mode works like in vim (page up)
     ;; must be set before package is loaded
     (setq evil-want-C-u-scroll t)
@@ -323,18 +325,24 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     (setq evil-search-module 'evil-search)
     (setq-default evil-cross-lines t)
     ;; git commit buffers start in insert mode
-    (evil-set-initial-state 'git-commit-mode 'insert)
-    (evil-set-initial-state 'dired-mode 'emacs)
-    (evil-set-initial-state 'image-dired-mode 'emacs)
-    (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)
-    (evil-set-initial-state 'eww-mode 'emacs)
-    (evil-set-initial-state 'cider-repl 'emacs)
-    (evil-set-initial-state 'cider-error 'emacs)
-    (evil-set-initial-state 'deft-mode 'emacs)
-    (evil-set-initial-state 'semantic-symref-results-mode 'emacs)
-    (evil-set-initial-state 'ledger-reconcile-mode 'emacs)
-    (add-to-list 'evil-emacs-state-modes 'forecast-mode)
+    ;; (evil-set-initial-state 'git-commit-mode 'insert)
+    ;; (evil-set-initial-state 'dired-mode 'normal)
+    ;; (evil-set-initial-state 'image-dired-mode 'emacs)
+    ;; (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)
+    ;; (evil-set-initial-state 'eww-mode 'emacs)
+    ;; (evil-set-initial-state 'cider-repl 'emacs)
+    ;; (evil-set-initial-state 'cider-error 'emacs)
+    ;; (evil-set-initial-state 'deft-mode 'emacs)
+    ;; (evil-set-initial-state 'semantic-symref-results-mode 'emacs)
+    ;; (evil-set-initial-state 'ledger-reconcile-mode 'emacs)
+    ;; (add-to-list 'evil-emacs-state-modes 'forecast-mode)
     (setq-default evil-cross-lines t))
+
+  (use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
   ;; use evil-matchit to match tags
   (use-package evil-matchit
@@ -377,7 +385,6 @@ Install Magit from nongnu repository using package manager.
 #+BEGIN_SRC emacs-lisp
   ;; provide shortcut registers to files
   (set-register ?e '(file . "~/.emacs.d/init.el"))
-  (set-register ?i '(file . (expand-file-name "inbox.org" org-directory)))
   (set-register ?c '(file . "~/.emacs.d/configuration.org"))
 #+END_SRC
 
@@ -622,6 +629,8 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
   :custom
   (completion-styles '(orderless basic ))
   (completion-category-overrides '((file (styles basic partial-completion)))))
+
+  (use-package consult)
 
 
 #+END_SRc

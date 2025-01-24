@@ -334,10 +334,11 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     ;; (evil-set-initial-state 'cider-error 'emacs)
     ;; (evil-set-initial-state 'deft-mode 'emacs)
     ;; (evil-set-initial-state 'semantic-symref-results-mode 'emacs)
-    ;; (evil-set-initial-state 'ledger-reconcile-mode 'emacs)
+    (evil-set-initial-state 'ledger-reconcile-mode 'emacs)
     ;; (add-to-list 'evil-emacs-state-modes 'forecast-mode)
     (setq-default evil-cross-lines t))
 
+  ;; tries to apply evil mode to most non-text buffers
   (use-package evil-collection
   :after evil
   :ensure t
@@ -645,40 +646,43 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
 
 ** Vertico and friends
 #+BEGIN_SRC emacs-lisp
-  (use-package vertico
-    :config
-    (vertico-mode))
+   (use-package vertico
+     :config
+     (vertico-mode))
 
-  (use-package marginalia
-    :after (vertico)
-    :config
-    (marginalia-mode 1))
+   (use-package marginalia
+     :after (vertico)
+     :config
+     (marginalia-mode 1))
 
-  (use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic ))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+   (use-package orderless
+   :ensure t
+   :custom
+   (completion-styles '(orderless basic ))
+   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-  (use-package consult
-    :bind (
-      ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-      ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-      ("M-s r" . consult-ripgrep)               ;; rg is faster than grep
- ))
+   (use-package consult
+     :bind (
+       ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+       ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+       ("M-s r" . consult-ripgrep)               ;; rg is faster than grep
+  ))
 
-#+END_SRc
+  (use-package consult-denote
+    :after denote
+    :config (consult-denote-mode))
+
+#+END_SRC
 
 ** Consult-notes
 Combine org-roam and denote notes
 
-#+begin_src emacs
+#+begin_src emacs-lisp
   (use-package consult-notes
     :config
     (setq consult-notes-file-dir-sources
-  
        '(("Org Roam" ?r "~/Documents/org-roam")
-         ("Denote" ?d "~/Documents/Notes")))
+         ("Denote" ?d "~/Documents/Notes"))))
   
 #+end_src
 
@@ -891,12 +895,16 @@ We are using company mode instead of auto-complete for now.
 An alternative to org-roam
 
 #+begin_src emacs-lisp
-    (use-package denote
-      :hook (dired-mode . denote-dired-mode)
-      :config
-      (setq denote-directory (expand-file-name "~/Documents/Notes"))
-      (denote-rename-buffer-mode 1))
+  (use-package denote
+    :hook (dired-mode . denote-dired-mode)
+    :config
+    (setq denote-directory (expand-file-name "~/Documents/Notes"))
+    (denote-rename-buffer-mode 1))
 
+  (defun dem/denote-open-denote-dir()
+    "Open denote directory."
+    (interactive)
+    (dired denote-directory))
 
 #+end_src
 

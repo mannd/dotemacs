@@ -422,7 +422,7 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
   (use-package modus-themes
     :ensure t
     :config
-    (load-theme 'modus-vivendi))
+    (load-theme 'modus-vivendi-tinted))
 
   (when (member "Source Code Pro" (font-family-list))
     (if (eq system-type 'windows-nt) (set-frame-font "Source Code Pro-12" nil t))
@@ -919,7 +919,7 @@ An alternative to org-roam
 #+BEGIN_SRC emacs-lisp
   (use-package citar
     :if (eq system-type 'darwin)
-    :after (org-roam org)
+    :after (org)
     :custom
     (org-cite-global-bibliography '("~/Documents/Bibtex/My Library.bib"))
     (org-cite-csl-styles-dir (expand-file-name "~/Zotero/styles/"))

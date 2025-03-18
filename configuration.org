@@ -133,7 +133,6 @@ Set some global keys for org mode, set up my default org directory and tweak the
   (setq org-startup-indented t)
   (setq org-hide-emphasis-markers t)
 
-
   (use-package org-appear
      :hook (org-mode . org-appear-mode))
 #+END_SRC
@@ -175,13 +174,18 @@ Set up the org agenda.
 *** More org stuff
 
 #+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/elisp/emacs-ob-racket-master")
+  (require 'ob-racket)
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (C . t)
      (js . t)
      (shell . t)
+     (racket . t)
      (java . t)))
+  
   ;; file types for org-mode
   (add-to-list 'auto-mode-alist '("\\.\\(org_archive\\|txt\\)$" . org-mode))
 
@@ -265,6 +269,14 @@ Note that this requires emacs build with imagemagick.
 (setq org-image-actual-width nil)
 #+END_SRC
 
+** Ediff
+Make ediff default to a better layout.
+
+#+begin_src emacs-lisp
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+end_src
+
 ** Emacs server
 
 #+BEGIN_SRC emacs-lisp
@@ -294,7 +306,8 @@ Note that this requires emacs build with imagemagick.
     (setq flycheck-swift-sdk-path "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
     (setq-default flycheck-emacs-lisp-load-path 'inherit)
     (global-flycheck-mode)
-    (define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
+    (setq flycheck-global-modes '(not org-mode)))
+    ;;(define-key flycheck-mode-map (kbd "C-c ! !") 'org-time-stamp-inactive))
     ;; flycheck-swift
   (use-package flycheck-swift
     :config
@@ -392,12 +405,16 @@ Tweak dired.
 Install Magit from nongnu repository using package manager.
 
 #+BEGIN_SRC emacs-lisp
-    ;; Magit
-    (use-package magit)
+  ;; Magit
+  (use-package magit)
 
-    (use-package magit-gitflow
-      :after magit
-      :config (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+  (use-package magit-gitflow
+    :after magit
+    :config (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+
+    (use-package with-editor :after magit)
+
+    (global-set-key (kbd "C-x g") 'magit-status)
 #+END_SRC
 
 ** TODO fix paths for windows Register shortcuts
@@ -646,20 +663,20 @@ Mode for reading ebooks.  Use 'n' and 'p' to change chapters.
 
 ** Vertico and friends
 #+BEGIN_SRC emacs-lisp
-   (use-package vertico
-     :config
-     (vertico-mode))
+  (use-package vertico
+    :config
+    (vertico-mode))
 
-   (use-package marginalia
-     :after (vertico)
-     :config
-     (marginalia-mode 1))
+  (use-package marginalia
+    :after (vertico)
+    :config
+    (marginalia-mode 1))
 
-   (use-package orderless
-   :ensure t
-   :custom
-   (completion-styles '(orderless basic ))
-   (completion-category-overrides '((file (styles basic partial-completion)))))
+  (use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic ))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
    (use-package consult
      :bind (
@@ -682,8 +699,9 @@ Combine org-roam and denote notes
     :config
     (setq consult-notes-file-dir-sources
        '(("Org Roam" ?r "~/Documents/org-roam")
+         ("Bibliographic References" ?b "~/Documents/org-roam/references")
          ("Denote" ?d "~/Documents/Notes"))))
-  
+
 #+end_src
 
 ** Helm - replaced by Vertico and friends, except for helm-bibtex.
@@ -755,6 +773,12 @@ We are using company mode instead of auto-complete for now.
   (setq inferior-lisp-program "clisp")
 #+END_SRC
 
+*** Racket
+Use as a dialect of Scheme compatible with the book SICP.  See https://github.com/hasu/emacs-ob-racket for installation of emacs-ob-racket.  Code is downloaded from that site and is in the elisp subdirectory of .emacs.d/
+
+#+begin_src  emacs-lisp
+  (use-package racket-mode)
+#+end_src
 *** Swift
 
 #+BEGIN_SRC emacs-lisp

@@ -139,6 +139,16 @@ Set some global keys for org mode, set up my default org directory and tweak the
 
 **** TODO Consider moving org files to iCloud
 
+**** Citar-denote
+
+#+BEGIN_SRC emacs-lisp
+  (use-package citar-denote
+    :ensure t
+    :after (:any citar denote)
+    :config
+    (citar-denote-mode))
+#+END_SRC
+
 *** Org agenda
 
 Set up the org agenda.
@@ -706,18 +716,17 @@ Combine org-roam and denote notes
 
 ** Helm - replaced by Vertico and friends, except for helm-bibtex.
 
-** Projectile
+** Projectile - Trying out built-in Project mode, so temporarily disabled
 
 #+BEGIN_SRC emacs-lisp
   ;; projectile
   (use-package projectile
+    :disabled
     :ensure t
     :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (projectile-mode +1))
 #+END_SRC
-
-*** TODO Consider replace with built-in emacs project support
 
 ** Auto-complete
 We are using company mode instead of auto-complete for now.
@@ -863,21 +872,6 @@ Use as a dialect of Scheme compatible with the book SICP.  See https://github.co
   (setq company-after-completion-hook #'my-company-after-completion-hook)
 #+END_SRC
 
-** Deft
-#+BEGIN_SRC emacs-lisp
-  (use-package deft
-    :if (eq system-type 'darwin)
-    :after (org org-roam)
-    :bind
-    ("C-c n d" . deft)
-    :custom
-    (deft-recursive t)
-    (deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n")
-    (deft-use-filename-as-title t)
-    (deft-default-extension "org")
-    (deft-directory org-roam-directory))
-#+END_SRC
-
 ** Org-roam
 
 #+BEGIN_SRC emacs-lisp
@@ -904,7 +898,6 @@ Use as a dialect of Scheme compatible with the book SICP.  See https://github.co
              :target
              (file+head "references/${citekey}.org" "#+title: ${title}\n")
              :unnarrowed t)))
-    (org-roam-db-autosync-enable)
     (setq org-roam-node-display-template
          (concat "${title} "
                  (propertize "${tags}" 'face 'org-tag))))
@@ -956,9 +949,9 @@ An alternative to org-roam
     :bind
     (:map org-mode-map :package org ("C-c C-b" . #'org-cite-insert)))
 
-  (use-package citar-org-roam
-    :after (citar org-roam org)
-    :config (citar-org-roam-mode))
+  ;; (use-package citar-org-roam
+  ;;   :after (citar org-roam org)
+  ;;   :config (citar-org-roam-mode))
   #+END_SRC
 
 ** Helm-bibtex

@@ -60,7 +60,7 @@ Customizations get stored in their own file.  I have arranged this so that there
   ;;   (setq custom-file (expand-file-name "custom.el" emacs-folder)))
   ;; (if (eq system-type 'windows-nt)
   ;;   (setq custom-file "/msys64/home/mannd/.emacs.d/custom.el"))
-  (load custom-file)
+  (load custom-file 'noerror)
 #+END_SRC
 
 ** Define function key as hyper
@@ -116,6 +116,7 @@ Set some global keys for org mode, set up my default org directory and tweak the
 
 #+BEGIN_SRC emacs-lisp
   ;; org-mode setup
+  (require 'org)
   ;; Standard org key bindings
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
@@ -184,8 +185,8 @@ Set up the org agenda.
 *** More org stuff
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/elisp/emacs-ob-racket-master")
-  (require 'ob-racket)
+  ;;(add-to-list 'load-path "~/.emacs.d/elisp/emacs-ob-racket-master")
+  ;;(require 'ob-racket)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -193,7 +194,6 @@ Set up the org agenda.
      (C . t)
      (js . t)
      (shell . t)
-     (racket . t)
      (java . t)))
   
   ;; file types for org-mode
@@ -349,7 +349,8 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     (setq-default evil-cross-lines t)
     ;; git commit buffers start in insert mode
     (evil-set-initial-state 'git-commit-mode 'insert)
-    ;; (evil-set-initial-state 'dired-mode 'normal)
+    (evil-set-initial-state 'dired-mode 'emacs)
+    (evil-set-initial-state 'Info-mode 'emacs)
     ;; (evil-set-initial-state 'image-dired-mode 'emacs)
     ;; (evil-set-initial-state 'image-dired-thumbnail-mode 'emacs)
     ;; (evil-set-initial-state 'eww-mode 'emacs)
@@ -361,8 +362,12 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
     ;; (add-to-list 'evil-emacs-state-modes 'forecast-mode)
     (setq-default evil-cross-lines t))
 
-  ;; tries to apply evil mode to most non-text buffers
+  ;; Tries to apply evil mode to most non-text buffers
+  ;; However, there are too many conflicts with emacs keybindings
+  ;; in these states that I end up switching to emacs mode.
+  ;; Thus, disabled.
   (use-package evil-collection
+    :disabled
   :after evil
   :ensure t
   :config
@@ -381,13 +386,13 @@ Also see this Emacs simplification post, https://b.tuxes.uk/avoiding-emacs-bankr
 
   ;; evil-org
   (use-package evil-org
-    :after (org)
+    :after (evil org)
     :config
+    (require 'evil-org-agenda)
     (add-hook 'org-mode-hook 'evil-org-mode)
     (add-hook 'evil-org-mode-hook
           (lambda ()
             (evil-org-set-key-theme)))
-    (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 
 #+END_SRC
@@ -450,6 +455,9 @@ I am satisfied with the modus themes, but many doom themes are good, as well as 
     :ensure t
     :config
     (load-theme 'modus-vivendi-tinted))
+
+  (use-package doric-themes
+    :ensure t)
 
   (when (member "Source Code Pro" (font-family-list))
     (if (eq system-type 'windows-nt) (set-frame-font "Source Code Pro-12" nil t))
@@ -607,8 +615,9 @@ Colorizes strings that represent colors.
 Enable encryption of gpg files
 
 #+BEGIN_SRC emacs-lisp
-  (require 'epa-file)
-  (epa-file-enable)
+  ;; (unless (featurep 'epa-file)
+  ;; (require 'epa-file)
+  ;; (epa-file-enable))
 #+END_SRC
 
 ** Markdown mode
@@ -786,8 +795,9 @@ We are using company mode instead of auto-complete for now.
 Use as a dialect of Scheme compatible with the book SICP.  See https://github.com/hasu/emacs-ob-racket for installation of emacs-ob-racket.  Code is downloaded from that site and is in the elisp subdirectory of .emacs.d/
 
 #+begin_src  emacs-lisp
-  (use-package racket-mode)
+;;  (use-package racket-mode)
 #+end_src
+
 *** Swift
 
 #+BEGIN_SRC emacs-lisp
@@ -978,3 +988,22 @@ An alternative to org-roam
     (setq orb-attached-file-extensions '("pdf" "epub")))
 #+END_SRC
 
+** PDF tools
+#+BEGIN_SRC emacs-lisp
+(use-package ctrlf
+  :ensure t
+  :config
+  (ctrlf-mode +1))
+
+(use-package pdf-tools
+  :after ctrlf
+  :init
+  (pdf-tools-install)
+  :config
+  (add-hook 'pdf-isearch-minor-mode-hook (lambda () (ctrlf-local-mode -1))))
+
+(use-package org-pdftools
+  :after pdf-tools
+  :hook (org-mode . org-pdftools-setup-link))
+
+#+END_SRC
